@@ -41,6 +41,10 @@ export interface NumberField {
   placeholder?: string;
   group?: string;
   visibleIf?: (values: Values) => boolean;
+  // When true, renders as a smaller, centered input instead of the default
+  // full-width field — for single-value "type a number, get a result" tools
+  // (unit converters) rather than multi-field clinical forms.
+  compact?: boolean;
 }
 
 export type Field = SelectField | BooleanField | NumberField;

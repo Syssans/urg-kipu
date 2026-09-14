@@ -32,22 +32,24 @@ export const qtc: Calculator = {
     const isFemale = (v.sex ?? 0) === 1;
     const highThreshold = isFemale ? 470 : 450;
     const borderlineThreshold = isFemale ? 450 : 430;
+    const norms = "Normes : Homme ≤ 430 ms (limite 431-450), Femme ≤ 450 ms (limite 451-470). Allongé au-delà (> 450 ms chez l'homme, > 470 ms chez la femme).";
 
     let level: Level = "low";
     let title = "QTc normal";
-    let detail: string | undefined;
+    let clinicalNote: string | undefined;
     if (qtc >= 500) {
       level = "critical";
       title = "QTc très allongé";
-      detail = "Risque élevé de torsades de pointes. Corriger les facteurs favorisants (hypokaliémie, hypomagnésémie, médicaments allongeant le QT), scope/surveillance rapprochée.";
+      clinicalNote = "Risque élevé de torsades de pointes. Corriger les facteurs favorisants (hypokaliémie, hypomagnésémie, médicaments allongeant le QT), scope/surveillance rapprochée.";
     } else if (qtc > highThreshold) {
       level = "high";
       title = "QTc allongé";
-      detail = "Rechercher une cause (médicamenteuse, ionique, congénitale) et éviter tout médicament bradycardisant ou allongeant le QT.";
+      clinicalNote = "Rechercher une cause (médicamenteuse, ionique, congénitale) et éviter tout médicament bradycardisant ou allongeant le QT.";
     } else if (qtc > borderlineThreshold) {
       level = "moderate";
       title = "QTc à la limite supérieure";
     }
+    const detail = clinicalNote ? `${clinicalNote} ${norms}` : norms;
     return [{ title, level, scoreLabel: `${qtc.toFixed(0)} ms`, detail }];
   },
   source: "Formule de Bazett (QTc = QT / √RR) ; seuils selon Rautaharju et al., AHA/ACCF/HRS 2009.",

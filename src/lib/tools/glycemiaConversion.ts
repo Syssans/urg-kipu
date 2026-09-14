@@ -11,18 +11,18 @@ export const glycemiaConversion: Calculator = {
   keywords: ["glycemie", "glycémie", "glucose", "conversion", "mmol", "g/l", "sucre"],
   summary: "Convertit une glycémie entre mmol/L (unité SI) et g/L (unité encore courante en France).",
   fields: [
-    { type: "number", id: "mmolL", label: "Glycémie", unit: "mmol/L", step: 0.1, placeholder: "—" },
-    { type: "number", id: "gL", label: "Glycémie", unit: "g/L", step: 0.01, placeholder: "—" },
+    { type: "number", id: "mmolL", label: "mmol/L", step: 0.1, placeholder: "—", compact: true },
+    { type: "number", id: "gL", label: "g/L", step: 0.01, placeholder: "—", compact: true },
   ],
   compute: () => 0,
   interpret: (_score, v) => {
     if (v.mmolL !== undefined) {
       const gL = v.mmolL * FACTOR;
-      return [{ title: `${gL.toFixed(2)} g/L`, level: "info", scoreLabel: `${v.mmolL} mmol/L` }];
+      return [{ title: "Équivalent en g/L", level: "info", scoreLabel: `${gL.toFixed(2)} g/L`, detail: `${v.mmolL} mmol/L saisi.` }];
     }
     if (v.gL !== undefined) {
       const mmolL = v.gL / FACTOR;
-      return [{ title: `${mmolL.toFixed(1)} mmol/L`, level: "info", scoreLabel: `${v.gL} g/L` }];
+      return [{ title: "Équivalent en mmol/L", level: "info", scoreLabel: `${mmolL.toFixed(1)} mmol/L`, detail: `${v.gL} g/L saisi.` }];
     }
     return [{ title: "Saisissez une valeur", level: "info", detail: "Renseignez la glycémie dans l'une des deux unités (l'autre se calcule automatiquement)." }];
   },

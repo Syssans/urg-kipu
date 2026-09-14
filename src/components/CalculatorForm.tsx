@@ -103,12 +103,14 @@ function NumberInput({
   onChange,
   placeholder,
   missing,
+  centered,
 }: {
   id: string;
   value: number | undefined;
   onChange: (v: number | undefined) => void;
   placeholder: string;
   missing: boolean;
+  centered?: boolean;
 }) {
   const [raw, setRaw] = useState(value !== undefined ? String(value) : "");
 
@@ -155,9 +157,9 @@ function NumberInput({
       onChange={(e) => handleChange(e.target.value)}
       onBlur={handleBlur}
       aria-invalid={missing}
-      className={`w-full rounded-xl border px-4 py-3 text-base text-white outline-none focus:border-accent-2 ${
-        missing ? "border-red-500 bg-red-500/10 placeholder:text-red-400/70" : "border-border bg-surface"
-      }`}
+      className={`rounded-xl border px-4 py-3 text-white outline-none focus:border-accent-2 ${
+        centered ? "w-32 text-center text-lg" : "w-full text-base"
+      } ${missing ? "border-red-500 bg-red-500/10 placeholder:text-red-400/70" : "border-border bg-surface"}`}
     />
   );
 }
@@ -255,6 +257,27 @@ function FieldControl({
   // number
   const missing = required && value === undefined;
   const dimmed = optional && value === undefined;
+
+  if (field.compact) {
+    return (
+      <div className={`flex flex-col items-center gap-2 transition-opacity duration-150 ${dimmed ? "opacity-55 focus-within:opacity-100" : ""}`}>
+        <label className="text-sm font-medium text-slate-200" htmlFor={field.id}>
+          {field.label}
+          {required && <span className="ml-1 text-red-400">*</span>}
+          {showOptionalTag && <span className="ml-1.5 text-xs font-normal text-muted">(optionnel)</span>}
+        </label>
+        <NumberInput
+          id={field.id}
+          value={value}
+          onChange={onChange}
+          placeholder={field.placeholder ?? "—"}
+          missing={missing}
+          centered
+        />
+      </div>
+    );
+  }
+
   return (
     <div className={`flex flex-col gap-2 transition-opacity duration-150 ${dimmed ? "opacity-55 focus-within:opacity-100" : ""}`}>
       <label className="text-sm font-medium text-slate-200" htmlFor={field.id}>
