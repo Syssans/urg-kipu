@@ -70,7 +70,7 @@ function CalculatorPageInner({
           </button>
         </div>
 
-        <div className="sticky top-[57px] z-20 -mx-4 border-y border-border bg-bg/95 px-4 py-3 backdrop-blur">
+        <div className="-mx-4 border-y border-border bg-bg/95 px-4 py-3">
           {missingRequired ? (
             <p className="text-sm text-muted">Renseignez tous les champs numériques pour obtenir un résultat.</p>
           ) : (

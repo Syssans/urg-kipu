@@ -12,6 +12,11 @@ import { centor } from "./centor";
 import { canadianCtHead } from "./canadianCtHead";
 import { ottawaAnkle } from "./ottawaAnkle";
 import { blatchford } from "./blatchford";
+import { abg } from "./abg";
+import { csf } from "./csf";
+import { bloodIonogram } from "./bloodIonogram";
+import { urineIonogram } from "./urineIonogram";
+import { coagulation } from "./coagulation";
 
 export const calculators: Calculator[] = [
   gcs,
@@ -27,6 +32,11 @@ export const calculators: Calculator[] = [
   canadianCtHead,
   ottawaAnkle,
   blatchford,
+  abg,
+  csf,
+  bloodIonogram,
+  urineIonogram,
+  coagulation,
 ];
 
 export function getCalculator(id: string): Calculator | undefined {

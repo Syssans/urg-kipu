@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "dev",
-      "runtimeExecutable": "bash",
-      "runtimeArgs": ["-c", "export PATH=\"$PWD/.tools/node/bin:$PATH\" && npm run dev -- --host"],
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--", "--host"],
       "port": 5173
     }
   ]

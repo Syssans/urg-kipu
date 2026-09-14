@@ -52,7 +52,8 @@ export type Category =
   | "respiratoire"
   | "infectiologie"
   | "traumatologie"
-  | "digestif";
+  | "digestif"
+  | "biologie";
 
 export interface Calculator {
   id: string;
@@ -77,6 +78,7 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   infectiologie: "Infectiologie",
   traumatologie: "Traumatologie",
   digestif: "Digestif",
+  biologie: "Biologie",
 };
 
 export function defaultValues(fields: Field[]): Values {

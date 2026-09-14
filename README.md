@@ -29,11 +29,17 @@ npm run preview  # prévisualiser le build
 
 ## Contenu actuel
 
-### Calculateurs de scores (`src/lib/calculators/`)
+### Calculateurs et interprétateurs (`src/lib/calculators/`)
 
-13 scores cliniques largement publiés et utilisés en médecine d'urgence : Glasgow (GCS), NIHSS,
-qSOFA, CURB-65, Wells (EP et TVP), PERC, CHA₂DS₂-VASc, HAS-BLED, Centor/McIsaac, Canadian CT Head
-Rule, règles d'Ottawa (cheville/pied), Glasgow-Blatchford.
+18 outils reposant sur des critères publiés et largement utilisés en médecine d'urgence :
+
+- **Scores** : Glasgow (GCS), NIHSS, qSOFA, CURB-65, Wells (EP et TVP), PERC, CHA₂DS₂-VASc,
+  HAS-BLED, Centor/McIsaac, Canadian CT Head Rule, règles d'Ottawa (cheville/pied),
+  Glasgow-Blatchford.
+- **Interprétateurs biologiques** (catégorie « Biologie ») : gaz du sang (artériel/veineux,
+  trouble acido-basique, compensation, trou anionique, delta ratio, oxygénation, lactate), LCR
+  (orientation méningite bactérienne/virale), ionogramme sanguin, ionogramme urinaire
+  (FENa/FEUrée, natriurèse), bilan de coagulation (dont score ISTH de CIVD).
 
 Chaque calculateur est défini dans un fichier dédié avec : ses champs de saisie, sa fonction de
 calcul, sa fonction d'interprétation et sa source bibliographique (affichée dans l'app). Pour
