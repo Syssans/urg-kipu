@@ -4,6 +4,7 @@ interface Props {
   fields: Field[];
   values: Values;
   onChange: (id: string, value: number | undefined) => void;
+  requiredFieldIds?: string[];
 }
 
 function groupFields(fields: Field[]): { group: string | null; fields: Field[] }[] {
@@ -20,7 +21,7 @@ function groupFields(fields: Field[]): { group: string | null; fields: Field[] }
   return groups;
 }
 
-export function CalculatorForm({ fields, values, onChange }: Props) {
+export function CalculatorForm({ fields, values, onChange, requiredFieldIds }: Props) {
   const groups = groupFields(fields);
 
   return (
@@ -31,7 +32,13 @@ export function CalculatorForm({ fields, values, onChange }: Props) {
             <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">{group.group}</h3>
           )}
           {group.fields.map((field) => (
-            <FieldControl key={field.id} field={field} value={values[field.id]} onChange={(v) => onChange(field.id, v)} />
+            <FieldControl
+              key={field.id}
+              field={field}
+              value={values[field.id]}
+              onChange={(v) => onChange(field.id, v)}
+              required={requiredFieldIds?.includes(field.id) ?? false}
+            />
           ))}
         </div>
       ))}
@@ -43,10 +50,12 @@ function FieldControl({
   field,
   value,
   onChange,
+  required,
 }: {
   field: Field;
   value: number | undefined;
   onChange: (v: number | undefined) => void;
+  required: boolean;
 }) {
   if (field.type === "boolean") {
     const checked = (value ?? 0) === 1;
@@ -106,10 +115,12 @@ function FieldControl({
   }
 
   // number
+  const missing = required && value === undefined;
   return (
     <div className="flex flex-col gap-2">
       <label className="text-sm font-medium text-slate-200" htmlFor={field.id}>
         {field.label}
+        {required && <span className="ml-1 text-red-400">*</span>}
       </label>
       <div className="flex items-center gap-2">
         <input
@@ -122,7 +133,10 @@ function FieldControl({
           placeholder={field.placeholder ?? "—"}
           value={value ?? ""}
           onChange={(e) => onChange(e.target.value === "" ? undefined : Number(e.target.value))}
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-base text-white outline-none focus:border-accent-2"
+          aria-invalid={missing}
+          className={`w-full rounded-xl border px-4 py-3 text-base text-white outline-none focus:border-accent-2 ${
+            missing ? "border-red-500 bg-red-500/10 placeholder:text-red-400/70" : "border-border bg-surface"
+          }`}
         />
         {field.unit && <span className="shrink-0 text-sm text-muted">{field.unit}</span>}
       </div>

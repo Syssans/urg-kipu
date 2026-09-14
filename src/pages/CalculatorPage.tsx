@@ -78,6 +78,7 @@ function CalculatorPageInner({
           fields={calc.fields}
           values={values}
           onChange={(id, v) => setValues((prev) => ({ ...prev, [id]: v }))}
+          requiredFieldIds={calc.requiredNumberFieldIds}
         />
 
         <button
