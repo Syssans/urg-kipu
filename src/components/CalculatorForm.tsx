@@ -64,20 +64,20 @@ function FieldControl({
         type="button"
         onClick={() => onChange(checked ? 0 : 1)}
         aria-pressed={checked}
-        className={`flex items-center gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition-colors ${
+        className={`flex items-center gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition-all duration-150 ease-out ${
           checked
-            ? "border-accent-2/50 bg-accent-2/10 text-white"
-            : "border-border bg-surface text-slate-200 active:bg-surface-2"
+            ? "translate-x-1.5 border-accent-2/60 bg-accent-2/10 text-white"
+            : "translate-x-0 border-border bg-surface text-slate-200 active:bg-surface-2"
         }`}
       >
         <span
-          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 ${
+          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition-colors duration-150 ${
             checked ? "border-accent-2 bg-accent-2" : "border-border"
           }`}
         >
           {checked && (
             <svg viewBox="0 0 20 20" fill="none" className="h-3.5 w-3.5">
-              <path d="M4 10.5 8 14l8-8" stroke="#0b1220" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M4 10.5 8 14l8-8" stroke="#0a0a0b" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           )}
         </span>
@@ -99,10 +99,10 @@ function FieldControl({
                 key={opt.label}
                 onClick={() => onChange(opt.value)}
                 aria-pressed={active}
-                className={`rounded-xl border px-4 py-3 text-left text-sm transition-colors ${
+                className={`rounded-xl border px-4 py-3 text-left text-sm transition-all duration-150 ease-out ${
                   active
-                    ? "border-accent/50 bg-accent/10 text-white"
-                    : "border-border bg-surface text-slate-300 active:bg-surface-2"
+                    ? "translate-x-1.5 border-accent/60 bg-accent/10 text-white"
+                    : "translate-x-0 border-border bg-surface text-slate-300 active:bg-surface-2"
                 }`}
               >
                 {opt.label}

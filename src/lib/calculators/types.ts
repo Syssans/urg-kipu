@@ -96,5 +96,5 @@ export const LEVEL_STYLES: Record<Level, { bg: string; text: string; ring: strin
   moderate: { bg: "bg-amber-500/10", text: "text-amber-400", ring: "ring-amber-500/30", dot: "bg-amber-400" },
   high: { bg: "bg-orange-500/10", text: "text-orange-400", ring: "ring-orange-500/30", dot: "bg-orange-400" },
   critical: { bg: "bg-red-500/10", text: "text-red-400", ring: "ring-red-500/30", dot: "bg-red-400" },
-  info: { bg: "bg-sky-500/10", text: "text-sky-400", ring: "ring-sky-500/30", dot: "bg-sky-400" },
+  info: { bg: "bg-zinc-400/10", text: "text-zinc-300", ring: "ring-zinc-400/30", dot: "bg-zinc-300" },
 };
