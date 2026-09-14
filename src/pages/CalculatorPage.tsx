@@ -41,6 +41,9 @@ function CalculatorPageInner({
     .map((id) => calc.fields.find((f) => f.id === id)?.label)
     .filter((label): label is string => Boolean(label));
 
+  const recommendedFieldIds = calc.getRecommendedFieldIds?.(values) ?? [];
+  const highlightFieldIds = [...(calc.requiredNumberFieldIds ?? []), ...recommendedFieldIds];
+
   const results = useMemo(() => {
     if (missingRequired) return null;
     const score = calc.compute(values);
@@ -78,7 +81,7 @@ function CalculatorPageInner({
           fields={calc.fields}
           values={values}
           onChange={(id, v) => setValues((prev) => ({ ...prev, [id]: v }))}
-          requiredFieldIds={calc.requiredNumberFieldIds}
+          requiredFieldIds={highlightFieldIds}
         />
 
         <button

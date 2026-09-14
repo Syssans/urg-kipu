@@ -12,6 +12,7 @@ export interface SelectField {
   label: string;
   group?: string;
   options: SelectOption[];
+  visibleIf?: (values: Values) => boolean;
 }
 
 export interface BooleanField {
@@ -21,6 +22,7 @@ export interface BooleanField {
   hint?: string;
   group?: string;
   points?: number;
+  visibleIf?: (values: Values) => boolean;
 }
 
 export interface NumberField {
@@ -33,6 +35,7 @@ export interface NumberField {
   step?: number;
   placeholder?: string;
   group?: string;
+  visibleIf?: (values: Values) => boolean;
 }
 
 export type Field = SelectField | BooleanField | NumberField;
@@ -64,6 +67,7 @@ export interface Calculator {
   summary: string;
   fields: Field[];
   requiredNumberFieldIds?: string[];
+  getRecommendedFieldIds?: (values: Values) => string[];
   compute: (values: Values) => number;
   interpret: (score: number, values: Values) => Interpretation[];
   scoreSuffix?: string;

@@ -22,7 +22,8 @@ function groupFields(fields: Field[]): { group: string | null; fields: Field[] }
 }
 
 export function CalculatorForm({ fields, values, onChange, requiredFieldIds }: Props) {
-  const groups = groupFields(fields);
+  const visibleFields = fields.filter((f) => f.visibleIf?.(values) ?? true);
+  const groups = groupFields(visibleFields);
   const hasRequiredFields = (requiredFieldIds?.length ?? 0) > 0;
 
   return (
