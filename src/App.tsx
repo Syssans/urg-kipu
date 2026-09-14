@@ -13,7 +13,7 @@ import { getTool } from "./lib/tools";
 export default function App() {
   return (
     <HashRouter>
-      <div className="min-h-dvh bg-bg">
+      <div className="min-h-svh bg-bg">
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
