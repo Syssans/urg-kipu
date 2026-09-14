@@ -132,9 +132,9 @@ function FieldControl({
   if (field.type === "select") {
     const compact = field.options.length <= 3;
     return (
-      <div className="flex flex-col gap-1.5">
+      <div className="flex h-full flex-col gap-1.5">
         <label className={compact ? "text-xs font-medium text-slate-200" : "text-sm font-medium text-slate-200"}>{field.label}</label>
-        <div className={compact ? `grid gap-1.5 ${field.options.length === 2 ? "grid-cols-2" : "grid-cols-3"}` : "flex flex-col gap-2"}>
+        <div className={compact ? `mt-auto grid gap-1.5 ${field.options.length === 2 ? "grid-cols-2" : "grid-cols-3"}` : "flex flex-col gap-2"}>
           {field.options.map((opt) => {
             const active = value === opt.value;
             return (
