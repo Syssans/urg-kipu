@@ -101,7 +101,7 @@ function FieldControl({
                 aria-pressed={active}
                 className={`rounded-xl border px-4 py-3 text-left text-sm transition-all duration-150 ease-out ${
                   active
-                    ? "translate-x-1.5 border-accent/60 bg-accent/10 text-white"
+                    ? "translate-x-1.5 border-accent-2/60 bg-accent-2/10 text-white"
                     : "translate-x-0 border-border bg-surface text-slate-300 active:bg-surface-2"
                 }`}
               >
