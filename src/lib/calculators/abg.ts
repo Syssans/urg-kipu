@@ -160,17 +160,10 @@ function anionGapFindings(v: Values): Interpretation[] {
   const findings: Interpretation[] = [];
   if (!hasMetabolicAcidosisComponent(v)) return findings;
 
-  if (hyperlactatemiaExplainsAcidosis(v)) {
-    const lactate = v.lactate!;
-    findings.push({
-      title: "Acidose métabolique expliquée par l'hyperlactatémie",
-      level: lactate > 4 ? "critical" : "moderate",
-      scoreLabel: `Lactate ${lactate} mmol/L`,
-      detail:
-        "L'hyperlactatémie suffit à expliquer l'acidose métabolique : le trou anionique n'apporte pas d'information supplémentaire ici. Rechercher et traiter la cause de l'hypoperfusion/hyperlactatémie.",
-    });
-    return findings;
-  }
+  // A clearly elevated lactate already explains the metabolic acidosis on its
+  // own — the dedicated lactate card below carries that conclusion, so there's
+  // nothing more to add here (no separate card, to avoid saying it twice).
+  if (hyperlactatemiaExplainsAcidosis(v)) return findings;
 
   const ag = anionGap(v);
   if (ag === undefined) return findings;
@@ -297,6 +290,9 @@ function oxygenationAndLactate(v: Values): Interpretation[] {
       title = "Hyperlactatémie modérée";
       level = "moderate";
       detail = "Évoquer hypoperfusion débutante, sepsis, effort intense, certains médicaments (metformine, adrénaline). À recontrôler selon le contexte.";
+    }
+    if (lactate >= 2 && hasMetabolicAcidosisComponent(v)) {
+      detail = `${detail} Cette hyperlactatémie suffit à expliquer l'acidose métabolique observée : le trou anionique n'apporte pas d'information supplémentaire ici.`;
     }
     findings.push({ title, level, scoreLabel: `Lactate ${lactate} mmol/L`, detail });
   }
