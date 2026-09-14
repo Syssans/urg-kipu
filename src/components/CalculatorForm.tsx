@@ -21,6 +21,25 @@ function groupFields(fields: Field[]): { group: string | null; fields: Field[] }
   return groups;
 }
 
+function isCompactSelect(f: Field): boolean {
+  return f.type === "select" && f.options.length <= 3;
+}
+
+// Pairs up consecutive compact selects (e.g. two 2-option toggles) so they
+// can share one row instead of each taking a full-width block.
+function groupIntoRows(fields: Field[]): Field[][] {
+  const rows: Field[][] = [];
+  for (const f of fields) {
+    const last = rows[rows.length - 1];
+    if (isCompactSelect(f) && last && last.length === 1 && isCompactSelect(last[0])) {
+      last.push(f);
+    } else {
+      rows.push([f]);
+    }
+  }
+  return rows;
+}
+
 export function CalculatorForm({ fields, values, onChange, requiredFieldIds }: Props) {
   const visibleFields = fields.filter((f) => f.visibleIf?.(values) ?? true);
   const groups = groupFields(visibleFields);
@@ -33,19 +52,31 @@ export function CalculatorForm({ fields, values, onChange, requiredFieldIds }: P
           {group.group && (
             <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">{group.group}</h3>
           )}
-          {group.fields.map((field) => {
-            const required = requiredFieldIds?.includes(field.id) ?? false;
+          {groupIntoRows(group.fields).map((row, ri) => {
             const groupSaysOptional = group.group?.toLowerCase().includes("optionnel") ?? false;
+            const controls = row.map((field) => {
+              const required = requiredFieldIds?.includes(field.id) ?? false;
+              return (
+                <FieldControl
+                  key={field.id}
+                  field={field}
+                  value={values[field.id]}
+                  onChange={(v) => onChange(field.id, v)}
+                  required={required}
+                  optional={hasRequiredFields && field.type === "number" && !required}
+                  showOptionalTag={hasRequiredFields && field.type === "number" && !required && !groupSaysOptional}
+                />
+              );
+            });
+            if (row.length === 1) return controls[0] ?? null;
             return (
-              <FieldControl
-                key={field.id}
-                field={field}
-                value={values[field.id]}
-                onChange={(v) => onChange(field.id, v)}
-                required={required}
-                optional={hasRequiredFields && field.type === "number" && !required}
-                showOptionalTag={hasRequiredFields && field.type === "number" && !required && !groupSaysOptional}
-              />
+              <div key={ri} className="flex gap-3">
+                {row.map((field, i) => (
+                  <div key={field.id} className="min-w-0 flex-1">
+                    {controls[i]}
+                  </div>
+                ))}
+              </div>
             );
           })}
         </div>
@@ -101,9 +132,9 @@ function FieldControl({
   if (field.type === "select") {
     const compact = field.options.length <= 3;
     return (
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-slate-200">{field.label}</label>
-        <div className={compact ? `grid gap-2 ${field.options.length === 2 ? "grid-cols-2" : "grid-cols-3"}` : "flex flex-col gap-2"}>
+      <div className="flex flex-col gap-1.5">
+        <label className={compact ? "text-xs font-medium text-slate-200" : "text-sm font-medium text-slate-200"}>{field.label}</label>
+        <div className={compact ? `grid gap-1.5 ${field.options.length === 2 ? "grid-cols-2" : "grid-cols-3"}` : "flex flex-col gap-2"}>
           {field.options.map((opt) => {
             const active = value === opt.value;
             return (
@@ -112,11 +143,11 @@ function FieldControl({
                 key={opt.label}
                 onClick={() => onChange(opt.value)}
                 aria-pressed={active}
-                className={`rounded-xl border text-sm leading-snug transition-all duration-150 ease-out ${
-                  compact ? "flex min-h-[4.5rem] items-center justify-center p-2 text-center" : "px-4 py-3 text-left"
+                className={`rounded-lg border leading-snug transition-all duration-150 ease-out ${
+                  compact ? "flex min-h-[2.5rem] items-center justify-center p-1 text-center text-xs" : "px-4 py-3 text-left text-sm"
                 } ${
                   active
-                    ? `${compact ? "-translate-y-1" : "translate-x-1.5"} border-accent-2/60 bg-accent-2/10 text-white`
+                    ? `${compact ? "-translate-y-0.5" : "translate-x-1.5"} border-accent-2/60 bg-accent-2/10 text-white`
                     : `${compact ? "translate-y-0" : "translate-x-0"} border-border bg-surface text-slate-300 active:bg-surface-2`
                 }`}
               >
