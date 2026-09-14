@@ -1,5 +1,6 @@
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { BottomNav } from "./components/BottomNav";
+import { ScrollToTop } from "./components/ScrollToTop";
 import { Home } from "./pages/Home";
 import { ScoresList } from "./pages/ScoresList";
 import { CalculatorPage } from "./pages/CalculatorPage";
@@ -11,6 +12,7 @@ export default function App() {
   return (
     <HashRouter>
       <div className="min-h-dvh bg-bg">
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/scores" element={<ScoresList />} />
