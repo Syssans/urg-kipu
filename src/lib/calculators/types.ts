@@ -47,6 +47,10 @@ export interface Interpretation {
   level: Level;
   detail?: string;
   scoreLabel?: string;
+  // "primary" (default) renders as a colored, glowing card — the headline
+  // conclusion. "secondary" renders as a flat violet card with no glow, for
+  // supporting detail that shouldn't compete visually with the diagnosis.
+  role?: "primary" | "secondary";
 }
 
 export type Category =

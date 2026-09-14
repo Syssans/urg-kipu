@@ -92,6 +92,7 @@ function acidBaseFindings(v: Values): Interpretation[] {
     title: acidemia ? "Acidémie" : alkalemia ? "Alcalémie" : "pH normal",
     level: phLevel,
     scoreLabel: `pH ${ph.toFixed(2)}`,
+    role: "secondary",
   });
 
   if (acidemia && metAcidosis && respAcidosis) {
@@ -109,23 +110,23 @@ function acidBaseFindings(v: Values): Interpretation[] {
   } else if (metAcidosis && !alkalemia) {
     const expected = round1(1.5 * hco3 + 8);
     findings.push({ title: "Trouble primaire : acidose métabolique", level: "high", scoreLabel: `HCO₃⁻ ${hco3} mmol/L` });
-    findings.push(compensationFinding(pco2, expected - 2, expected + 2, expected, "PaCO₂", "compensation respiratoire (formule de Winter)"));
+    findings.push({ ...compensationFinding(pco2, expected - 2, expected + 2, expected, "PaCO₂", "compensation respiratoire (formule de Winter)"), role: "secondary" });
   } else if (metAlkalosis && !acidemia) {
     const expected = round1(40 + 0.7 * (hco3 - 24));
     findings.push({ title: "Trouble primaire : alcalose métabolique", level: "moderate", scoreLabel: `HCO₃⁻ ${hco3} mmol/L` });
-    findings.push(compensationFinding(pco2, expected - 5, expected + 5, expected, "PaCO₂", "compensation respiratoire attendue"));
+    findings.push({ ...compensationFinding(pco2, expected - 5, expected + 5, expected, "PaCO₂", "compensation respiratoire attendue"), role: "secondary" });
   } else if (respAcidosis && !alkalemia) {
     const factor = chronic ? 0.35 : 0.1;
     const expected = round1(24 + factor * (pco2 - 40));
     const tol = chronic ? 4 : 3;
     findings.push({ title: `Trouble primaire : acidose respiratoire (${chronic ? "chronique" : "aiguë"})`, level: "high", scoreLabel: `PaCO₂ ${pco2} mmHg` });
-    findings.push(compensationFinding(hco3, expected - tol, expected + tol, expected, "HCO₃⁻", `compensation métabolique attendue (${chronic ? "chronique" : "aiguë"})`));
+    findings.push({ ...compensationFinding(hco3, expected - tol, expected + tol, expected, "HCO₃⁻", `compensation métabolique attendue (${chronic ? "chronique" : "aiguë"})`), role: "secondary" });
   } else if (respAlkalosis && !acidemia) {
     const factor = chronic ? 0.4 : 0.2;
     const expected = round1(24 - factor * (40 - pco2));
     const tol = chronic ? 4 : 3;
     findings.push({ title: `Trouble primaire : alcalose respiratoire (${chronic ? "chronique" : "aiguë"})`, level: "moderate", scoreLabel: `PaCO₂ ${pco2} mmHg` });
-    findings.push(compensationFinding(hco3, expected - tol, expected + tol, expected, "HCO₃⁻", `compensation métabolique attendue (${chronic ? "chronique" : "aiguë"})`));
+    findings.push({ ...compensationFinding(hco3, expected - tol, expected + tol, expected, "HCO₃⁻", `compensation métabolique attendue (${chronic ? "chronique" : "aiguë"})`), role: "secondary" });
   } else if (!acidemia && !alkalemia) {
     findings.push({ title: "Équilibre acido-basique normal", level: "low" });
   } else {
@@ -193,6 +194,7 @@ function anionGapFindings(v: Values): Interpretation[] {
       level: "info",
       scoreLabel: `${round1(deltaRatio)}`,
       detail: `(TA − 12) / (24 − HCO₃⁻) : ${ratioMsg}`,
+      role: "secondary",
     });
   } else {
     const uag = urinaryAnionGap(v);
@@ -202,6 +204,7 @@ function anionGapFindings(v: Values): Interpretation[] {
         level: "moderate",
         scoreLabel: `TA ${round1(ag)} mmol/L${corrected ? " (corrigé albumine)" : ""}`,
         detail: "Renseignez le ionogramme urinaire ci-dessous (Na⁺, K⁺, Cl⁻) pour calculer le trou anionique urinaire et orienter l'origine (rénale ou digestive).",
+        role: "secondary",
       });
     } else {
       const renal = uag >= 0;
@@ -217,6 +220,7 @@ function anionGapFindings(v: Values): Interpretation[] {
         title: "Limite d'interprétation",
         level: "info",
         detail: "Le trou anionique urinaire n'est interprétable qu'avec une natriurèse suffisante (Na⁺ urinaire > 20-25 mmol/L) et en l'absence d'anions urinaires non mesurés (cétonurie, toxiques).",
+        role: "secondary",
       });
     }
   }
@@ -245,7 +249,7 @@ function oxygenationAndLactate(v: Values): Interpretation[] {
       title = "Hypoxémie sévère";
       level = "critical";
     }
-    findings.push({ title, level, scoreLabel: `PaO₂ ${pao2} mmHg` });
+    findings.push({ title, level, scoreLabel: `PaO₂ ${pao2} mmHg`, role: "secondary" });
 
     const fio2 = v.fio2;
     if (fio2 !== undefined && fio2 > 0) {
@@ -267,6 +271,7 @@ function oxygenationAndLactate(v: Values): Interpretation[] {
         level: pfLevel,
         scoreLabel: `P/F ${pf}`,
         detail: "Seuils issus de la définition de Berlin du SDRA (composante d'oxygénation uniquement).",
+        role: "secondary",
       });
     }
   } else if (!isArterial && pao2 !== undefined) {
@@ -274,6 +279,7 @@ function oxygenationAndLactate(v: Values): Interpretation[] {
       title: "Oxygénation non évaluable sur gaz veineux",
       level: "info",
       detail: "La PvO₂ ne reflète pas fiablement l'oxygénation artérielle : utiliser une SpO₂/gaz artériel si l'oxygénation doit être évaluée.",
+      role: "secondary",
     });
   }
 
@@ -291,13 +297,30 @@ function oxygenationAndLactate(v: Values): Interpretation[] {
       level = "moderate";
       detail = "Évoquer hypoperfusion débutante, sepsis, effort intense, certains médicaments (metformine, adrénaline). À recontrôler selon le contexte.";
     }
-    if (lactate >= 2 && hasMetabolicAcidosisComponent(v)) {
+    const explainsAcidosis = lactate >= 2 && hasMetabolicAcidosisComponent(v);
+    if (explainsAcidosis) {
       detail = `${detail} Cette hyperlactatémie suffit à expliquer l'acidose métabolique observée : le trou anionique n'apporte pas d'information supplémentaire ici.`;
     }
-    findings.push({ title, level, scoreLabel: `Lactate ${lactate} mmol/L`, detail });
+    findings.push({ title, level, scoreLabel: `Lactate ${lactate} mmol/L`, detail, role: explainsAcidosis ? "primary" : "secondary" });
   }
 
   return findings;
+}
+
+// Several helpers each tag their own headline finding as "primary" (the
+// default when `role` is omitted), in the order the diagnosis gets refined:
+// acid-base primary disorder → anion gap conclusion → lactate explanation.
+// Only the LAST primary-tagged card should actually read as the diagnosis;
+// earlier ones get demoted to secondary once something more specific exists.
+function keepOnlyMostSpecificPrimary(findings: Interpretation[]): Interpretation[] {
+  let lastPrimaryIndex = -1;
+  findings.forEach((f, i) => {
+    if ((f.role ?? "primary") === "primary") lastPrimaryIndex = i;
+  });
+  return findings.map((f, i) => {
+    if ((f.role ?? "primary") !== "primary") return f;
+    return { ...f, role: i === lastPrimaryIndex ? "primary" : "secondary" };
+  });
 }
 
 export const abg: Calculator = {
@@ -397,7 +420,7 @@ export const abg: Calculator = {
     return ids;
   },
   compute: () => 0,
-  interpret: (_score, v) => [...acidBaseFindings(v), ...anionGapFindings(v), ...oxygenationAndLactate(v)],
+  interpret: (_score, v) => keepOnlyMostSpecificPrimary([...acidBaseFindings(v), ...anionGapFindings(v), ...oxygenationAndLactate(v)]),
   source:
     "Approche de Boston (Narins & Emmett, Medicine 1980) ; formule de Winter (Winters RW et al., Ann N Y Acad Sci 1967) ; trou anionique urinaire (Goldstein MB et al., Ann Intern Med 1986) ; définition de Berlin du SDRA (JAMA 2012).",
   notes:
