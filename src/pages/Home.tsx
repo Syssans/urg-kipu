@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { searchCalculators } from "../lib/calculators";
 import { searchAll } from "../lib/catalog";
 import { CalculatorListItem } from "../components/CalculatorListItem";
 import { Disclaimer } from "../components/Disclaimer";
@@ -75,26 +74,22 @@ export function Home() {
             </Link>
           </div>
 
-          {favCalcs.length > 0 && (
-            <div className="flex flex-col gap-2.5">
-              <h2 className="text-sm font-semibold text-slate-200">Favoris</h2>
-              {favCalcs.map((r) => (
-                <CalculatorListItem key={r.calc.id} calc={r.calc} basePath={r.basePath} />
-              ))}
-            </div>
-          )}
-
           <div className="flex flex-col gap-2.5">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-slate-200">Scores fréquents</h2>
-              <Link to="/scores" className="text-sm text-accent-2">
-                Tout voir
-              </Link>
+              <h2 className="text-sm font-semibold text-slate-200">Favoris</h2>
+              {favCalcs.length > 0 && (
+                <Link to="/favoris" className="text-sm text-accent-2">
+                  Tout voir
+                </Link>
+              )}
             </div>
-            {["gcs", "nihss", "qsofa", "curb65"].map((id) => {
-              const c = searchCalculators("").find((x) => x.id === id);
-              return c ? <CalculatorListItem key={c.id} calc={c} /> : null;
-            })}
+            {favCalcs.length > 0 ? (
+              favCalcs.map((r) => <CalculatorListItem key={r.calc.id} calc={r.calc} basePath={r.basePath} />)
+            ) : (
+              <p className="rounded-xl border border-dashed border-border p-4 text-sm text-muted">
+                Aucun favori pour l'instant. Ouvrez un score ou un outil et appuyez sur l'étoile pour l'épingler ici.
+              </p>
+            )}
           </div>
         </>
       )}
