@@ -18,7 +18,7 @@ export function Home() {
     <div className="mx-auto flex max-w-xl flex-col gap-6 px-4 pb-28 pt-4">
       <div>
         <p className="text-sm text-muted">Aide-mémoire</p>
-        <h1 className="text-2xl font-bold text-white">Urgence+</h1>
+        <h1 className="text-2xl font-bold text-white">Kipu</h1>
       </div>
 
       <div className="relative">

@@ -15,8 +15,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.png', 'icons/icon.svg'],
       manifest: {
-        name: 'Urgence+ — Aide-mémoire médecine d’urgence',
-        short_name: 'Urgence+',
+        name: 'Kipu — Aide-mémoire médecine d’urgence',
+        short_name: 'Kipu',
         description: 'Calculateurs de scores, protocoles et arbres décisionnels pour la médecine d’urgence.',
         theme_color: '#0a0a0b',
         background_color: '#0a0a0b',

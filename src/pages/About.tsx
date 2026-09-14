@@ -8,9 +8,9 @@ export function About() {
       <div className="mx-auto flex max-w-xl flex-col gap-4 px-4 pb-24 pt-4">
         <Disclaimer />
         <div className="rounded-2xl border border-border bg-surface p-4 text-sm leading-relaxed text-muted">
-          <p className="mb-2 font-semibold text-slate-200">À propos d'Urgence+</p>
+          <p className="mb-2 font-semibold text-slate-200">À propos de Kipu</p>
           <p>
-            Urgence+ est un aide-mémoire pour les professionnels de la médecine d'urgence :
+            Kipu est un aide-mémoire pour les professionnels de la médecine d'urgence :
             calculateurs de scores, et bientôt protocoles et arbres décisionnels, réunis dans une
             interface pensée pour un accès rapide au lit du patient.
           </p>

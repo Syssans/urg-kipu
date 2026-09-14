@@ -1,4 +1,4 @@
-# Urgence+
+# Kipu
 
 Aide-mémoire (web app / PWA) pour les professionnels de la médecine d'urgence : calculateurs de
 scores cliniques, et à terme protocoles et arbres décisionnels, réunis dans une interface pensée
