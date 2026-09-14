@@ -8,13 +8,13 @@ export const wellsPe: Calculator = {
   keywords: ["wells", "embolie pulmonaire", "ep", "tvp"],
   summary: "Probabilité clinique pré-test d'embolie pulmonaire.",
   fields: [
-    { type: "boolean", id: "dvtSigns", label: "Signes cliniques de TVP (œdème, douleur palpation trajet veineux profond)" },
-    { type: "boolean", id: "altDiagnosisLess", label: "Diagnostic alternatif moins probable que l'EP" },
-    { type: "boolean", id: "hr", label: "Fréquence cardiaque > 100/min" },
-    { type: "boolean", id: "immobilization", label: "Immobilisation ≥ 3 jours ou chirurgie dans les 4 dernières semaines" },
-    { type: "boolean", id: "priorDvtPe", label: "Antécédent de TVP ou d'EP" },
-    { type: "boolean", id: "hemoptysis", label: "Hémoptysie" },
-    { type: "boolean", id: "cancer", label: "Cancer actif (traitement en cours ou palliatif, dans les 6 derniers mois)" },
+    { type: "boolean", id: "dvtSigns", label: "Signes cliniques de TVP (œdème, douleur palpation trajet veineux profond)", points: 3 },
+    { type: "boolean", id: "altDiagnosisLess", label: "Diagnostic alternatif moins probable que l'EP", points: 3 },
+    { type: "boolean", id: "hr", label: "Fréquence cardiaque > 100/min", points: 1.5 },
+    { type: "boolean", id: "immobilization", label: "Immobilisation ≥ 3 jours ou chirurgie dans les 4 dernières semaines", points: 1.5 },
+    { type: "boolean", id: "priorDvtPe", label: "Antécédent de TVP ou d'EP", points: 1.5 },
+    { type: "boolean", id: "hemoptysis", label: "Hémoptysie", points: 1 },
+    { type: "boolean", id: "cancer", label: "Cancer actif (traitement en cours ou palliatif, dans les 6 derniers mois)", points: 1 },
   ],
   compute: (v) =>
     (v.dvtSigns ?? 0) * 3 +

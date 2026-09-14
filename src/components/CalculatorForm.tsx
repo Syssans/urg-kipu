@@ -22,7 +22,13 @@ function groupFields(fields: Field[]): { group: string | null; fields: Field[] }
 }
 
 function isCompactSelect(f: Field): boolean {
-  return f.type === "select" && f.options.length <= 3;
+  return f.type === "select" && f.options.length <= 3 && !f.showPoints;
+}
+
+function formatSigned(n: number): string {
+  if (n > 0) return `+${n}`;
+  if (n < 0) return `${n}`;
+  return "0";
 }
 
 // Pairs up consecutive compact selects (e.g. two 2-option toggles) so they
@@ -124,13 +130,17 @@ function FieldControl({
             </svg>
           )}
         </span>
-        <span className="leading-snug">{field.label}</span>
+        <span className="flex-1 leading-snug">{field.label}</span>
+        {field.points !== undefined && (
+          <span className={`shrink-0 tabular-nums ${checked ? "text-white" : "text-muted"}`}>{formatSigned(field.points)}</span>
+        )}
       </button>
     );
   }
 
   if (field.type === "select") {
-    const compact = field.options.length <= 3;
+    const compact = isCompactSelect(field);
+    const showPoints = field.showPoints ?? false;
     return (
       <div className="flex h-full flex-col gap-1.5">
         <label className={compact ? "text-xs font-medium text-slate-200" : "text-sm font-medium text-slate-200"}>{field.label}</label>
@@ -144,14 +154,25 @@ function FieldControl({
                 onClick={() => onChange(opt.value)}
                 aria-pressed={active}
                 className={`rounded-lg border leading-snug transition-all duration-150 ease-out ${
-                  compact ? "flex min-h-[2.5rem] items-center justify-center p-1 text-center text-xs" : "px-4 py-3 text-left text-sm"
+                  compact
+                    ? "flex min-h-[2.5rem] items-center justify-center p-1 text-center text-xs"
+                    : showPoints
+                    ? "flex items-center gap-3 px-4 py-3 text-left text-sm"
+                    : "px-4 py-3 text-left text-sm"
                 } ${
                   active
                     ? `${compact ? "-translate-y-0.5" : "translate-x-1.5"} border-accent-2/60 bg-accent-2/10 text-white`
                     : `${compact ? "translate-y-0" : "translate-x-0"} border-border bg-surface text-slate-300 active:bg-surface-2`
                 }`}
               >
-                {opt.label}
+                {showPoints ? (
+                  <>
+                    <span className="flex-1">{opt.label}</span>
+                    <span className={`shrink-0 tabular-nums ${active ? "text-white" : "text-muted"}`}>{formatSigned(opt.value)}</span>
+                  </>
+                ) : (
+                  opt.label
+                )}
               </button>
             );
           })}

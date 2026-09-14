@@ -1,7 +1,7 @@
 import type { Calculator } from "./types";
 
 function opts(...pairs: [string, number][]) {
-  return pairs.map(([label, value]) => ({ label: `${label} — ${value}`, value }));
+  return pairs.map(([label, value]) => ({ label, value }));
 }
 
 export const nihss: Calculator = {
@@ -14,6 +14,7 @@ export const nihss: Calculator = {
   fields: [
     {
       type: "select",
+      showPoints: true,
       id: "loc",
       label: "1a. Niveau de conscience",
       group: "Conscience",
@@ -21,6 +22,7 @@ export const nihss: Calculator = {
     },
     {
       type: "select",
+      showPoints: true,
       id: "locQuestions",
       label: "1b. Questions (mois, âge)",
       group: "Conscience",
@@ -28,6 +30,7 @@ export const nihss: Calculator = {
     },
     {
       type: "select",
+      showPoints: true,
       id: "locCommands",
       label: "1c. Commandes (ouvrir/fermer les yeux, serrer/ouvrir la main)",
       group: "Conscience",
@@ -35,24 +38,28 @@ export const nihss: Calculator = {
     },
     {
       type: "select",
+      showPoints: true,
       id: "gaze",
       label: "2. Oculomotricité",
       options: opts(["Normale", 0], ["Paralysie partielle du regard", 1], ["Déviation forcée", 2]),
     },
     {
       type: "select",
+      showPoints: true,
       id: "visual",
       label: "3. Champ visuel",
       options: opts(["Aucun déficit", 0], ["Hémianopsie partielle", 1], ["Hémianopsie complète", 2], ["Hémianopsie bilatérale / cécité corticale", 3]),
     },
     {
       type: "select",
+      showPoints: true,
       id: "facial",
       label: "4. Paralysie faciale",
       options: opts(["Normale", 0], ["Mineure (asymétrie sourire)", 1], ["Partielle (paralysie inférieure)", 2], ["Complète (unie ou bilatérale)", 3]),
     },
     {
       type: "select",
+      showPoints: true,
       id: "motorLeftArm",
       label: "5a. Motricité bras gauche",
       group: "Motricité",
@@ -60,6 +67,7 @@ export const nihss: Calculator = {
     },
     {
       type: "select",
+      showPoints: true,
       id: "motorRightArm",
       label: "5b. Motricité bras droit",
       group: "Motricité",
@@ -67,6 +75,7 @@ export const nihss: Calculator = {
     },
     {
       type: "select",
+      showPoints: true,
       id: "motorLeftLeg",
       label: "6a. Motricité jambe gauche",
       group: "Motricité",
@@ -74,6 +83,7 @@ export const nihss: Calculator = {
     },
     {
       type: "select",
+      showPoints: true,
       id: "motorRightLeg",
       label: "6b. Motricité jambe droite",
       group: "Motricité",
@@ -81,30 +91,35 @@ export const nihss: Calculator = {
     },
     {
       type: "select",
+      showPoints: true,
       id: "ataxia",
       label: "7. Ataxie des membres",
       options: opts(["Absente", 0], ["Présente sur 1 membre", 1], ["Présente sur 2 membres", 2]),
     },
     {
       type: "select",
+      showPoints: true,
       id: "sensory",
       label: "8. Sensibilité",
       options: opts(["Normale", 0], ["Perte légère à modérée", 1], ["Perte sévère à totale", 2]),
     },
     {
       type: "select",
+      showPoints: true,
       id: "language",
       label: "9. Langage (aphasie)",
       options: opts(["Normal", 0], ["Aphasie légère à modérée", 1], ["Aphasie sévère", 2], ["Mutisme / aphasie globale", 3]),
     },
     {
       type: "select",
+      showPoints: true,
       id: "dysarthria",
       label: "10. Dysarthrie",
       options: opts(["Normale", 0], ["Légère à modérée", 1], ["Sévère / anarthrie", 2]),
     },
     {
       type: "select",
+      showPoints: true,
       id: "extinction",
       label: "11. Extinction / négligence",
       options: opts(["Absente", 0], ["Légère (1 modalité)", 1], ["Sévère (≥2 modalités)", 2]),

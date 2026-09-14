@@ -13,6 +13,11 @@ export interface SelectField {
   group?: string;
   options: SelectOption[];
   visibleIf?: (values: Values) => boolean;
+  // When true, each option renders as a full-width row with its label on
+  // the left and its point value (signed: +N / −N / 0) right-aligned,
+  // instead of the compact square layout used for short categorical
+  // choices with no score contribution (e.g. artériel/veineux).
+  showPoints?: boolean;
 }
 
 export interface BooleanField {
