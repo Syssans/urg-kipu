@@ -3,10 +3,12 @@ import { BottomNav } from "./components/BottomNav";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { Home } from "./pages/Home";
 import { ScoresList } from "./pages/ScoresList";
+import { ToolsList } from "./pages/ToolsList";
 import { CalculatorPage } from "./pages/CalculatorPage";
 import { Favorites } from "./pages/Favorites";
 import { About } from "./pages/About";
 import { ComingSoon } from "./pages/ComingSoon";
+import { getTool } from "./lib/tools";
 
 export default function App() {
   return (
@@ -17,17 +19,10 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/scores" element={<ScoresList />} />
           <Route path="/scores/:id" element={<CalculatorPage />} />
+          <Route path="/calcul" element={<ToolsList />} />
+          <Route path="/calcul/:id" element={<CalculatorPage lookup={getTool} />} />
           <Route path="/favoris" element={<Favorites />} />
           <Route path="/a-propos" element={<About />} />
-          <Route
-            path="/protocoles"
-            element={
-              <ComingSoon
-                title="Protocoles"
-                description="Les protocoles de service seront ajoutés ici une fois les référentiels sourcés (SFMU, HAS, sociétés savantes) réunis."
-              />
-            }
-          />
           <Route
             path="/arbres"
             element={

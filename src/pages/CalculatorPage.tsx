@@ -4,12 +4,12 @@ import { Header } from "../components/Header";
 import { CalculatorForm } from "../components/CalculatorForm";
 import { ResultCard } from "../components/ResultCard";
 import { getCalculator } from "../lib/calculators";
-import { defaultValues, type Values } from "../lib/calculators/types";
+import { defaultValues, type Calculator, type Values } from "../lib/calculators/types";
 import { useFavorites } from "../lib/favorites";
 
-export function CalculatorPage() {
+export function CalculatorPage({ lookup = getCalculator }: { lookup?: (id: string) => Calculator | undefined }) {
   const { id } = useParams();
-  const calc = id ? getCalculator(id) : undefined;
+  const calc = id ? lookup(id) : undefined;
   const { isFavorite, toggleFavorite } = useFavorites();
 
   if (!calc) {

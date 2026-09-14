@@ -11,14 +11,14 @@ export function About() {
           <p className="mb-2 font-semibold text-slate-200">À propos de Kipu</p>
           <p>
             Kipu est un aide-mémoire pour les professionnels de la médecine d'urgence :
-            calculateurs de scores, et bientôt protocoles et arbres décisionnels, réunis dans une
-            interface pensée pour un accès rapide au lit du patient.
+            calculateurs de scores, outils de conversion et de calcul, et bientôt arbres
+            décisionnels, réunis dans une interface pensée pour un accès rapide au lit du patient.
           </p>
           <p className="mt-2">
-            Les scores actuellement disponibles reposent sur des critères publiés et largement
-            diffusés dans la littérature (voir la source citée sur chaque fiche). Les protocoles et
-            arbres décisionnels seront ajoutés au fur et à mesure, à partir de référentiels sourcés
-            (SFMU, HAS, sociétés savantes) fournis par l'équipe.
+            Les scores et outils actuellement disponibles reposent sur des critères et formules
+            publiés et largement diffusés dans la littérature (voir la source citée sur chaque
+            fiche). Les arbres décisionnels seront ajoutés au fur et à mesure, à partir de
+            référentiels sourcés (SFMU, HAS, sociétés savantes) fournis par l'équipe.
           </p>
         </div>
       </div>

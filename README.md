@@ -1,8 +1,8 @@
 # Kipu
 
 Aide-mémoire (web app / PWA) pour les professionnels de la médecine d'urgence : calculateurs de
-scores cliniques, et à terme protocoles et arbres décisionnels, réunis dans une interface pensée
-pour un accès rapide au lit du patient.
+scores cliniques, outils de conversion et de calcul, et à terme arbres décisionnels, réunis dans
+une interface pensée pour un accès rapide au lit du patient.
 
 **Statut : prototype à usage interne.** Voir l'avertissement dans l'app (page « À propos »).
 
@@ -46,11 +46,20 @@ calcul, sa fonction d'interprétation et sa source bibliographique (affichée da
 ajouter un score, créer un nouveau fichier sur ce modèle et l'enregistrer dans
 `src/lib/calculators/index.ts`.
 
-### Protocoles / Arbres décisionnels
+### Outils de conversion et de calcul (`src/lib/tools/`)
 
-Pages présentes dans la navigation mais marquées « Bientôt disponible » : ce contenu nécessite des
+Onglet « Calcul » : conversions d'unités et formules courantes, indépendantes des scores cliniques
+(pas de protocoles de service ici — ceux-ci varient trop selon pays/établissements pour être
+codés en dur). Même moteur que les calculateurs (`Calculator`, `CalculatorForm`, `CalculatorPage`),
+catégories dédiées `conversion` / `formule`. Actuellement : conversion glycémie (mmol/L ↔ g/L), QT
+corrigé (formule de Bazett), IMC. Pour ajouter un outil, créer un fichier sur le modèle de
+`src/lib/tools/bmi.ts` et l'enregistrer dans `src/lib/tools/index.ts`.
+
+### Arbres décisionnels
+
+Page présente dans la navigation mais marquée « Bientôt disponible » : ce contenu nécessite des
 référentiels sourcés (SFMU, HAS, sociétés savantes...) qui n'ont pas encore été fournis. Ne pas
-inventer de contenu clinique dans ces sections.
+inventer de contenu clinique dans cette section.
 
 ## Icônes
 

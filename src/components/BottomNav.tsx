@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 const items = [
   { to: "/", label: "Accueil", icon: HomeIcon, end: true },
   { to: "/scores", label: "Scores", icon: CalcIcon },
-  { to: "/protocoles", label: "Protocoles", icon: DocIcon },
+  { to: "/calcul", label: "Calcul", icon: ConvertIcon },
   { to: "/arbres", label: "Arbres", icon: TreeIcon },
   { to: "/favoris", label: "Favoris", icon: StarIcon },
 ];
@@ -48,11 +48,11 @@ function CalcIcon(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
-function DocIcon(props: React.SVGProps<SVGSVGElement>) {
+function ConvertIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" {...props}>
-      <path d="M7 3h7l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="currentColor" strokeWidth={1.8} strokeLinejoin="round" />
-      <path d="M9 12h6M9 16h6M9 8h3" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" />
+      <path d="M6 8h11.5M17.5 8 14 4.5M17.5 8 14 11.5" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M18 16H6.5M6.5 16 10 12.5M6.5 16 10 19.5" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

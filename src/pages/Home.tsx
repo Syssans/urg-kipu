@@ -1,16 +1,17 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { searchCalculators } from "../lib/calculators";
+import { searchAll } from "../lib/catalog";
 import { CalculatorListItem } from "../components/CalculatorListItem";
 import { Disclaimer } from "../components/Disclaimer";
 import { useFavorites } from "../lib/favorites";
 
 export function Home() {
   const [query, setQuery] = useState("");
-  const results = useMemo(() => searchCalculators(query), [query]);
+  const results = useMemo(() => searchAll(query), [query]);
   const { favorites } = useFavorites();
   const favCalcs = useMemo(
-    () => searchCalculators("").filter((c) => favorites.includes(c.id)),
+    () => searchAll("").filter((c) => favorites.includes(c.calc.id)),
     [favorites],
   );
 
@@ -29,7 +30,7 @@ export function Home() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Rechercher un score, un protocole…"
+          placeholder="Rechercher un score, un outil de calcul…"
           className="w-full rounded-2xl border border-border bg-surface py-3.5 pl-11 pr-4 text-base text-white outline-none placeholder:text-muted focus:border-accent-2"
         />
       </div>
@@ -37,8 +38,8 @@ export function Home() {
       {query.trim() ? (
         <div className="flex flex-col gap-2.5">
           <p className="text-sm text-muted">{results.length} résultat{results.length > 1 ? "s" : ""}</p>
-          {results.map((c) => (
-            <CalculatorListItem key={c.id} calc={c} />
+          {results.map((r) => (
+            <CalculatorListItem key={r.calc.id} calc={r.calc} basePath={r.basePath} />
           ))}
           {results.length === 0 && (
             <p className="rounded-xl border border-dashed border-border p-4 text-sm text-muted">
@@ -56,12 +57,12 @@ export function Home() {
               </TileIcon>
               <span className="text-xs font-medium text-slate-200">Scores</span>
             </Link>
-            <Link to="/protocoles" className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-surface py-5 active:bg-surface-2">
+            <Link to="/calcul" className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-surface py-5 active:bg-surface-2">
               <TileIcon>
-                <path d="M7 3h7l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="currentColor" strokeWidth={1.8} strokeLinejoin="round" />
-                <path d="M9 12h6M9 16h6M9 8h3" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" />
+                <path d="M6 8h11.5M17.5 8 14 4.5M17.5 8 14 11.5" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M18 16H6.5M6.5 16 10 12.5M6.5 16 10 19.5" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
               </TileIcon>
-              <span className="text-xs font-medium text-slate-200">Protocoles</span>
+              <span className="text-xs font-medium text-slate-200">Calcul</span>
             </Link>
             <Link to="/arbres" className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-surface py-5 active:bg-surface-2">
               <TileIcon>
@@ -77,8 +78,8 @@ export function Home() {
           {favCalcs.length > 0 && (
             <div className="flex flex-col gap-2.5">
               <h2 className="text-sm font-semibold text-slate-200">Favoris</h2>
-              {favCalcs.map((c) => (
-                <CalculatorListItem key={c.id} calc={c} />
+              {favCalcs.map((r) => (
+                <CalculatorListItem key={r.calc.id} calc={r.calc} basePath={r.basePath} />
               ))}
             </div>
           )}

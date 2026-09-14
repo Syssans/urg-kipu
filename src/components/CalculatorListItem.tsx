@@ -3,14 +3,14 @@ import type { Calculator } from "../lib/calculators/types";
 import { CATEGORY_LABELS } from "../lib/calculators/types";
 import { useFavorites } from "../lib/favorites";
 
-export function CalculatorListItem({ calc }: { calc: Calculator }) {
+export function CalculatorListItem({ calc, basePath = "/scores" }: { calc: Calculator; basePath?: "/scores" | "/calcul" }) {
   const { isFavorite, toggleFavorite } = useFavorites();
   const fav = isFavorite(calc.id);
 
   return (
     <div className="flex items-center gap-2">
       <Link
-        to={`/scores/${calc.id}`}
+        to={`${basePath}/${calc.id}`}
         className="flex-1 rounded-xl border border-border bg-surface px-4 py-3.5 active:bg-surface-2"
       >
         <div className="flex items-center justify-between gap-2">

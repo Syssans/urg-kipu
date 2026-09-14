@@ -1,11 +1,11 @@
 import { Header } from "../components/Header";
 import { CalculatorListItem } from "../components/CalculatorListItem";
-import { searchCalculators } from "../lib/calculators";
+import { searchAll } from "../lib/catalog";
 import { useFavorites } from "../lib/favorites";
 
 export function Favorites() {
   const { favorites } = useFavorites();
-  const items = searchCalculators("").filter((c) => favorites.includes(c.id));
+  const items = searchAll("").filter((r) => favorites.includes(r.calc.id));
 
   return (
     <div>
@@ -13,10 +13,10 @@ export function Favorites() {
       <div className="mx-auto flex max-w-xl flex-col gap-2.5 px-4 pb-24 pt-4">
         {items.length === 0 ? (
           <p className="rounded-xl border border-dashed border-border p-4 text-sm text-muted">
-            Aucun favori pour l'instant. Ouvrez un score et appuyez sur l'étoile pour l'épingler ici.
+            Aucun favori pour l'instant. Ouvrez un score ou un outil et appuyez sur l'étoile pour l'épingler ici.
           </p>
         ) : (
-          items.map((c) => <CalculatorListItem key={c.id} calc={c} />)
+          items.map((r) => <CalculatorListItem key={r.calc.id} calc={r.calc} basePath={r.basePath} />)
         )}
       </div>
     </div>
