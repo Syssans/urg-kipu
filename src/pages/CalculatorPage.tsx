@@ -35,7 +35,11 @@ function CalculatorPageInner({
 }) {
   const [values, setValues] = useState<Values>(() => defaultValues(calc.fields));
 
-  const missingRequired = (calc.requiredNumberFieldIds ?? []).some((id) => values[id] === undefined);
+  const missingFieldIds = (calc.requiredNumberFieldIds ?? []).filter((id) => values[id] === undefined);
+  const missingRequired = missingFieldIds.length > 0;
+  const missingFieldLabels = missingFieldIds
+    .map((id) => calc.fields.find((f) => f.id === id)?.label)
+    .filter((label): label is string => Boolean(label));
 
   const results = useMemo(() => {
     if (missingRequired) return null;
@@ -70,18 +74,6 @@ function CalculatorPageInner({
           </button>
         </div>
 
-        <div className="-mx-4 border-y border-border bg-bg/95 px-4 py-3">
-          {missingRequired ? (
-            <p className="text-sm text-muted">Renseignez tous les champs numériques pour obtenir un résultat.</p>
-          ) : (
-            <div className="flex flex-col gap-2.5">
-              {results!.map((r, i) => (
-                <ResultCard key={i} result={r} />
-              ))}
-            </div>
-          )}
-        </div>
-
         <CalculatorForm
           fields={calc.fields}
           values={values}
@@ -95,6 +87,29 @@ function CalculatorPageInner({
         >
           Réinitialiser
         </button>
+
+        <div className="flex flex-col gap-2.5 border-t border-border pt-5">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">Résultat</h3>
+          {missingRequired ? (
+            <div className="flex items-start gap-2.5 rounded-2xl border border-red-500/30 bg-red-500/10 p-4">
+              <svg viewBox="0 0 24 24" fill="none" className="mt-0.5 h-5 w-5 shrink-0 text-red-400">
+                <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth={1.8} />
+                <path d="M12 8v5" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" />
+                <circle cx="12" cy="16" r="1" fill="currentColor" />
+              </svg>
+              <p className="text-sm leading-snug text-red-300">
+                Champ{missingFieldLabels.length > 1 ? "s" : ""} obligatoire{missingFieldLabels.length > 1 ? "s" : ""} manquant
+                {missingFieldLabels.length > 1 ? "s" : ""} : {missingFieldLabels.join(", ")}.
+              </p>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2.5">
+              {results!.map((r, i) => (
+                <ResultCard key={i} result={r} />
+              ))}
+            </div>
+          )}
+        </div>
 
         <div className="flex flex-col gap-1.5 border-t border-border pt-4 text-[13px] leading-snug text-muted">
           <p>
