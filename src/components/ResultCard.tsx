@@ -3,7 +3,7 @@ import { LEVEL_STYLES, type Interpretation } from "../lib/calculators/types";
 export function ResultCard({ result }: { result: Interpretation }) {
   const styles = LEVEL_STYLES[result.level];
   return (
-    <div className={`rounded-2xl border border-border p-4 ${styles.bg} ring-1 ${styles.ring}`}>
+    <div className={`rounded-2xl border border-border p-4 shadow-[0_0_36px_2px] ${styles.bg} ring-1 ${styles.ring} ${styles.glow}`}>
       <div className="flex items-center gap-2">
         <span className={`h-2.5 w-2.5 rounded-full ${styles.dot}`} />
         <span className={`text-sm font-semibold ${styles.text}`}>{result.title}</span>

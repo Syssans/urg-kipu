@@ -91,10 +91,10 @@ export function defaultValues(fields: Field[]): Values {
   return values;
 }
 
-export const LEVEL_STYLES: Record<Level, { bg: string; text: string; ring: string; dot: string }> = {
-  low: { bg: "bg-emerald-500/10", text: "text-emerald-400", ring: "ring-emerald-500/30", dot: "bg-emerald-400" },
-  moderate: { bg: "bg-amber-500/10", text: "text-amber-400", ring: "ring-amber-500/30", dot: "bg-amber-400" },
-  high: { bg: "bg-orange-500/10", text: "text-orange-400", ring: "ring-orange-500/30", dot: "bg-orange-400" },
-  critical: { bg: "bg-red-500/10", text: "text-red-400", ring: "ring-red-500/30", dot: "bg-red-400" },
-  info: { bg: "bg-zinc-400/10", text: "text-zinc-300", ring: "ring-zinc-400/30", dot: "bg-zinc-300" },
+export const LEVEL_STYLES: Record<Level, { bg: string; text: string; ring: string; dot: string; glow: string }> = {
+  low: { bg: "bg-emerald-500/10", text: "text-emerald-400", ring: "ring-emerald-500/30", dot: "bg-emerald-400", glow: "shadow-emerald-500/40" },
+  moderate: { bg: "bg-amber-500/10", text: "text-amber-400", ring: "ring-amber-500/30", dot: "bg-amber-400", glow: "shadow-amber-500/40" },
+  high: { bg: "bg-orange-500/10", text: "text-orange-400", ring: "ring-orange-500/30", dot: "bg-orange-400", glow: "shadow-orange-500/45" },
+  critical: { bg: "bg-red-500/10", text: "text-red-400", ring: "ring-red-500/30", dot: "bg-red-400", glow: "shadow-red-500/55" },
+  info: { bg: "bg-zinc-400/10", text: "text-zinc-300", ring: "ring-zinc-400/30", dot: "bg-zinc-300", glow: "shadow-zinc-400/30" },
 };

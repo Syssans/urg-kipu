@@ -23,6 +23,7 @@ function groupFields(fields: Field[]): { group: string | null; fields: Field[] }
 
 export function CalculatorForm({ fields, values, onChange, requiredFieldIds }: Props) {
   const groups = groupFields(fields);
+  const hasRequiredFields = (requiredFieldIds?.length ?? 0) > 0;
 
   return (
     <div className="flex flex-col gap-6">
@@ -31,15 +32,21 @@ export function CalculatorForm({ fields, values, onChange, requiredFieldIds }: P
           {group.group && (
             <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">{group.group}</h3>
           )}
-          {group.fields.map((field) => (
-            <FieldControl
-              key={field.id}
-              field={field}
-              value={values[field.id]}
-              onChange={(v) => onChange(field.id, v)}
-              required={requiredFieldIds?.includes(field.id) ?? false}
-            />
-          ))}
+          {group.fields.map((field) => {
+            const required = requiredFieldIds?.includes(field.id) ?? false;
+            const groupSaysOptional = group.group?.toLowerCase().includes("optionnel") ?? false;
+            return (
+              <FieldControl
+                key={field.id}
+                field={field}
+                value={values[field.id]}
+                onChange={(v) => onChange(field.id, v)}
+                required={required}
+                optional={hasRequiredFields && field.type === "number" && !required}
+                showOptionalTag={hasRequiredFields && field.type === "number" && !required && !groupSaysOptional}
+              />
+            );
+          })}
         </div>
       ))}
     </div>
@@ -51,11 +58,15 @@ function FieldControl({
   value,
   onChange,
   required,
+  optional,
+  showOptionalTag,
 }: {
   field: Field;
   value: number | undefined;
   onChange: (v: number | undefined) => void;
   required: boolean;
+  optional: boolean;
+  showOptionalTag: boolean;
 }) {
   if (field.type === "boolean") {
     const checked = (value ?? 0) === 1;
@@ -117,10 +128,11 @@ function FieldControl({
   // number
   const missing = required && value === undefined;
   return (
-    <div className="flex flex-col gap-2">
+    <div className={`flex flex-col gap-2 transition-opacity duration-150 ${optional ? "opacity-55 focus-within:opacity-100" : ""}`}>
       <label className="text-sm font-medium text-slate-200" htmlFor={field.id}>
         {field.label}
         {required && <span className="ml-1 text-red-400">*</span>}
+        {showOptionalTag && <span className="ml-1.5 text-xs font-normal text-muted">(optionnel)</span>}
       </label>
       <div className="flex items-center gap-2">
         <input

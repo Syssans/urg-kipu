@@ -134,11 +134,11 @@ export const coagulation: Calculator = {
   keywords: ["coagulation", "tp", "inr", "tca", "fibrinogene", "fibrinogène", "civd", "plaquettes"],
   summary: "Lecture du TP/INR, TCA, fibrinogène et plaquettes, avec score ISTH de CIVD si contexte évocateur.",
   fields: [
-    { type: "number", id: "inr", label: "INR", step: 0.01, group: "TP / TCA" },
-    { type: "number", id: "tpPercent", label: "TP", unit: "%", step: 1, group: "TP / TCA" },
-    { type: "number", id: "tcaRatio", label: "Ratio TCA (patient/témoin)", step: 0.01, group: "TP / TCA" },
     { type: "number", id: "fibrinogene", label: "Fibrinogène", unit: "g/L", step: 0.1, group: "Fibrinogène et plaquettes" },
     { type: "number", id: "plaquettes", label: "Plaquettes", unit: "G/L", step: 1, group: "Fibrinogène et plaquettes" },
+    { type: "number", id: "inr", label: "INR", step: 0.01, group: "TP / TCA (optionnel)" },
+    { type: "number", id: "tpPercent", label: "TP", unit: "%", step: 1, group: "TP / TCA (optionnel)" },
+    { type: "number", id: "tcaRatio", label: "Ratio TCA (patient/témoin)", step: 0.01, group: "TP / TCA (optionnel)" },
     {
       type: "boolean",
       id: "underlyingDisorder",
