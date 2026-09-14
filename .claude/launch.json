@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dev",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "export PATH=\"$PWD/.tools/node/bin:$PATH\" && npm run dev -- --host"],
+      "port": 5173
+    }
+  ]
+}
