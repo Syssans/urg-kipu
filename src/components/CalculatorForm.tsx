@@ -99,10 +99,11 @@ function FieldControl({
   }
 
   if (field.type === "select") {
+    const compact = field.options.length <= 3;
     return (
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-slate-200">{field.label}</label>
-        <div className="flex flex-col gap-2">
+        <div className={compact ? `grid gap-2 ${field.options.length === 2 ? "grid-cols-2" : "grid-cols-3"}` : "flex flex-col gap-2"}>
           {field.options.map((opt) => {
             const active = value === opt.value;
             return (
@@ -111,10 +112,12 @@ function FieldControl({
                 key={opt.label}
                 onClick={() => onChange(opt.value)}
                 aria-pressed={active}
-                className={`rounded-xl border px-4 py-3 text-left text-sm transition-all duration-150 ease-out ${
+                className={`rounded-xl border text-sm leading-snug transition-all duration-150 ease-out ${
+                  compact ? "flex min-h-[4.5rem] items-center justify-center p-2 text-center" : "px-4 py-3 text-left"
+                } ${
                   active
-                    ? "translate-x-1.5 border-accent-2/60 bg-accent-2/10 text-white"
-                    : "translate-x-0 border-border bg-surface text-slate-300 active:bg-surface-2"
+                    ? `${compact ? "-translate-y-1" : "translate-x-1.5"} border-accent-2/60 bg-accent-2/10 text-white`
+                    : `${compact ? "translate-y-0" : "translate-x-0"} border-border bg-surface text-slate-300 active:bg-surface-2`
                 }`}
               >
                 {opt.label}
