@@ -18,7 +18,7 @@ export function ToolsList() {
   return (
     <div>
       <Header title="Calcul" />
-      <div className="mx-auto flex max-w-xl flex-col gap-5 px-4 pb-24 pt-4">
+      <div className="mx-auto flex max-w-xl flex-col gap-5 px-4 pb-8 pt-4">
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}

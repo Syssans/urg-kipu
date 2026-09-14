@@ -53,7 +53,7 @@ function CalculatorPageInner({
   return (
     <div>
       <Header title={calc.shortName} back />
-      <div className="mx-auto flex max-w-xl flex-col gap-6 px-4 pb-28 pt-4">
+      <div className="mx-auto flex max-w-xl flex-col gap-6 px-4 pb-8 pt-4">
         <div className="flex items-start justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold text-white">{calc.name}</h2>

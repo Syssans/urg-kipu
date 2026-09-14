@@ -5,7 +5,7 @@ export function About() {
   return (
     <div>
       <Header title="À propos" back />
-      <div className="mx-auto flex max-w-xl flex-col gap-4 px-4 pb-24 pt-4">
+      <div className="mx-auto flex max-w-xl flex-col gap-4 px-4 pb-8 pt-4">
         <Disclaimer />
         <div className="rounded-2xl border border-border bg-surface p-4 text-sm leading-relaxed text-muted">
           <p className="mb-2 font-semibold text-slate-200">À propos de Kipu</p>

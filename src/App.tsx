@@ -13,26 +13,28 @@ import { getTool } from "./lib/tools";
 export default function App() {
   return (
     <HashRouter>
-      <div className="min-h-svh bg-bg">
+      <div className="flex h-dvh flex-col bg-bg">
         <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/scores" element={<ScoresList />} />
-          <Route path="/scores/:id" element={<CalculatorPage />} />
-          <Route path="/calcul" element={<ToolsList />} />
-          <Route path="/calcul/:id" element={<CalculatorPage lookup={getTool} />} />
-          <Route path="/favoris" element={<Favorites />} />
-          <Route path="/a-propos" element={<About />} />
-          <Route
-            path="/arbres"
-            element={
-              <ComingSoon
-                title="Arbres décisionnels"
-                description="Les arbres décisionnels cliniques seront ajoutés ici une fois les référentiels sourcés réunis."
-              />
-            }
-          />
-        </Routes>
+        <div id="scroll-area" className="flex-1 overflow-y-auto">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/scores" element={<ScoresList />} />
+            <Route path="/scores/:id" element={<CalculatorPage />} />
+            <Route path="/calcul" element={<ToolsList />} />
+            <Route path="/calcul/:id" element={<CalculatorPage lookup={getTool} />} />
+            <Route path="/favoris" element={<Favorites />} />
+            <Route path="/a-propos" element={<About />} />
+            <Route
+              path="/arbres"
+              element={
+                <ComingSoon
+                  title="Arbres décisionnels"
+                  description="Les arbres décisionnels cliniques seront ajoutés ici une fois les référentiels sourcés réunis."
+                />
+              }
+            />
+          </Routes>
+        </div>
         <BottomNav />
       </div>
     </HashRouter>
