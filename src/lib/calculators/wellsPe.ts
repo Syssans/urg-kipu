@@ -25,20 +25,11 @@ export const wellsPe: Calculator = {
     (v.hemoptysis ?? 0) * 1 +
     (v.cancer ?? 0) * 1,
   interpret: (score) => {
-    const threeTier =
-      score < 2
-        ? { title: "Probabilité clinique faible", level: "low" as const }
-        : score <= 6
-        ? { title: "Probabilité clinique intermédiaire", level: "moderate" as const }
-        : { title: "Probabilité clinique élevée", level: "high" as const };
     const twoTier =
       score <= 4
         ? { title: "EP peu probable (≤ 4)", level: "low" as const, detail: "D-dimères recommandés en première intention." }
         : { title: "EP probable (> 4)", level: "high" as const, detail: "Imagerie (angio-TDM thoracique) recommandée d'emblée." };
-    return [
-      { title: threeTier.title, level: threeTier.level, scoreLabel: `${score} pts (3 classes)` },
-      { title: twoTier.title, level: twoTier.level, scoreLabel: `${score} pts (2 classes)`, detail: twoTier.detail },
-    ];
+    return [{ title: twoTier.title, level: twoTier.level, scoreLabel: `${score} pts`, detail: twoTier.detail }];
   },
   source: "Wells et al., Ann Intern Med 2001 / Thromb Haemost 2000.",
 };
