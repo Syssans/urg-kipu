@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import type { Field, Values } from "../lib/calculators/types";
 
 interface Props {
@@ -88,6 +89,76 @@ export function CalculatorForm({ fields, values, onChange, requiredFieldIds }: P
         </div>
       ))}
     </div>
+  );
+}
+
+// Plain <input type="number"> rejects a comma entirely (its value must always use
+// "." per the HTML spec), but French mobile keypads for inputMode="decimal" only
+// offer a comma — so typing a decimal on phone was silently impossible. This uses
+// type="text" instead and normalizes "," to "." itself, keeping the numeric keypad
+// via inputMode while accepting whatever separator the keyboard actually offers.
+function NumberInput({
+  id,
+  value,
+  onChange,
+  placeholder,
+  missing,
+}: {
+  id: string;
+  value: number | undefined;
+  onChange: (v: number | undefined) => void;
+  placeholder: string;
+  missing: boolean;
+}) {
+  const [raw, setRaw] = useState(value !== undefined ? String(value) : "");
+
+  useEffect(() => {
+    const parsed = raw === "" ? undefined : Number(raw.replace(",", "."));
+    if (parsed !== value) {
+      setRaw(value !== undefined ? String(value) : "");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+
+  const handleChange = (text: string) => {
+    if (!/^-?[0-9]*[.,]?[0-9]*$/.test(text)) return;
+    setRaw(text);
+    if (text === "") {
+      onChange(undefined);
+      return;
+    }
+    const normalized = text.replace(",", ".");
+    if (normalized === "-" || normalized.endsWith(".")) return;
+    const parsed = Number(normalized);
+    if (!Number.isNaN(parsed)) onChange(parsed);
+  };
+
+  const handleBlur = () => {
+    // A fully-typed value was already committed on change; only clean up a
+    // value left dangling on a separator (e.g. "12," or "-") when leaving the field.
+    const normalized = raw.replace(",", ".");
+    if (normalized !== "-" && !normalized.endsWith(".")) return;
+    const cleaned = normalized.slice(0, -1);
+    const parsed = cleaned === "" ? undefined : Number(cleaned);
+    const final = parsed !== undefined && !Number.isNaN(parsed) ? parsed : undefined;
+    onChange(final);
+    setRaw(final !== undefined ? String(final) : "");
+  };
+
+  return (
+    <input
+      id={id}
+      type="text"
+      inputMode="decimal"
+      placeholder={placeholder}
+      value={raw}
+      onChange={(e) => handleChange(e.target.value)}
+      onBlur={handleBlur}
+      aria-invalid={missing}
+      className={`w-full rounded-xl border px-4 py-3 text-base text-white outline-none focus:border-accent-2 ${
+        missing ? "border-red-500 bg-red-500/10 placeholder:text-red-400/70" : "border-border bg-surface"
+      }`}
+    />
   );
 }
 
@@ -192,20 +263,12 @@ function FieldControl({
         {showOptionalTag && <span className="ml-1.5 text-xs font-normal text-muted">(optionnel)</span>}
       </label>
       <div className="flex items-center gap-2">
-        <input
+        <NumberInput
           id={field.id}
-          type="number"
-          inputMode="decimal"
-          min={field.min}
-          max={field.max}
-          step={field.step ?? 1}
+          value={value}
+          onChange={onChange}
           placeholder={field.placeholder ?? "—"}
-          value={value ?? ""}
-          onChange={(e) => onChange(e.target.value === "" ? undefined : Number(e.target.value))}
-          aria-invalid={missing}
-          className={`w-full rounded-xl border px-4 py-3 text-base text-white outline-none focus:border-accent-2 ${
-            missing ? "border-red-500 bg-red-500/10 placeholder:text-red-400/70" : "border-border bg-surface"
-          }`}
+          missing={missing}
         />
         {field.unit && <span className="shrink-0 text-sm text-muted">{field.unit}</span>}
       </div>
