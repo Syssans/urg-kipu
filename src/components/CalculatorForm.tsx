@@ -128,8 +128,9 @@ function FieldControl({
 
   // number
   const missing = required && value === undefined;
+  const dimmed = optional && value === undefined;
   return (
-    <div className={`flex flex-col gap-2 transition-opacity duration-150 ${optional ? "opacity-55 focus-within:opacity-100" : ""}`}>
+    <div className={`flex flex-col gap-2 transition-opacity duration-150 ${dimmed ? "opacity-55 focus-within:opacity-100" : ""}`}>
       <label className="text-sm font-medium text-slate-200" htmlFor={field.id}>
         {field.label}
         {required && <span className="ml-1 text-red-400">*</span>}

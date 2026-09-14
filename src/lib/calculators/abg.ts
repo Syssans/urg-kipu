@@ -57,8 +57,18 @@ function anionGapElevated(v: Values): boolean | undefined {
   return ag > AG_HIGH;
 }
 
+// A clearly elevated lactate already explains a metabolic acidosis on its own:
+// no need to work up the anion gap in that case.
+function hyperlactatemiaExplainsAcidosis(v: Values): boolean {
+  return v.lactate !== undefined && v.lactate >= 2;
+}
+
+function showAnionGapFields(v: Values): boolean {
+  return hasMetabolicAcidosisComponent(v) && !hyperlactatemiaExplainsAcidosis(v);
+}
+
 function showUrinaryGapFields(v: Values): boolean {
-  return hasMetabolicAcidosisComponent(v) && anionGapElevated(v) === false;
+  return showAnionGapFields(v) && anionGapElevated(v) === false;
 }
 
 function urinaryAnionGap(v: Values): number | undefined {
@@ -150,6 +160,18 @@ function anionGapFindings(v: Values): Interpretation[] {
   const findings: Interpretation[] = [];
   if (!hasMetabolicAcidosisComponent(v)) return findings;
 
+  if (hyperlactatemiaExplainsAcidosis(v)) {
+    const lactate = v.lactate!;
+    findings.push({
+      title: "Acidose métabolique expliquée par l'hyperlactatémie",
+      level: lactate > 4 ? "critical" : "moderate",
+      scoreLabel: `Lactate ${lactate} mmol/L`,
+      detail:
+        "L'hyperlactatémie suffit à expliquer l'acidose métabolique : le trou anionique n'apporte pas d'information supplémentaire ici. Rechercher et traiter la cause de l'hypoperfusion/hyperlactatémie.",
+    });
+    return findings;
+  }
+
   const ag = anionGap(v);
   if (ag === undefined) return findings;
 
@@ -157,12 +179,13 @@ function anionGapFindings(v: Values): Interpretation[] {
   const corrected = v.albumin !== undefined;
 
   if (elevated) {
+    const checklist = ["cétonémie", "fonction rénale", "bilan hépatique"];
+    if (v.lactate === undefined) checklist.unshift("lactates");
     findings.push({
       title: "Acidose métabolique à trou anionique augmenté",
       level: "critical",
       scoreLabel: `TA ${round1(ag)} mmol/L${corrected ? " (corrigé albumine)" : ""}`,
-      detail:
-        "Conseil : doser lactates, cétonémie, fonction rénale, bilan hépatique ; rechercher une prise de metformine, une diarrhée, une intoxication (méthanol, éthylène glycol, salicylés).",
+      detail: `Conseil : doser ${checklist.join(", ")} ; rechercher une prise de metformine, une diarrhée, une intoxication (méthanol, éthylène glycol, salicylés).`,
     });
 
     const hco3 = v.hco3!;
@@ -320,7 +343,7 @@ export const abg: Calculator = {
       unit: "mmol/L",
       step: 1,
       group: "Trou anionique — acidose métabolique détectée",
-      visibleIf: hasMetabolicAcidosisComponent,
+      visibleIf: showAnionGapFields,
     },
     {
       type: "number",
@@ -329,7 +352,7 @@ export const abg: Calculator = {
       unit: "mmol/L",
       step: 1,
       group: "Trou anionique — acidose métabolique détectée",
-      visibleIf: hasMetabolicAcidosisComponent,
+      visibleIf: showAnionGapFields,
     },
     {
       type: "number",
@@ -338,7 +361,7 @@ export const abg: Calculator = {
       unit: "g/L",
       step: 1,
       group: "Optionnel",
-      visibleIf: hasMetabolicAcidosisComponent,
+      visibleIf: showAnionGapFields,
     },
     {
       type: "number",
@@ -371,7 +394,7 @@ export const abg: Calculator = {
   requiredNumberFieldIds: ["ph", "pco2", "po2", "hco3"],
   getRecommendedFieldIds: (v) => {
     const ids: string[] = [];
-    if (hasMetabolicAcidosisComponent(v)) {
+    if (showAnionGapFields(v)) {
       ids.push("na", "cl");
       if (showUrinaryGapFields(v)) ids.push("naU", "clU", "kU");
     }
