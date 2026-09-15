@@ -7,9 +7,19 @@ const PCO2_HIGH = 45;
 const HCO3_LOW = 22;
 const HCO3_HIGH = 26;
 const AG_HIGH = 16;
+const PAO2_LOW = 80;
+const LACTATE_HIGH = 2;
 
 function round1(n: number) {
   return Math.round(n * 10) / 10;
+}
+
+function frNum(n: number): string {
+  return String(n).replace(".", ",");
+}
+
+function normRange(low: number, high: number): string {
+  return `${frNum(low)}–${frNum(high)}`;
 }
 
 interface Pattern {
@@ -60,7 +70,7 @@ function anionGapElevated(v: Values): boolean | undefined {
 // A clearly elevated lactate already explains a metabolic acidosis on its own:
 // no need to work up the anion gap in that case.
 function hyperlactatemiaExplainsAcidosis(v: Values): boolean {
-  return v.lactate !== undefined && v.lactate >= 2;
+  return v.lactate !== undefined && v.lactate >= LACTATE_HIGH;
 }
 
 function showAnionGapFields(v: Values): boolean {
@@ -110,25 +120,29 @@ function acidBaseFindings(v: Values): Interpretation[] {
   } else if (metAcidosis && !alkalemia) {
     const expected = round1(1.5 * hco3 + 8);
     findings.push({ title: "Trouble primaire : acidose métabolique", level: "high", scoreLabel: `HCO₃⁻ ${hco3} mmol/L` });
-    findings.push({ ...compensationFinding(pco2, expected - 2, expected + 2, expected, "PaCO₂", "compensation respiratoire (formule de Winter)"), role: "secondary" });
+    const comp = compensationFinding(pco2, expected - 2, expected + 2, expected, "PaCO₂", "compensation respiratoire (formule de Winter)");
+    if (comp) findings.push({ ...comp, role: "secondary" });
   } else if (metAlkalosis && !acidemia) {
     const expected = round1(40 + 0.7 * (hco3 - 24));
     findings.push({ title: "Trouble primaire : alcalose métabolique", level: "moderate", scoreLabel: `HCO₃⁻ ${hco3} mmol/L` });
-    findings.push({ ...compensationFinding(pco2, expected - 5, expected + 5, expected, "PaCO₂", "compensation respiratoire attendue"), role: "secondary" });
+    const comp = compensationFinding(pco2, expected - 5, expected + 5, expected, "PaCO₂", "compensation respiratoire attendue");
+    if (comp) findings.push({ ...comp, role: "secondary" });
   } else if (respAcidosis && !alkalemia) {
     const factor = chronic ? 0.35 : 0.1;
     const expected = round1(24 + factor * (pco2 - 40));
     const tol = chronic ? 4 : 3;
     findings.push({ title: `Trouble primaire : acidose respiratoire (${chronic ? "chronique" : "aiguë"})`, level: "high", scoreLabel: `PaCO₂ ${pco2} mmHg` });
-    findings.push({ ...compensationFinding(hco3, expected - tol, expected + tol, expected, "HCO₃⁻", `compensation métabolique attendue (${chronic ? "chronique" : "aiguë"})`), role: "secondary" });
+    const comp = compensationFinding(hco3, expected - tol, expected + tol, expected, "HCO₃⁻", `compensation métabolique attendue (${chronic ? "chronique" : "aiguë"})`);
+    if (comp) findings.push({ ...comp, role: "secondary" });
   } else if (respAlkalosis && !acidemia) {
     const factor = chronic ? 0.4 : 0.2;
     const expected = round1(24 - factor * (40 - pco2));
     const tol = chronic ? 4 : 3;
     findings.push({ title: `Trouble primaire : alcalose respiratoire (${chronic ? "chronique" : "aiguë"})`, level: "moderate", scoreLabel: `PaCO₂ ${pco2} mmHg` });
-    findings.push({ ...compensationFinding(hco3, expected - tol, expected + tol, expected, "HCO₃⁻", `compensation métabolique attendue (${chronic ? "chronique" : "aiguë"})`), role: "secondary" });
+    const comp = compensationFinding(hco3, expected - tol, expected + tol, expected, "HCO₃⁻", `compensation métabolique attendue (${chronic ? "chronique" : "aiguë"})`);
+    if (comp) findings.push({ ...comp, role: "secondary" });
   } else if (!acidemia && !alkalemia) {
-    findings.push({ title: "Équilibre acido-basique normal", level: "low" });
+    // Nothing more to add: the pH card above already says there's no disorder.
   } else {
     findings.push({
       title: "Profil non univoque",
@@ -140,15 +154,12 @@ function acidBaseFindings(v: Values): Interpretation[] {
   return findings;
 }
 
-function compensationFinding(measured: number, low: number, high: number, expected: number, paramLabel: string, contextLabel: string): Interpretation {
+// Returns undefined when compensation is appropriate — an expected,
+// uncomplicated compensation isn't worth its own card; only a surprising
+// one (suggesting a second, superimposed disorder) is.
+function compensationFinding(measured: number, low: number, high: number, expected: number, paramLabel: string, contextLabel: string): Interpretation | undefined {
   const inRange = measured >= low && measured <= high;
-  if (inRange) {
-    return {
-      title: "Compensation appropriée",
-      level: "low",
-      detail: `${paramLabel} mesuré (${round1(measured)}) cohérent avec la ${contextLabel} (attendu ≈ ${round1(expected)}, plage ${round1(low)}–${round1(high)}). Trouble probablement simple.`,
-    };
-  }
+  if (inRange) return undefined;
   const direction = measured > high ? "plus élevé" : "plus bas";
   return {
     title: "Compensation inattendue : trouble surajouté probable",
@@ -234,45 +245,46 @@ function oxygenationAndLactate(v: Values): Interpretation[] {
   const pao2 = v.po2;
 
   if (isArterial && pao2 !== undefined) {
-    let title = "";
-    let level: Level = "low";
-    if (pao2 >= 80) {
-      title = "Oxygénation normale";
-      level = "low";
-    } else if (pao2 >= 60) {
-      title = "Hypoxémie légère";
-      level = "moderate";
-    } else if (pao2 >= 40) {
-      title = "Hypoxémie modérée à sévère";
-      level = "high";
-    } else {
-      title = "Hypoxémie sévère";
-      level = "critical";
+    if (pao2 < PAO2_LOW) {
+      let title = "";
+      let level: Level = "moderate";
+      if (pao2 >= 60) {
+        title = "Hypoxémie légère";
+        level = "moderate";
+      } else if (pao2 >= 40) {
+        title = "Hypoxémie modérée à sévère";
+        level = "high";
+      } else {
+        title = "Hypoxémie sévère";
+        level = "critical";
+      }
+      findings.push({ title, level, scoreLabel: `PaO₂ ${pao2} mmHg`, role: "secondary" });
     }
-    findings.push({ title, level, scoreLabel: `PaO₂ ${pao2} mmHg`, role: "secondary" });
 
+    // Computed independently of the raw PaO2 check above: a PaO2 that looks
+    // normal can still reflect poor oxygenation once corrected for a high
+    // FiO2 (e.g. PaO2 85 mmHg under 100% FiO2 is severe ARDS territory).
     const fio2 = v.fio2;
     if (fio2 !== undefined && fio2 > 0) {
       const pf = round1(pao2 / (fio2 / 100));
-      let pfLevel: Level = "low";
-      let pfTitle = "Rapport PaO₂/FiO₂ normal";
-      if (pf < 100) {
-        pfTitle = "Rapport PaO₂/FiO₂ : atteinte sévère de l'oxygénation";
-        pfLevel = "critical";
-      } else if (pf < 200) {
-        pfTitle = "Rapport PaO₂/FiO₂ : atteinte modérée de l'oxygénation";
-        pfLevel = "high";
-      } else if (pf < 300) {
-        pfTitle = "Rapport PaO₂/FiO₂ : atteinte légère de l'oxygénation";
-        pfLevel = "moderate";
+      if (pf < 300) {
+        let pfLevel: Level = "moderate";
+        let pfTitle = "Rapport PaO₂/FiO₂ : atteinte légère de l'oxygénation";
+        if (pf < 100) {
+          pfTitle = "Rapport PaO₂/FiO₂ : atteinte sévère de l'oxygénation";
+          pfLevel = "critical";
+        } else if (pf < 200) {
+          pfTitle = "Rapport PaO₂/FiO₂ : atteinte modérée de l'oxygénation";
+          pfLevel = "high";
+        }
+        findings.push({
+          title: pfTitle,
+          level: pfLevel,
+          scoreLabel: `P/F ${pf}`,
+          detail: "Seuils issus de la définition de Berlin du SDRA (composante d'oxygénation uniquement).",
+          role: "secondary",
+        });
       }
-      findings.push({
-        title: pfTitle,
-        level: pfLevel,
-        scoreLabel: `P/F ${pf}`,
-        detail: "Seuils issus de la définition de Berlin du SDRA (composante d'oxygénation uniquement).",
-        role: "secondary",
-      });
     }
   } else if (!isArterial && pao2 !== undefined) {
     findings.push({
@@ -284,20 +296,16 @@ function oxygenationAndLactate(v: Values): Interpretation[] {
   }
 
   const lactate = v.lactate;
-  if (lactate !== undefined) {
-    let title = "Lactate normal";
-    let level: Level = "low";
-    let detail: string | undefined;
+  if (lactate !== undefined && lactate >= LACTATE_HIGH) {
+    let title = "Hyperlactatémie modérée";
+    let level: Level = "moderate";
+    let detail = "Évoquer hypoperfusion débutante, sepsis, effort intense, certains médicaments (metformine, adrénaline). À recontrôler selon le contexte.";
     if (lactate > 4) {
       title = "Hyperlactatémie sévère";
       level = "critical";
       detail = "Évoque une hypoperfusion tissulaire significative (choc, sepsis) ; facteur pronostique péjoratif. Rechercher et traiter la cause en urgence.";
-    } else if (lactate >= 2) {
-      title = "Hyperlactatémie modérée";
-      level = "moderate";
-      detail = "Évoquer hypoperfusion débutante, sepsis, effort intense, certains médicaments (metformine, adrénaline). À recontrôler selon le contexte.";
     }
-    const explainsAcidosis = lactate >= 2 && hasMetabolicAcidosisComponent(v);
+    const explainsAcidosis = hasMetabolicAcidosisComponent(v);
     if (explainsAcidosis) {
       detail = `${detail} Cette hyperlactatémie suffit à expliquer l'acidose métabolique observée : le trou anionique n'apporte pas d'information supplémentaire ici.`;
     }
@@ -349,11 +357,11 @@ export const abg: Calculator = {
         { label: "Chronique", value: 1 },
       ],
     },
-    { type: "number", id: "ph", label: "pH", step: 0.01 },
-    { type: "number", id: "pco2", label: "PaCO₂ (ou PvCO₂)", unit: "mmHg", step: 1 },
-    { type: "number", id: "po2", label: "PaO₂ (ou PvO₂)", unit: "mmHg", step: 1 },
-    { type: "number", id: "hco3", label: "Bicarbonates (HCO₃⁻)", unit: "mmol/L", step: 0.5 },
-    { type: "number", id: "lactate", label: "Lactate", unit: "mmol/L", step: 0.1, group: "Optionnel" },
+    { type: "number", id: "ph", label: "pH", step: 0.01, normText: normRange(PH_LOW, PH_HIGH) },
+    { type: "number", id: "pco2", label: "PaCO₂ (ou PvCO₂)", unit: "mmHg", step: 1, normText: normRange(PCO2_LOW, PCO2_HIGH) },
+    { type: "number", id: "po2", label: "PaO₂ (ou PvO₂)", unit: "mmHg", step: 1, normText: `≥ ${frNum(PAO2_LOW)} si artériel` },
+    { type: "number", id: "hco3", label: "Bicarbonates (HCO₃⁻)", unit: "mmol/L", step: 0.5, normText: normRange(HCO3_LOW, HCO3_HIGH) },
+    { type: "number", id: "lactate", label: "Lactate", unit: "mmol/L", step: 0.1, group: "Optionnel", normText: `< ${frNum(LACTATE_HIGH)}` },
     { type: "number", id: "fio2", label: "FiO₂", unit: "%", min: 21, max: 100, step: 1, group: "Optionnel", visibleIf: (v) => (v.mode ?? 0) === 0 },
     {
       type: "number",

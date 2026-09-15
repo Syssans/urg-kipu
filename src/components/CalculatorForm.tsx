@@ -265,6 +265,7 @@ function FieldControl({
           {field.label}
           {required && <span className="ml-1 text-red-400">*</span>}
           {showOptionalTag && <span className="ml-1.5 text-xs font-normal text-muted">(optionnel)</span>}
+          {field.normText && <span className="ml-1.5 text-xs font-normal italic text-muted">({field.normText})</span>}
         </label>
         <NumberInput
           id={field.id}
@@ -284,6 +285,7 @@ function FieldControl({
         {field.label}
         {required && <span className="ml-1 text-red-400">*</span>}
         {showOptionalTag && <span className="ml-1.5 text-xs font-normal text-muted">(optionnel)</span>}
+        {field.normText && <span className="ml-1.5 text-xs font-normal italic text-muted">({field.normText})</span>}
       </label>
       <div className="flex items-center gap-2">
         <NumberInput

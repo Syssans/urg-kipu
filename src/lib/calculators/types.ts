@@ -45,6 +45,10 @@ export interface NumberField {
   // full-width field — for single-value "type a number, get a result" tools
   // (unit converters) rather than multi-field clinical forms.
   compact?: boolean;
+  // Reference range shown in small gray italics next to the label (e.g.
+  // "7,35–7,45") — a quick at-a-glance normal, always visible regardless of
+  // whether the field has been filled in.
+  normText?: string;
 }
 
 export type Field = SelectField | BooleanField | NumberField;
