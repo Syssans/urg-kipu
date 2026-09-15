@@ -31,15 +31,15 @@ npm run preview  # prévisualiser le build
 
 ### Calculateurs et interprétateurs (`src/lib/calculators/`)
 
-16 outils reposant sur des critères publiés et largement utilisés en médecine d'urgence :
+15 outils reposant sur des critères publiés et largement utilisés en médecine d'urgence :
 
 - **Scores** : Glasgow (GCS), NIHSS, qSOFA, CURB-65, Wells EP, CHA₂DS₂-VASc, Centor/McIsaac,
   Canadian CT Head Rule, règles d'Ottawa (cheville/pied), échelle de Cushman (sevrage alcoolique),
   Child-Pugh (cirrhose).
 - **Interprétateurs biologiques** (catégorie « Biologie ») : gaz du sang (artériel/veineux,
   trouble acido-basique, compensation, trou anionique, delta ratio, oxygénation, lactate), LCR
-  (orientation méningite bactérienne/virale), ionogramme sanguin, ionogramme urinaire
-  (FENa/FEUrée, natriurèse), bilan de coagulation (dont score ISTH de CIVD).
+  (orientation méningite bactérienne/virale), ionogramme urinaire (FENa/FEUrée, natriurèse),
+  bilan de coagulation (dont score ISTH de CIVD).
 
 Chaque calculateur est défini dans un fichier dédié avec : ses champs de saisie, sa fonction de
 calcul, sa fonction d'interprétation et sa source bibliographique (affichée dans l'app). Pour

@@ -6,10 +6,11 @@ import { Splash } from "./components/Splash";
 import { Home } from "./pages/Home";
 import { ScoresList } from "./pages/ScoresList";
 import { ToolsList } from "./pages/ToolsList";
+import { TreesList } from "./pages/TreesList";
 import { CalculatorPage } from "./pages/CalculatorPage";
+import { DecisionTreePage } from "./pages/DecisionTreePage";
 import { Favorites } from "./pages/Favorites";
 import { About } from "./pages/About";
-import { ComingSoon } from "./pages/ComingSoon";
 import { getTool } from "./lib/tools";
 
 export default function App() {
@@ -29,15 +30,8 @@ export default function App() {
             <Route path="/calcul/:id" element={<CalculatorPage lookup={getTool} />} />
             <Route path="/favoris" element={<Favorites />} />
             <Route path="/a-propos" element={<About />} />
-            <Route
-              path="/arbres"
-              element={
-                <ComingSoon
-                  title="Arbres décisionnels"
-                  description="Les arbres décisionnels cliniques seront ajoutés ici une fois les référentiels sourcés réunis."
-                />
-              }
-            />
+            <Route path="/arbres" element={<TreesList />} />
+            <Route path="/arbres/:id" element={<DecisionTreePage />} />
           </Routes>
         </div>
         <BottomNav />

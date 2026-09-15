@@ -10,7 +10,6 @@ import { canadianCtHead } from "./canadianCtHead";
 import { ottawaAnkle } from "./ottawaAnkle";
 import { abg } from "./abg";
 import { csf } from "./csf";
-import { bloodIonogram } from "./bloodIonogram";
 import { urineIonogram } from "./urineIonogram";
 import { coagulation } from "./coagulation";
 import { cushman } from "./cushman";
@@ -28,7 +27,6 @@ export const calculators: Calculator[] = [
   ottawaAnkle,
   abg,
   csf,
-  bloodIonogram,
   urineIonogram,
   coagulation,
   cushman,
