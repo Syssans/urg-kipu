@@ -14,13 +14,19 @@
 html {
   color-scheme: dark;
   -webkit-tap-highlight-color: transparent;
+  height: 100%;
 }
 
 body {
+  height: 100%;
   background: var(--color-bg);
   color: #f4f4f5;
   font-family: var(--font-sans);
   overscroll-behavior-y: none;
+}
+
+#root {
+  height: 100%;
 }
 
 * {
