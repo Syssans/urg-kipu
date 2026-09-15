@@ -18,7 +18,7 @@ export function BottomNav() {
             to={item.to}
             end={item.end}
             className={({ isActive }) =>
-              `flex flex-1 flex-col items-center gap-0.5 rounded-full py-2 text-[11px] font-medium transition-colors duration-150 ${
+              `flex flex-1 flex-col items-center gap-0.5 rounded-full py-2 text-[11px] font-medium transition-all duration-150 active:scale-90 ${
                 isActive ? "bg-accent-2/15 text-accent-2" : "text-muted"
               }`
             }
