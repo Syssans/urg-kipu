@@ -21,6 +21,13 @@ export function About() {
             référentiels sourcés (SFMU, HAS, sociétés savantes) fournis par l'équipe.
           </p>
         </div>
+        <div className="rounded-2xl border border-border bg-surface p-4 text-sm leading-relaxed text-muted">
+          <p className="mb-2 font-semibold text-slate-200">Créateur</p>
+          <p>
+            Kipu est développé par <span className="text-slate-200">Anton Millien</span>, interne
+            en médecine d'urgence rattaché au CHU de Caen.
+          </p>
+        </div>
       </div>
     </div>
   );
