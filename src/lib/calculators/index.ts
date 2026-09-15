@@ -4,19 +4,17 @@ import { nihss } from "./nihss";
 import { qsofa } from "./qsofa";
 import { curb65 } from "./curb65";
 import { wellsPe } from "./wellsPe";
-import { wellsDvt } from "./wellsDvt";
-import { perc } from "./perc";
 import { cha2ds2vasc } from "./cha2ds2vasc";
-import { hasbled } from "./hasbled";
 import { centor } from "./centor";
 import { canadianCtHead } from "./canadianCtHead";
 import { ottawaAnkle } from "./ottawaAnkle";
-import { blatchford } from "./blatchford";
 import { abg } from "./abg";
 import { csf } from "./csf";
 import { bloodIonogram } from "./bloodIonogram";
 import { urineIonogram } from "./urineIonogram";
 import { coagulation } from "./coagulation";
+import { cushman } from "./cushman";
+import { childPugh } from "./childPugh";
 
 export const calculators: Calculator[] = [
   gcs,
@@ -24,19 +22,17 @@ export const calculators: Calculator[] = [
   qsofa,
   curb65,
   wellsPe,
-  wellsDvt,
-  perc,
   cha2ds2vasc,
-  hasbled,
   centor,
   canadianCtHead,
   ottawaAnkle,
-  blatchford,
   abg,
   csf,
   bloodIonogram,
   urineIonogram,
   coagulation,
+  cushman,
+  childPugh,
 ];
 
 export function getCalculator(id: string): Calculator | undefined {

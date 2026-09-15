@@ -31,11 +31,11 @@ npm run preview  # prévisualiser le build
 
 ### Calculateurs et interprétateurs (`src/lib/calculators/`)
 
-18 outils reposant sur des critères publiés et largement utilisés en médecine d'urgence :
+16 outils reposant sur des critères publiés et largement utilisés en médecine d'urgence :
 
-- **Scores** : Glasgow (GCS), NIHSS, qSOFA, CURB-65, Wells (EP et TVP), PERC, CHA₂DS₂-VASc,
-  HAS-BLED, Centor/McIsaac, Canadian CT Head Rule, règles d'Ottawa (cheville/pied),
-  Glasgow-Blatchford.
+- **Scores** : Glasgow (GCS), NIHSS, qSOFA, CURB-65, Wells EP, CHA₂DS₂-VASc, Centor/McIsaac,
+  Canadian CT Head Rule, règles d'Ottawa (cheville/pied), échelle de Cushman (sevrage alcoolique),
+  Child-Pugh (cirrhose).
 - **Interprétateurs biologiques** (catégorie « Biologie ») : gaz du sang (artériel/veineux,
   trouble acido-basique, compensation, trou anionique, delta ratio, oxygénation, lactate), LCR
   (orientation méningite bactérienne/virale), ionogramme sanguin, ionogramme urinaire
@@ -52,7 +52,8 @@ Onglet « Calcul » : conversions d'unités et formules courantes, indépendante
 (pas de protocoles de service ici — ceux-ci varient trop selon pays/établissements pour être
 codés en dur). Même moteur que les calculateurs (`Calculator`, `CalculatorForm`, `CalculatorPage`),
 catégories dédiées `conversion` / `formule`. Actuellement : conversion glycémie (mmol/L ↔ g/L), QT
-corrigé (formule de Bazett), IMC. Pour ajouter un outil, créer un fichier sur le modèle de
+corrigé (formule de Bazett), IMC, clairance de la créatinine (Cockcroft-Gault). Pour ajouter un
+outil, créer un fichier sur le modèle de
 `src/lib/tools/bmi.ts` et l'enregistrer dans `src/lib/tools/index.ts`.
 
 ### Arbres décisionnels

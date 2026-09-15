@@ -2,8 +2,9 @@ import type { Calculator } from "../calculators/types";
 import { glycemiaConversion } from "./glycemiaConversion";
 import { qtc } from "./qtc";
 import { bmi } from "./bmi";
+import { creatinineClearance } from "./creatinineClearance";
 
-export const tools: Calculator[] = [glycemiaConversion, qtc, bmi];
+export const tools: Calculator[] = [glycemiaConversion, qtc, bmi, creatinineClearance];
 
 export function getTool(id: string): Calculator | undefined {
   return tools.find((t) => t.id === id);
