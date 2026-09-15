@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Logo } from "./Logo";
 
 export function Splash({ onDone }: { onDone: () => void }) {
   const [fading, setFading] = useState(false);
@@ -19,11 +20,7 @@ export function Splash({ onDone }: { onDone: () => void }) {
         fading ? "opacity-0" : "opacity-100"
       }`}
     >
-      <svg viewBox="0 0 512 512" className="logo-in h-24 w-24">
-        <path d="M190 150 L190 362" stroke="#a78bfa" strokeWidth={56} strokeLinecap="round" />
-        <path d="M196 256 L348 150" stroke="#a78bfa" strokeWidth={56} strokeLinecap="round" />
-        <path d="M196 256 L348 362" stroke="#a78bfa" strokeWidth={56} strokeLinecap="round" />
-      </svg>
+      <Logo className="logo-in h-24 w-24" />
     </div>
   );
 }
