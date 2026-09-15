@@ -2,8 +2,8 @@ import type { Calculator } from "./types";
 
 export const centor: Calculator = {
   id: "centor-mcisaac",
-  name: "Score de Centor modifié (McIsaac)",
-  shortName: "Centor/McIsaac",
+  name: "Score de McIsaac",
+  shortName: "McIsaac",
   category: "infectiologie",
   keywords: ["centor", "mcisaac", "angine", "pharyngite", "streptocoque"],
   summary: "Probabilité d'angine à streptocoque du groupe A et pertinence d'un test/antibiothérapie.",

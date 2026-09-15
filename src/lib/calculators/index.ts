@@ -2,7 +2,7 @@ import type { Calculator } from "./types";
 import { gcs } from "./gcs";
 import { nihss } from "./nihss";
 import { qsofa } from "./qsofa";
-import { curb65 } from "./curb65";
+import { crb65 } from "./crb65";
 import { wellsPe } from "./wellsPe";
 import { cha2ds2vasc } from "./cha2ds2vasc";
 import { centor } from "./centor";
@@ -26,7 +26,7 @@ export const calculators: Calculator[] = [
   gcs,
   nihss,
   qsofa,
-  curb65,
+  crb65,
   wellsPe,
   cha2ds2vasc,
   centor,

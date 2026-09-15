@@ -33,10 +33,9 @@ npm run preview  # prévisualiser le build
 
 22 outils reposant sur des critères publiés et largement utilisés en médecine d'urgence :
 
-- **Scores** : Glasgow (GCS), NIHSS, qSOFA, CURB-65, Wells EP, score de Genève révisé simplifié,
-  CHA₂DS₂-VASc, ABCD², sPESI, Centor/McIsaac, Canadian CT Head Rule, règles d'Ottawa
-  (cheville/pied), ASIA (lésion médullaire), échelle de Cushman (sevrage alcoolique), Child-Pugh
-  (cirrhose).
+- **Scores** : Glasgow (GCS), NIHSS, qSOFA, CRB-65, Wells EP, score de Genève révisé simplifié,
+  CHA₂DS₂-VASc, ABCD², sPESI, McIsaac, Canadian CT Head Rule, règles d'Ottawa (cheville/pied),
+  ASIA (lésion médullaire), échelle de Cushman (sevrage alcoolique), Child-Pugh (cirrhose).
 - **Pédiatrie** : Glasgow pédiatrique, Apgar, Silverman-Andersen (détresse respiratoire
   néonatale).
 - **Interprétateurs biologiques** (catégorie « Biologie ») : gaz du sang (artériel/veineux,
