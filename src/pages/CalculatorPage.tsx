@@ -53,7 +53,7 @@ function CalculatorPageInner({
   return (
     <div>
       <Header title={calc.shortName} back />
-      <div className="mx-auto flex max-w-xl flex-col gap-6 px-4 pb-28 pt-4">
+      <div className="page-in mx-auto flex max-w-xl flex-col gap-6 px-4 pb-28 pt-4">
         <div className="flex items-start justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold text-white">{calc.name}</h2>
@@ -63,7 +63,7 @@ function CalculatorPageInner({
             type="button"
             aria-label={favorite ? "Retirer des favoris" : "Ajouter aux favoris"}
             onClick={onToggleFavorite}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border bg-surface active:bg-surface-2"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border bg-surface backdrop-blur-xl transition-transform duration-150 active:scale-90 active:bg-surface-2"
           >
             <svg viewBox="0 0 24 24" fill={favorite ? "#e11d2f" : "none"} className="h-5 w-5">
               <path
@@ -95,7 +95,7 @@ function CalculatorPageInner({
         <div className="flex flex-col gap-2.5 border-t border-border pt-5">
           <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">Résultat</h3>
           {missingRequired ? (
-            <div className="flex items-start gap-2.5 rounded-2xl border border-red-500/30 bg-red-500/10 p-4">
+            <div className="flex items-start gap-2.5 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 backdrop-blur-xl">
               <svg viewBox="0 0 24 24" fill="none" className="mt-0.5 h-5 w-5 shrink-0 text-red-400">
                 <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth={1.8} />
                 <path d="M12 8v5" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" />

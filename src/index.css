@@ -2,9 +2,11 @@
 
 @theme {
   --color-bg: #0a0a0b;
-  --color-surface: #141416;
-  --color-surface-2: #1e1e21;
-  --color-border: #313135;
+  /* Liquid Glass surfaces: translucent white-on-black tints instead of flat
+     opaque fills, meant to be paired with backdrop-blur on the element. */
+  --color-surface: rgb(255 255 255 / 0.07);
+  --color-surface-2: rgb(255 255 255 / 0.12);
+  --color-border: rgb(255 255 255 / 0.12);
   --color-accent: #e11d2f;
   --color-accent-2: #a78bfa;
   --color-muted: #9a9aa1;
@@ -46,4 +48,32 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 .safe-top {
   padding-top: env(safe-area-inset-top);
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.page-in {
+  animation: page-in 220ms ease-out;
+}
+
+@keyframes logo-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.logo-in {
+  animation: logo-in 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }

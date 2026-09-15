@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { BottomNav } from "./components/BottomNav";
 import { ScrollToTop } from "./components/ScrollToTop";
+import { Splash } from "./components/Splash";
 import { Home } from "./pages/Home";
 import { ScoresList } from "./pages/ScoresList";
 import { ToolsList } from "./pages/ToolsList";
@@ -11,10 +13,13 @@ import { ComingSoon } from "./pages/ComingSoon";
 import { getTool } from "./lib/tools";
 
 export default function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
   return (
     <HashRouter>
       <div className="relative flex h-dvh flex-col overflow-hidden bg-bg">
         <ScrollToTop />
+        {showSplash && <Splash onDone={() => setShowSplash(false)} />}
         <div id="scroll-area" className="flex-1 overflow-y-auto">
           <Routes>
             <Route path="/" element={<Home />} />

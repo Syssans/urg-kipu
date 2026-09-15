@@ -18,12 +18,12 @@ export function ToolsList() {
   return (
     <div>
       <Header title="Calcul" />
-      <div className="mx-auto flex max-w-xl flex-col gap-5 px-4 pb-28 pt-4">
+      <div className="page-in mx-auto flex max-w-xl flex-col gap-5 px-4 pb-28 pt-4">
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Filtrer…"
-          className="w-full rounded-2xl border border-border bg-surface px-4 py-3 text-base text-white outline-none placeholder:text-muted focus:border-accent-2"
+          className="w-full rounded-2xl border border-border bg-surface px-4 py-3 text-base text-white outline-none backdrop-blur-xl transition-colors duration-150 placeholder:text-muted focus:border-accent-2"
         />
         {byCategory.map(({ cat, items }) => (
           <div key={cat} className="flex flex-col gap-2.5">

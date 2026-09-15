@@ -11,14 +11,14 @@ const items = [
 export function BottomNav() {
   return (
     <nav className="absolute inset-x-0 bottom-0 z-40 px-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
-      <div className="mx-auto flex max-w-xl items-stretch justify-between gap-1 rounded-full border border-white/10 bg-surface/70 p-1.5 shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl">
+      <div className="mx-auto flex max-w-xl items-stretch justify-between gap-1 rounded-full border border-border bg-surface p-1.5 shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl">
         {items.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
             end={item.end}
             className={({ isActive }) =>
-              `flex flex-1 flex-col items-center gap-0.5 rounded-full py-2 text-[11px] font-medium transition-colors duration-150 ${
+              `flex flex-1 scale-100 flex-col items-center gap-0.5 rounded-full py-2 text-[11px] font-medium transition-all duration-150 active:scale-90 ${
                 isActive ? "bg-accent-2/15 text-accent-2" : "text-muted"
               }`
             }

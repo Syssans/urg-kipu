@@ -5,9 +5,9 @@ export function About() {
   return (
     <div>
       <Header title="À propos" back />
-      <div className="mx-auto flex max-w-xl flex-col gap-4 px-4 pb-28 pt-4">
+      <div className="page-in mx-auto flex max-w-xl flex-col gap-4 px-4 pb-28 pt-4">
         <Disclaimer />
-        <div className="rounded-2xl border border-border bg-surface p-4 text-sm leading-relaxed text-muted">
+        <div className="rounded-2xl border border-border bg-surface p-4 text-sm leading-relaxed text-muted backdrop-blur-xl">
           <p className="mb-2 font-semibold text-slate-200">À propos de Kipu</p>
           <p>
             Kipu est un aide-mémoire pour les professionnels de la médecine d'urgence :
@@ -21,7 +21,7 @@ export function About() {
             référentiels sourcés (SFMU, HAS, sociétés savantes) fournis par l'équipe.
           </p>
         </div>
-        <div className="rounded-2xl border border-border bg-surface p-4 text-sm leading-relaxed text-muted">
+        <div className="rounded-2xl border border-border bg-surface p-4 text-sm leading-relaxed text-muted backdrop-blur-xl">
           <p className="mb-2 font-semibold text-slate-200">Créateur</p>
           <p>
             Kipu est développé par <span className="text-slate-200">Anton Millien</span>, interne

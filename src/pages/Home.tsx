@@ -15,11 +15,8 @@ export function Home() {
   );
 
   return (
-    <div className="mx-auto flex max-w-xl flex-col gap-6 px-4 pb-28 pt-[calc(env(safe-area-inset-top)+1rem)]">
-      <div>
-        <p className="text-sm text-muted">Aide-mémoire</p>
-        <h1 className="text-2xl font-bold text-white">Kipu</h1>
-      </div>
+    <div className="page-in mx-auto flex max-w-xl flex-col gap-6 px-4 pb-28 pt-[calc(env(safe-area-inset-top)+1rem)]">
+      <h1 className="text-2xl font-bold text-white">Rechercher</h1>
 
       <div className="relative">
         <svg viewBox="0 0 24 24" fill="none" className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-muted">
@@ -30,7 +27,7 @@ export function Home() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Rechercher un score, un outil de calcul…"
-          className="w-full rounded-2xl border border-border bg-surface py-3.5 pl-11 pr-4 text-base text-white outline-none placeholder:text-muted focus:border-accent-2"
+          className="w-full rounded-2xl border border-border bg-surface py-3.5 pl-11 pr-4 text-base text-white outline-none backdrop-blur-xl transition-colors duration-150 placeholder:text-muted focus:border-accent-2"
         />
       </div>
 
@@ -49,21 +46,30 @@ export function Home() {
       ) : (
         <>
           <div className="grid grid-cols-3 gap-3">
-            <Link to="/scores" className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-surface py-5 active:bg-surface-2">
+            <Link
+              to="/scores"
+              className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-surface py-5 backdrop-blur-xl transition-transform duration-150 active:scale-[0.96] active:bg-surface-2"
+            >
               <TileIcon>
                 <rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" strokeWidth={1.8} />
                 <path d="M8 8h8M8 12h2M12 12h2M8 16h2M12 16h2" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" />
               </TileIcon>
               <span className="text-xs font-medium text-slate-200">Scores</span>
             </Link>
-            <Link to="/calcul" className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-surface py-5 active:bg-surface-2">
+            <Link
+              to="/calcul"
+              className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-surface py-5 backdrop-blur-xl transition-transform duration-150 active:scale-[0.96] active:bg-surface-2"
+            >
               <TileIcon>
                 <path d="M6 8h11.5M17.5 8 14 4.5M17.5 8 14 11.5" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M18 16H6.5M6.5 16 10 12.5M6.5 16 10 19.5" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
               </TileIcon>
               <span className="text-xs font-medium text-slate-200">Calcul</span>
             </Link>
-            <Link to="/arbres" className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-surface py-5 active:bg-surface-2">
+            <Link
+              to="/arbres"
+              className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-surface py-5 backdrop-blur-xl transition-transform duration-150 active:scale-[0.96] active:bg-surface-2"
+            >
               <TileIcon>
                 <circle cx="6" cy="6" r="2.2" stroke="currentColor" strokeWidth={1.8} />
                 <circle cx="18" cy="6" r="2.2" stroke="currentColor" strokeWidth={1.8} />

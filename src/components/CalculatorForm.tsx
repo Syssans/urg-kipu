@@ -157,7 +157,7 @@ function NumberInput({
       onChange={(e) => handleChange(e.target.value)}
       onBlur={handleBlur}
       aria-invalid={missing}
-      className={`rounded-xl border px-4 py-3 text-white outline-none focus:border-accent-2 ${
+      className={`rounded-xl border px-4 py-3 text-white outline-none backdrop-blur-xl transition-colors duration-150 focus:border-accent-2 ${
         centered ? "w-32 text-center text-lg" : "w-full text-base"
       } ${missing ? "border-red-500 bg-red-500/10 placeholder:text-red-400/70" : "border-border bg-surface"}`}
     />
@@ -186,7 +186,7 @@ function FieldControl({
         type="button"
         onClick={() => onChange(checked ? 0 : 1)}
         aria-pressed={checked}
-        className={`flex items-center gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition-all duration-150 ease-out ${
+        className={`flex items-center gap-3 rounded-xl border px-4 py-3.5 text-left text-sm backdrop-blur-xl transition-all duration-150 ease-out ${
           checked
             ? "translate-x-1.5 border-accent-2/60 bg-accent-2/10 text-white"
             : "translate-x-0 border-border bg-surface text-slate-200 active:bg-surface-2"
@@ -226,7 +226,7 @@ function FieldControl({
                 key={opt.label}
                 onClick={() => onChange(opt.value)}
                 aria-pressed={active}
-                className={`rounded-lg border leading-snug transition-all duration-150 ease-out ${
+                className={`rounded-lg border leading-snug backdrop-blur-xl transition-all duration-150 ease-out ${
                   compact
                     ? "flex min-h-[2.5rem] items-center justify-center p-1 text-center text-xs"
                     : showPoints

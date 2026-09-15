@@ -12,7 +12,7 @@ export function Disclaimer({ compact }: { compact?: boolean }) {
     );
   }
   return (
-    <div className="rounded-2xl border border-border bg-surface p-4 text-sm leading-relaxed text-muted">
+    <div className="rounded-2xl border border-border bg-surface p-4 text-sm leading-relaxed text-muted backdrop-blur-xl">
       <p className="mb-2 font-semibold text-slate-200">Avertissement</p>
       <p>
         Cette application est un aide-mémoire destiné à des professionnels de santé formés. Les

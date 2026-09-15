@@ -11,7 +11,7 @@ export function CalculatorListItem({ calc, basePath = "/scores" }: { calc: Calcu
     <div className="flex items-center gap-2">
       <Link
         to={`${basePath}/${calc.id}`}
-        className="flex-1 rounded-xl border border-border bg-surface px-4 py-3.5 active:bg-surface-2"
+        className="flex-1 rounded-xl border border-border bg-surface px-4 py-3.5 backdrop-blur-xl transition-transform duration-150 active:scale-[0.98] active:bg-surface-2"
       >
         <div className="flex items-center justify-between gap-2">
           <span className="font-medium text-white">{calc.shortName}</span>
@@ -25,7 +25,7 @@ export function CalculatorListItem({ calc, basePath = "/scores" }: { calc: Calcu
         type="button"
         aria-label={fav ? "Retirer des favoris" : "Ajouter aux favoris"}
         onClick={() => toggleFavorite(calc.id)}
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border bg-surface active:bg-surface-2"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border bg-surface backdrop-blur-xl transition-transform duration-150 active:scale-90 active:bg-surface-2"
       >
         <svg viewBox="0 0 24 24" fill={fav ? "#e11d2f" : "none"} className="h-5 w-5">
           <path
