@@ -13,7 +13,7 @@ import { getTool } from "./lib/tools";
 export default function App() {
   return (
     <HashRouter>
-      <div className="flex h-dvh flex-col bg-bg">
+      <div className="relative flex h-dvh flex-col overflow-hidden bg-bg">
         <ScrollToTop />
         <div id="scroll-area" className="flex-1 overflow-y-auto">
           <Routes>
