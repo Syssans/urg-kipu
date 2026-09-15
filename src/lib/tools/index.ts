@@ -3,8 +3,9 @@ import { glycemiaConversion } from "./glycemiaConversion";
 import { qtc } from "./qtc";
 import { bmi } from "./bmi";
 import { creatinineClearance } from "./creatinineClearance";
+import { correctedSodium } from "./correctedSodium";
 
-export const tools: Calculator[] = [glycemiaConversion, qtc, bmi, creatinineClearance];
+export const tools: Calculator[] = [glycemiaConversion, qtc, bmi, creatinineClearance, correctedSodium];
 
 export function getTool(id: string): Calculator | undefined {
   return tools.find((t) => t.id === id);

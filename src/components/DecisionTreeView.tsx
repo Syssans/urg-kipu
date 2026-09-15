@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import type { DecisionTree, TreeNode } from "../lib/trees/types";
+import { Link } from "react-router-dom";
+import type { DecisionTree, TreeLink, TreeNode } from "../lib/trees/types";
 
 interface PathStep {
   nodeId: string;
@@ -56,6 +57,20 @@ export function DecisionTreeView({ tree }: { tree: DecisionTree }) {
   );
 }
 
+function NodeLink({ link }: { link: TreeLink }) {
+  return (
+    <Link
+      to={link.to}
+      className="mt-2 flex items-center gap-1.5 text-[13px] font-medium text-accent-2 underline underline-offset-2"
+    >
+      {link.label}
+      <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5">
+        <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </Link>
+  );
+}
+
 function NodeCard({
   node,
   chosenIndex,
@@ -78,6 +93,7 @@ function NodeCard({
           ))}
         </ul>
         {node.detail && <p className="mt-2.5 text-[13px] leading-snug text-muted">{node.detail}</p>}
+        {node.link && <NodeLink link={node.link} />}
       </div>
     );
   }
@@ -86,6 +102,8 @@ function NodeCard({
     <div className="card-in w-[82vw] max-w-sm shrink-0 rounded-2xl border border-border bg-surface p-4 backdrop-blur-xl">
       <p className="text-sm font-semibold text-white">{node.title}</p>
       {node.subtitle && <p className="mt-0.5 text-xs text-muted">{node.subtitle}</p>}
+      {node.detail && <p className="mt-1.5 text-[13px] leading-snug text-muted">{node.detail}</p>}
+      {node.link && <NodeLink link={node.link} />}
       <div className="mt-3 flex flex-col gap-2">
         {node.options.map((opt, i) => {
           const active = chosenIndex === i;

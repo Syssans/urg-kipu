@@ -4,7 +4,7 @@ export const dysnatremia: DecisionTree = {
   id: "dysnatremie",
   name: "Diagnostic d'une dysnatrémie",
   shortName: "Dysnatrémie",
-  summary: "Démarche rapide devant une hypo- ou une hypernatrémie.",
+  summary: "Orientation étiologique en 2 clics à partir de ce qu'on a déjà au lit du patient : natrémie et examen clinique.",
   rootId: "natremie",
   nodes: {
     natremie: {
@@ -12,117 +12,69 @@ export const dysnatremia: DecisionTree = {
       id: "natremie",
       title: "Natrémie ?",
       options: [
-        { label: "Hyponatrémie (< 135 mmol/L)", next: "hypo-osmolalite" },
+        { label: "Hyponatrémie (< 135 mmol/L)", next: "hypo-volemie" },
         { label: "Hypernatrémie (> 145 mmol/L)", next: "hyper-volemie" },
       ],
     },
 
-    "hypo-osmolalite": {
-      type: "question",
-      id: "hypo-osmolalite",
-      title: "Osmolalité plasmatique ?",
-      subtitle: "Confirmer une hyponatrémie hypotonique vraie",
-      options: [
-        { label: "Normale ou élevée (> 280 mOsm/kg)", next: "leaf-hypo-fausse" },
-        { label: "Basse (< 280 mOsm/kg)", next: "hypo-osmolalite-urinaire" },
-      ],
-    },
-    "hypo-osmolalite-urinaire": {
-      type: "question",
-      id: "hypo-osmolalite-urinaire",
-      title: "Osmolalité urinaire ?",
-      subtitle: "Hyponatrémie hypotonique confirmée",
-      options: [
-        { label: "< 100 mOsm/kg", next: "leaf-hypo-polydipsie" },
-        { label: "> 100 mOsm/kg", next: "hypo-volemie" },
-      ],
-    },
     "hypo-volemie": {
       type: "question",
       id: "hypo-volemie",
       title: "Statut volémique clinique ?",
+      subtitle: "Pli cutané, TA/FC, œdèmes — pas besoin d'osmolalité",
+      detail: "Glycémie élevée ? Corrige la natrémie sans osmolalité :",
+      link: { label: "Calculer la natrémie corrigée", to: "/calcul/natremie-corrigee" },
       options: [
         { label: "Hypovolémie (hypoTA, tachycardie, pli cutané)", next: "leaf-hypo-hypovolemie" },
         { label: "Euvolémie", next: "leaf-hypo-siadh" },
         { label: "Hypervolémie (œdèmes, prise de poids)", next: "leaf-hypo-hypervolemie" },
       ],
     },
-
-    "leaf-hypo-fausse": {
-      type: "leaf",
-      id: "leaf-hypo-fausse",
-      title: "Hyponatrémie non hypotonique",
-      items: ["Hyperprotidémie (fausse hyponatrémie)", "Hyperlipidémie (fausse hyponatrémie)", "Hyperglycémie", "Mannitol"],
-      detail: "Hyperprotidémie/hyperlipidémie : erreur de mesure, natrémie réelle normale. Hyperglycémie/mannitol : attraction réelle d'eau vers le secteur extracellulaire.",
-    },
-    "leaf-hypo-polydipsie": {
-      type: "leaf",
-      id: "leaf-hypo-polydipsie",
-      title: "Excrétion rénale d'eau adaptée",
-      items: ["Potomanie (apports > 10 L/j)", "Apports osmolaires faibles (« tea and toast »)", "Reset osmostat (grossesse)"],
-    },
     "leaf-hypo-hypovolemie": {
       type: "leaf",
       id: "leaf-hypo-hypovolemie",
       title: "Hyponatrémie hypovolémique",
       items: ["Pertes digestives", "Pertes cutanées", "Diurétiques", "Insuffisance surrénale"],
-      detail: "Natriurèse généralement < 30 mmol/L, sauf prise de diurétiques ou insuffisance surrénale.",
+      detail: "Si natriurèse disponible : NaU < 30 mmol/L en faveur de pertes extra-rénales ; NaU > 30 en faveur de pertes rénales (diurétiques, insuffisance surrénale).",
     },
     "leaf-hypo-siadh": {
       type: "leaf",
       id: "leaf-hypo-siadh",
-      title: "SIADH — cause la plus fréquente",
-      items: ["Atteinte du SNC (infection, AVC, traumatisme)", "Pathologie pulmonaire", "Postopératoire", "Médicaments (carbamazépine, ISRS, halopéridol)", "Néoplasie", "Endocrinopathie"],
-      detail: "À confirmer : natriurèse > 30 mmol/L, fonctions thyroïdienne et surrénalienne normales, uricémie souvent basse (< 240 µmol/L).",
+      title: "SIADH — 1ʳᵉ cause à évoquer",
+      items: ["Atteinte du SNC (infection, AVC, traumatisme)", "Pathologie pulmonaire", "Postopératoire, douleur, nausée", "Médicaments (carbamazépine, ISRS, halopéridol)", "Néoplasie"],
+      detail: "Alternative si polyurie + gros volumes bus ou apports alimentaires très pauvres : potomanie / apports osmolaires faibles (« tea and toast »).",
     },
     "leaf-hypo-hypervolemie": {
       type: "leaf",
       id: "leaf-hypo-hypervolemie",
       title: "Hyponatrémie hypervolémique",
       items: ["Insuffisance cardiaque", "Cirrhose hépatique", "Syndrome néphrotique", "Insuffisance rénale avancée"],
-      detail: "Excès d'eau et de sodium, avec excès d'eau supérieur à l'excès de sodium.",
     },
 
     "hyper-volemie": {
       type: "question",
       id: "hyper-volemie",
       title: "Statut volémique clinique ?",
-      subtitle: "Hypernatrémie confirmée (> 145 mmol/L, osmolalité > 300 mOsm/kg)",
+      subtitle: "Hypernatrémie = perte d'eau nette, toujours par défaut de soif ou d'accès à l'eau",
       options: [
-        { label: "Déshydratation globale (extra- + intracellulaire)", next: "hyper-natriurese" },
-        { label: "Déshydratation intracellulaire isolée", next: "leaf-hyper-dic" },
+        { label: "Déshydratation globale (EC + IC)", next: "leaf-hyper-globale" },
+        { label: "Déshydratation intracellulaire isolée (EC normal)", next: "leaf-hyper-dic" },
         { label: "Hyperhydratation extracellulaire (excès de Na)", next: "leaf-hyper-hec" },
       ],
     },
-    "hyper-natriurese": {
-      type: "question",
-      id: "hyper-natriurese",
-      title: "Natriurèse ?",
-      subtitle: "Déshydratation globale",
-      options: [
-        { label: "< 20 mmol/L", next: "leaf-hyper-extrarenal" },
-        { label: "> 20 mmol/L", next: "leaf-hyper-renal" },
-      ],
-    },
-
-    "leaf-hyper-extrarenal": {
+    "leaf-hyper-globale": {
       type: "leaf",
-      id: "leaf-hyper-extrarenal",
-      title: "Pertes extra-rénales",
-      items: ["Pertes digestives (diarrhée)", "Pertes cutanées (brûlures, chaleur)", "Pertes respiratoires (hyperventilation, fièvre)"],
-    },
-    "leaf-hyper-renal": {
-      type: "leaf",
-      id: "leaf-hyper-renal",
-      title: "Pertes rénales",
-      items: ["Diurèse osmotique (hyperglycémie, mannitol)", "Diurétiques", "Insuffisance surrénale"],
+      id: "leaf-hyper-globale",
+      title: "Déshydratation globale",
+      items: ["Pertes digestives (diarrhée)", "Pertes cutanées (brûlures, chaleur)", "Pertes respiratoires (hyperventilation, fièvre)", "Diurèse osmotique (hyperglycémie, mannitol)", "Diurétiques"],
+      detail: "Si natriurèse disponible : NaU < 20 mmol/L en faveur de pertes extra-rénales ; NaU > 20 en faveur de pertes rénales (diurèse osmotique, diurétiques, insuffisance surrénale).",
     },
     "leaf-hyper-dic": {
       type: "leaf",
       id: "leaf-hyper-dic",
       title: "Déshydratation intracellulaire isolée",
       items: ["Diabète insipide central ou néphrogénique (polyurie, urines diluées)", "Pertes insensibles (fièvre, hyperventilation)", "Carence d'apport en eau (personne âgée, trouble de conscience, nourrisson)"],
-      detail: "Diabète insipide : test de restriction hydrique puis épreuve à la desmopressine (réponse = central, absence de réponse = néphrogénique).",
+      detail: "Diabète insipide : test de restriction hydrique puis épreuve à la desmopressine (réponse = central, absence de réponse = néphrogénique) — bilan spécialisé, pas en urgence immédiate sauf déshydratation sévère.",
     },
     "leaf-hyper-hec": {
       type: "leaf",
@@ -131,7 +83,7 @@ export const dysnatremia: DecisionTree = {
       items: ["Apports iatrogènes de sérum salé hypertonique", "Bicarbonate de sodium hypertonique", "Hyperaldostéronisme"],
     },
   },
-  source: "D'après manuel.cuen.fr/hyponatremie-hypernatremie (Collège Universitaire des Enseignants de Néphrologie).",
+  source: "D'après manuel.cuen.fr/hyponatremie-hypernatremie (Collège Universitaire des Enseignants de Néphrologie), simplifié pour un usage rapide au lit du patient.",
   notes:
     "Hyponatrémie : vitesse de correction ≤ 10 mmol/L les premières 24h (≤ 8 mmol/L la 2ᵉ 24h, ≤ 18 mmol/L/48h) — risque de myélinolyse centropontine si correction trop rapide. Hypernatrémie chronique : ≤ 10 mmol/L/24h — risque d'œdème cérébral si correction trop rapide.",
 };
