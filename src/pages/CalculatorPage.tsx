@@ -21,7 +21,7 @@ export function CalculatorPage({ lookup = getCalculator }: { lookup?: (id: strin
     );
   }
 
-  return <CalculatorPageInner calc={calc} favorite={isFavorite(calc.id)} onToggleFavorite={() => toggleFavorite(calc.id)} />;
+  return <CalculatorPageInner key={calc.id} calc={calc} favorite={isFavorite(calc.id)} onToggleFavorite={() => toggleFavorite(calc.id)} />;
 }
 
 function CalculatorPageInner({

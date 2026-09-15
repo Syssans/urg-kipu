@@ -14,6 +14,13 @@ import { urineIonogram } from "./urineIonogram";
 import { coagulation } from "./coagulation";
 import { cushman } from "./cushman";
 import { childPugh } from "./childPugh";
+import { gcsPediatric } from "./gcsPediatric";
+import { genevaSimplified } from "./genevaSimplified";
+import { abcd2 } from "./abcd2";
+import { spesi } from "./spesi";
+import { asia } from "./asia";
+import { apgar } from "./apgar";
+import { silverman } from "./silverman";
 
 export const calculators: Calculator[] = [
   gcs,
@@ -31,6 +38,13 @@ export const calculators: Calculator[] = [
   coagulation,
   cushman,
   childPugh,
+  gcsPediatric,
+  genevaSimplified,
+  abcd2,
+  spesi,
+  asia,
+  apgar,
+  silverman,
 ];
 
 export function getCalculator(id: string): Calculator | undefined {

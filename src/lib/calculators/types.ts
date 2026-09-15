@@ -74,6 +74,7 @@ export type Category =
   | "traumatologie"
   | "digestif"
   | "biologie"
+  | "pediatrie"
   | "conversion"
   | "formule";
 
@@ -102,6 +103,7 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   traumatologie: "Traumatologie",
   digestif: "Digestif",
   biologie: "Biologie",
+  pediatrie: "Pédiatrie",
   conversion: "Conversions",
   formule: "Formules",
 };

@@ -31,11 +31,14 @@ npm run preview  # prévisualiser le build
 
 ### Calculateurs et interprétateurs (`src/lib/calculators/`)
 
-15 outils reposant sur des critères publiés et largement utilisés en médecine d'urgence :
+22 outils reposant sur des critères publiés et largement utilisés en médecine d'urgence :
 
-- **Scores** : Glasgow (GCS), NIHSS, qSOFA, CURB-65, Wells EP, CHA₂DS₂-VASc, Centor/McIsaac,
-  Canadian CT Head Rule, règles d'Ottawa (cheville/pied), échelle de Cushman (sevrage alcoolique),
-  Child-Pugh (cirrhose).
+- **Scores** : Glasgow (GCS), NIHSS, qSOFA, CURB-65, Wells EP, score de Genève révisé simplifié,
+  CHA₂DS₂-VASc, ABCD², sPESI, Centor/McIsaac, Canadian CT Head Rule, règles d'Ottawa
+  (cheville/pied), ASIA (lésion médullaire), échelle de Cushman (sevrage alcoolique), Child-Pugh
+  (cirrhose).
+- **Pédiatrie** : Glasgow pédiatrique, Apgar, Silverman-Andersen (détresse respiratoire
+  néonatale).
 - **Interprétateurs biologiques** (catégorie « Biologie ») : gaz du sang (artériel/veineux,
   trouble acido-basique, compensation, trou anionique, delta ratio, oxygénation, lactate), LCR
   (orientation méningite bactérienne/virale), ionogramme urinaire (FENa/FEUrée, natriurèse),
