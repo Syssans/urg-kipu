@@ -117,30 +117,54 @@ function acidBaseFindings(v: Values): Interpretation[] {
       level: "high",
       detail: "Les deux composantes vont dans le sens de l'alcalose : deux troubles primaires associés, pas une compensation.",
     });
+  } else if (metAlkalosis && respAcidosis && !acidemia && !alkalemia) {
+    // HCO₃⁻ and PaCO₂ both abnormal but pH has normalized: one is primary,
+    // the other is its compensation, and the value alone can't say which —
+    // compensation is never quite complete, so the side of exactly 7.40 the
+    // pH still leans toward reveals the primary process.
+    if (ph < 7.4) {
+      const factor = chronic ? 0.35 : 0.1;
+      const expected = round1(24 + factor * (pco2 - 40));
+      const tol = chronic ? 4 : 3;
+      findings.push({ title: `Trouble primaire : acidose respiratoire (${chronic ? "chronique" : "aiguë"}), bien compensée`, level: "moderate", scoreLabel: `PaCO₂ ${pco2} mmHg` });
+      findings.push({ ...compensationFinding(hco3, expected - tol, expected + tol, expected, "HCO₃⁻", `compensation métabolique attendue (${chronic ? "chronique" : "aiguë"})`), role: "secondary" });
+    } else {
+      const expected = round1(40 + 0.7 * (hco3 - 24));
+      findings.push({ title: "Trouble primaire : alcalose métabolique, bien compensée", level: "moderate", scoreLabel: `HCO₃⁻ ${hco3} mmol/L` });
+      findings.push({ ...compensationFinding(pco2, expected - 5, expected + 5, expected, "PaCO₂", "compensation respiratoire attendue"), role: "secondary" });
+    }
+  } else if (metAcidosis && respAlkalosis && !acidemia && !alkalemia) {
+    if (ph < 7.4) {
+      const expected = round1(1.5 * hco3 + 8);
+      findings.push({ title: "Trouble primaire : acidose métabolique, bien compensée", level: "moderate", scoreLabel: `HCO₃⁻ ${hco3} mmol/L` });
+      findings.push({ ...compensationFinding(pco2, expected - 2, expected + 2, expected, "PaCO₂", "compensation respiratoire (formule de Winter)"), role: "secondary" });
+    } else {
+      const factor = chronic ? 0.4 : 0.2;
+      const expected = round1(24 - factor * (40 - pco2));
+      const tol = chronic ? 4 : 3;
+      findings.push({ title: `Trouble primaire : alcalose respiratoire (${chronic ? "chronique" : "aiguë"}), bien compensée`, level: "moderate", scoreLabel: `PaCO₂ ${pco2} mmHg` });
+      findings.push({ ...compensationFinding(hco3, expected - tol, expected + tol, expected, "HCO₃⁻", `compensation métabolique attendue (${chronic ? "chronique" : "aiguë"})`), role: "secondary" });
+    }
   } else if (metAcidosis && !alkalemia) {
     const expected = round1(1.5 * hco3 + 8);
     findings.push({ title: "Trouble primaire : acidose métabolique", level: "high", scoreLabel: `HCO₃⁻ ${hco3} mmol/L` });
-    const comp = compensationFinding(pco2, expected - 2, expected + 2, expected, "PaCO₂", "compensation respiratoire (formule de Winter)");
-    if (comp) findings.push({ ...comp, role: "secondary" });
+    findings.push({ ...compensationFinding(pco2, expected - 2, expected + 2, expected, "PaCO₂", "compensation respiratoire (formule de Winter)"), role: "secondary" });
   } else if (metAlkalosis && !acidemia) {
     const expected = round1(40 + 0.7 * (hco3 - 24));
     findings.push({ title: "Trouble primaire : alcalose métabolique", level: "moderate", scoreLabel: `HCO₃⁻ ${hco3} mmol/L` });
-    const comp = compensationFinding(pco2, expected - 5, expected + 5, expected, "PaCO₂", "compensation respiratoire attendue");
-    if (comp) findings.push({ ...comp, role: "secondary" });
+    findings.push({ ...compensationFinding(pco2, expected - 5, expected + 5, expected, "PaCO₂", "compensation respiratoire attendue"), role: "secondary" });
   } else if (respAcidosis && !alkalemia) {
     const factor = chronic ? 0.35 : 0.1;
     const expected = round1(24 + factor * (pco2 - 40));
     const tol = chronic ? 4 : 3;
     findings.push({ title: `Trouble primaire : acidose respiratoire (${chronic ? "chronique" : "aiguë"})`, level: "high", scoreLabel: `PaCO₂ ${pco2} mmHg` });
-    const comp = compensationFinding(hco3, expected - tol, expected + tol, expected, "HCO₃⁻", `compensation métabolique attendue (${chronic ? "chronique" : "aiguë"})`);
-    if (comp) findings.push({ ...comp, role: "secondary" });
+    findings.push({ ...compensationFinding(hco3, expected - tol, expected + tol, expected, "HCO₃⁻", `compensation métabolique attendue (${chronic ? "chronique" : "aiguë"})`), role: "secondary" });
   } else if (respAlkalosis && !acidemia) {
     const factor = chronic ? 0.4 : 0.2;
     const expected = round1(24 - factor * (40 - pco2));
     const tol = chronic ? 4 : 3;
     findings.push({ title: `Trouble primaire : alcalose respiratoire (${chronic ? "chronique" : "aiguë"})`, level: "moderate", scoreLabel: `PaCO₂ ${pco2} mmHg` });
-    const comp = compensationFinding(hco3, expected - tol, expected + tol, expected, "HCO₃⁻", `compensation métabolique attendue (${chronic ? "chronique" : "aiguë"})`);
-    if (comp) findings.push({ ...comp, role: "secondary" });
+    findings.push({ ...compensationFinding(hco3, expected - tol, expected + tol, expected, "HCO₃⁻", `compensation métabolique attendue (${chronic ? "chronique" : "aiguë"})`), role: "secondary" });
   } else if (!acidemia && !alkalemia) {
     // Nothing more to add: the pH card above already says there's no disorder.
   } else {
@@ -154,12 +178,19 @@ function acidBaseFindings(v: Values): Interpretation[] {
   return findings;
 }
 
-// Returns undefined when compensation is appropriate — an expected,
-// uncomplicated compensation isn't worth its own card; only a surprising
-// one (suggesting a second, superimposed disorder) is.
-function compensationFinding(measured: number, low: number, high: number, expected: number, paramLabel: string, contextLabel: string): Interpretation | undefined {
+// Always returns a card, even when compensation is appropriate: that's
+// often the only thing explaining a deceptively normal pH (a fully
+// compensated disorder still needs to be recognized as a disorder), and it
+// confirms a simple single disorder rather than something mixed.
+function compensationFinding(measured: number, low: number, high: number, expected: number, paramLabel: string, contextLabel: string): Interpretation {
   const inRange = measured >= low && measured <= high;
-  if (inRange) return undefined;
+  if (inRange) {
+    return {
+      title: "Compensation appropriée",
+      level: "low",
+      detail: `${paramLabel} mesuré (${round1(measured)}) cohérent avec la ${contextLabel} (attendu ≈ ${round1(expected)}, plage ${round1(low)}–${round1(high)}). Trouble probablement simple.`,
+    };
+  }
   const direction = measured > high ? "plus élevé" : "plus bas";
   return {
     title: "Compensation inattendue : trouble surajouté probable",
