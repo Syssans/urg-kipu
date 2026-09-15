@@ -1,7 +1,7 @@
 import type { DecisionTree } from "./types";
-import { hyponatremia } from "./hyponatremia";
+import { dysnatremia } from "./dysnatremia";
 
-export const trees: DecisionTree[] = [hyponatremia];
+export const trees: DecisionTree[] = [dysnatremia];
 
 export function getTree(id: string): DecisionTree | undefined {
   return trees.find((t) => t.id === id);
