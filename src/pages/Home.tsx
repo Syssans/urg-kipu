@@ -19,7 +19,7 @@ export function Home() {
       <h1 className="text-2xl font-bold text-white">Rechercher</h1>
 
       <div className="relative">
-        <svg viewBox="0 0 24 24" fill="none" className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-muted">
+        <svg viewBox="0 0 24 24" fill="none" className="pointer-events-none absolute left-3.5 top-1/2 z-10 h-5 w-5 -translate-y-1/2 text-muted">
           <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth={1.8} />
           <path d="m21 21-4.3-4.3" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" />
         </svg>
