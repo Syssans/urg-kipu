@@ -71,6 +71,17 @@ function NodeLink({ link }: { link: TreeLink }) {
   );
 }
 
+function Warning({ text }: { text: string }) {
+  return (
+    <p className="mt-2.5 flex items-start gap-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 py-2 text-[13px] leading-snug text-amber-300">
+      <svg viewBox="0 0 24 24" fill="none" className="mt-0.5 h-4 w-4 shrink-0">
+        <path d="M12 9v4M12 17h.01M10.3 3.86 1.8 18a1.5 1.5 0 0 0 1.3 2.25h17.8a1.5 1.5 0 0 0 1.3-2.25L13.7 3.86a1.5 1.5 0 0 0-2.6 0Z" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+      {text}
+    </p>
+  );
+}
+
 function NodeCard({
   node,
   chosenIndex,
@@ -82,7 +93,7 @@ function NodeCard({
 }) {
   if (node.type === "leaf") {
     return (
-      <div className="card-in w-[82vw] max-w-sm shrink-0 rounded-2xl border border-accent-2/25 bg-accent-2/5 p-4 backdrop-blur-xl">
+      <div className="card-in w-[82vw] max-w-md shrink-0 rounded-2xl border border-accent-2/25 bg-accent-2/5 p-4 backdrop-blur-xl">
         <p className="text-sm font-semibold text-accent-2">{node.title}</p>
         <ul className="mt-2.5 flex flex-col gap-1.5">
           {node.items.map((item) => (
@@ -92,18 +103,35 @@ function NodeCard({
             </li>
           ))}
         </ul>
-        {node.detail && <p className="mt-2.5 text-[13px] leading-snug text-muted">{node.detail}</p>}
+        {node.treatment && node.treatment.length > 0 && (
+          <>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted">Prise en charge</p>
+            <ul className="mt-1.5 flex flex-col gap-1.5">
+              {node.treatment.map((item) => (
+                <li key={item} className="flex items-start gap-2 text-sm leading-snug text-white">
+                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-white/60" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+        {node.warning && <Warning text={node.warning} />}
+        {node.detail && <p className="mt-2.5 whitespace-pre-line text-[13px] leading-snug text-muted">{node.detail}</p>}
         {node.link && <NodeLink link={node.link} />}
+        {node.links?.map((l) => <NodeLink key={l.to} link={l} />)}
       </div>
     );
   }
 
   return (
-    <div className="card-in w-[82vw] max-w-sm shrink-0 rounded-2xl border border-border bg-surface p-4 backdrop-blur-xl">
+    <div className="card-in w-[82vw] max-w-md shrink-0 rounded-2xl border border-border bg-surface p-4 backdrop-blur-xl">
       <p className="text-sm font-semibold text-white">{node.title}</p>
       {node.subtitle && <p className="mt-0.5 text-xs text-muted">{node.subtitle}</p>}
-      {node.detail && <p className="mt-1.5 text-[13px] leading-snug text-muted">{node.detail}</p>}
+      {node.detail && <p className="mt-1.5 whitespace-pre-line text-[13px] leading-snug text-muted">{node.detail}</p>}
+      {node.warning && <Warning text={node.warning} />}
       {node.link && <NodeLink link={node.link} />}
+      {node.links?.map((l) => <NodeLink key={l.to} link={l} />)}
       <div className="mt-3 flex flex-col gap-2">
         {node.options.map((opt, i) => {
           const active = chosenIndex === i;

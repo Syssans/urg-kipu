@@ -14,7 +14,9 @@ export interface TreeQuestion {
   title: string;
   subtitle?: string;
   detail?: string;
+  warning?: string;
   link?: TreeLink;
+  links?: TreeLink[];
   options: TreeOption[];
 }
 
@@ -23,8 +25,11 @@ export interface TreeLeaf {
   id: string;
   title: string;
   items: string[];
+  treatment?: string[];
+  warning?: string;
   detail?: string;
   link?: TreeLink;
+  links?: TreeLink[];
 }
 
 export type TreeNode = TreeQuestion | TreeLeaf;
