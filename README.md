@@ -43,7 +43,7 @@ npm run preview  # prévisualiser le build
 - **Interprétateurs biologiques** (catégorie « Biologie ») : gaz du sang (artériel/veineux,
   trouble acido-basique, compensation, trou anionique, delta ratio, oxygénation, lactate), LCR
   (orientation méningite bactérienne/virale), ionogramme urinaire (FENa/FEUrée, natriurèse),
-  bilan de coagulation (dont score ISTH de CIVD).
+  bilan de coagulation (étiologies d'une anomalie du TP/TCA, facteurs en cause).
 
 Chaque calculateur est défini dans un fichier dédié avec : ses champs de saisie, sa fonction de
 calcul, sa fonction d'interprétation et sa source bibliographique (affichée dans l'app). Pour
