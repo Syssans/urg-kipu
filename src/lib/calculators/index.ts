@@ -23,7 +23,6 @@ import { apgar } from "./apgar";
 import { silverman } from "./silverman";
 import { gir } from "./gir";
 import { adl } from "./adl";
-import { iadl } from "./iadl";
 import { nyha } from "./nyha";
 import { mmrc } from "./mmrc";
 
@@ -52,7 +51,6 @@ export const calculators: Calculator[] = [
   silverman,
   gir,
   adl,
-  iadl,
   nyha,
   mmrc,
 ];

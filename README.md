@@ -31,7 +31,7 @@ npm run preview  # prévisualiser le build
 
 ### Calculateurs et interprétateurs (`src/lib/calculators/`)
 
-27 outils reposant sur des critères publiés et largement utilisés en médecine d'urgence :
+26 outils reposant sur des critères publiés et largement utilisés en médecine d'urgence :
 
 - **Scores** : Glasgow (GCS), NIHSS, qSOFA, CRB-65, Wells EP, score de Genève révisé simplifié,
   CHA₂DS₂-VASc, ABCD², sPESI, McIsaac, Canadian CT Head Rule, règles d'Ottawa (cheville/pied),
@@ -39,7 +39,7 @@ npm run preview  # prévisualiser le build
   (insuffisance cardiaque), mMRC (dyspnée).
 - **Pédiatrie** : Glasgow pédiatrique, Apgar, Silverman-Andersen (détresse respiratoire
   néonatale).
-- **Gériatrie** : GIR (grille AGGIR), ADL de Katz, IADL de Lawton (autonomie).
+- **Gériatrie** : GIR (grille AGGIR), ADL de Katz + IADL de Lawton (autonomie, sur une même page).
 - **Interprétateurs biologiques** (catégorie « Biologie ») : gaz du sang (artériel/veineux,
   trouble acido-basique, compensation, trou anionique, delta ratio, oxygénation, lactate), LCR
   (orientation méningite bactérienne/virale), ionogramme urinaire (FENa/FEUrée, natriurèse),
