@@ -1,11 +1,15 @@
 import { Header } from "../components/Header";
 import { CalculatorListItem } from "../components/CalculatorListItem";
-import { searchAll } from "../lib/catalog";
+import { searchAll, type CatalogEntry } from "../lib/catalog";
 import { useFavorites } from "../lib/favorites";
+
+function isCalcEntry(r: CatalogEntry): r is Extract<CatalogEntry, { kind: "calc" }> {
+  return r.kind === "calc";
+}
 
 export function Favorites() {
   const { favorites } = useFavorites();
-  const items = searchAll("").filter((r) => favorites.includes(r.calc.id));
+  const items = searchAll("").filter(isCalcEntry).filter((r) => favorites.includes(r.calc.id));
 
   return (
     <div>

@@ -61,11 +61,16 @@ corrigé (formule de Bazett), IMC, clairance de la créatinine (Cockcroft-Gault)
 outil, créer un fichier sur le modèle de
 `src/lib/tools/bmi.ts` et l'enregistrer dans `src/lib/tools/index.ts`.
 
-### Arbres décisionnels
+### Arbres décisionnels (`src/lib/trees/`)
 
-Page présente dans la navigation mais marquée « Bientôt disponible » : ce contenu nécessite des
-référentiels sourcés (SFMU, HAS, sociétés savantes...) qui n'ont pas encore été fournis. Ne pas
-inventer de contenu clinique dans cette section.
+Onglet « Arbres » : arbres décisionnels basés sur des protocoles de service sourcés (pas de
+contenu clinique inventé). Moteur dédié (`DecisionTree`, `TreeQuestion`/`TreeLeaf`/`TreeScore`),
+rendu en cartes horizontales navigables et progressivement révélées
+(`src/components/DecisionTreeView.tsx`). Un nœud `TreeScore` peut intégrer directement un
+calculateur existant (`calculatorId`) : le score se calcule dans le fil de l'arbre et la branche
+suivante est choisie selon des seuils définis sur le nœud. Les arbres sont indexés dans la
+recherche globale au même titre que les scores et outils. Actuellement : dysnatrémie (hypo/hyper,
+CHU Dijon-Bourgogne).
 
 ## Icônes
 

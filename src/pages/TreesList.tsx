@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import { Header } from "../components/Header";
+import { TreeListItem } from "../components/TreeListItem";
 import { searchTrees } from "../lib/trees";
 
 export function TreesList() {
@@ -19,14 +19,7 @@ export function TreesList() {
         />
         <div className="flex flex-col gap-2.5">
           {results.map((t) => (
-            <Link
-              key={t.id}
-              to={`/arbres/${t.id}`}
-              className="rounded-xl border border-border bg-surface px-4 py-3.5 backdrop-blur-xl transition-transform duration-150 active:scale-[0.98] active:bg-surface-2"
-            >
-              <span className="font-medium text-white">{t.shortName}</span>
-              <p className="mt-1 line-clamp-2 text-[13px] leading-snug text-muted">{t.summary}</p>
-            </Link>
+            <TreeListItem key={t.id} tree={t} />
           ))}
         </div>
         {results.length === 0 && (

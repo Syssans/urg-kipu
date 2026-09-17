@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import type { DecisionTree, TreeLink, TreeNode } from "../lib/trees/types";
+import { getAny } from "../lib/catalog";
+import { defaultValues, type Values } from "../lib/calculators/types";
+import { CalculatorForm } from "./CalculatorForm";
+import type { DecisionTree, TreeLink, TreeNode, TreeScore } from "../lib/trees/types";
 
 interface PathStep {
   nodeId: string;
@@ -14,9 +17,12 @@ export function DecisionTreeView({ tree }: { tree: DecisionTree }) {
   const nodesToShow: TreeNode[] = [tree.nodes[tree.rootId]];
   let current = tree.nodes[tree.rootId];
   for (const step of path) {
-    if (current.type !== "question") break;
-    const opt = current.options[step.choiceIndex];
-    const next = tree.nodes[opt.next];
+    let nextId: string | undefined;
+    if (current.type === "question") nextId = current.options[step.choiceIndex]?.next;
+    else if (current.type === "score") nextId = current.branches[step.choiceIndex]?.next;
+    else break;
+    if (!nextId) break;
+    const next = tree.nodes[nextId];
     if (!next) break;
     nodesToShow.push(next);
     current = next;
@@ -82,6 +88,63 @@ function Warning({ text }: { text: string }) {
   );
 }
 
+function ScoreNodeCard({
+  node,
+  chosenIndex,
+  onChoose,
+}: {
+  node: TreeScore;
+  chosenIndex: number | undefined;
+  onChoose: (branchIndex: number) => void;
+}) {
+  const entry = getAny(node.calculatorId);
+  const calc = entry?.kind === "calc" ? entry.calc : undefined;
+  const [values, setValues] = useState<Values>(() => defaultValues(calc?.fields ?? []));
+
+  if (!calc) {
+    return (
+      <div className="card-in w-[82vw] max-w-md shrink-0 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 backdrop-blur-xl">
+        <p className="text-sm text-red-300">Calculateur introuvable : {node.calculatorId}</p>
+      </div>
+    );
+  }
+
+  const missingRequired = (calc.requiredNumberFieldIds ?? []).some((id) => values[id] === undefined);
+  const score = calc.compute(values);
+  const matchedIndex = node.branches.findIndex((b) => b.test(score));
+  const upToDate = chosenIndex !== undefined && chosenIndex === matchedIndex;
+
+  return (
+    <div className="card-in w-[82vw] max-w-md shrink-0 rounded-2xl border border-border bg-surface p-4 backdrop-blur-xl">
+      <p className="text-sm font-semibold text-white">{node.title}</p>
+      {node.subtitle && <p className="mt-0.5 text-xs text-muted">{node.subtitle}</p>}
+      {node.detail && <p className="mt-1.5 whitespace-pre-line text-[13px] leading-snug text-muted">{node.detail}</p>}
+      <div className="mt-3">
+        <CalculatorForm
+          fields={calc.fields}
+          values={values}
+          onChange={(id, v) => setValues((prev) => ({ ...prev, [id]: v }))}
+          requiredFieldIds={calc.requiredNumberFieldIds}
+        />
+      </div>
+      {!missingRequired && (
+        <p className="mt-3 text-sm text-muted">
+          Score actuel : <span className="font-semibold text-white">{score}</span>
+          {matchedIndex >= 0 && ` — ${node.branches[matchedIndex].label}`}
+        </p>
+      )}
+      <button
+        type="button"
+        disabled={missingRequired || matchedIndex < 0 || upToDate}
+        onClick={() => onChoose(matchedIndex)}
+        className="mt-3 w-full rounded-lg border border-accent-2/60 bg-accent-2/10 px-3.5 py-2.5 text-center text-sm font-medium text-white backdrop-blur-xl transition-all duration-150 disabled:opacity-40"
+      >
+        {upToDate ? "Validé" : chosenIndex !== undefined ? "Mettre à jour" : "Valider"}
+      </button>
+    </div>
+  );
+}
+
 function NodeCard({
   node,
   chosenIndex,
@@ -91,6 +154,10 @@ function NodeCard({
   chosenIndex: number | undefined;
   onChoose: (choiceIndex: number) => void;
 }) {
+  if (node.type === "score") {
+    return <ScoreNodeCard node={node} chosenIndex={chosenIndex} onChoose={onChoose} />;
+  }
+
   if (node.type === "leaf") {
     return (
       <div className="card-in w-[82vw] max-w-md shrink-0 rounded-2xl border border-accent-2/25 bg-accent-2/5 p-4 backdrop-blur-xl">

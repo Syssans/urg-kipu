@@ -32,7 +32,25 @@ export interface TreeLeaf {
   links?: TreeLink[];
 }
 
-export type TreeNode = TreeQuestion | TreeLeaf;
+export interface TreeScoreBranch {
+  label: string;
+  test: (score: number) => boolean;
+  next: string;
+}
+
+export interface TreeScore {
+  type: "score";
+  id: string;
+  title: string;
+  subtitle?: string;
+  detail?: string;
+  // id of a Calculator (score or tool) to render inline — resolved via getAny()
+  calculatorId: string;
+  // evaluated in order, first branch whose test(score) matches wins
+  branches: TreeScoreBranch[];
+}
+
+export type TreeNode = TreeQuestion | TreeLeaf | TreeScore;
 
 export interface DecisionTree {
   id: string;

@@ -1,16 +1,21 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { searchAll } from "../lib/catalog";
+import { searchAll, type CatalogEntry } from "../lib/catalog";
 import { CalculatorListItem } from "../components/CalculatorListItem";
+import { TreeListItem } from "../components/TreeListItem";
 import { Disclaimer } from "../components/Disclaimer";
 import { useFavorites } from "../lib/favorites";
+
+function isCalcEntry(r: CatalogEntry): r is Extract<CatalogEntry, { kind: "calc" }> {
+  return r.kind === "calc";
+}
 
 export function Home() {
   const [query, setQuery] = useState("");
   const results = useMemo(() => searchAll(query), [query]);
   const { favorites } = useFavorites();
   const favCalcs = useMemo(
-    () => searchAll("").filter((c) => favorites.includes(c.calc.id)),
+    () => searchAll("").filter(isCalcEntry).filter((r) => favorites.includes(r.calc.id)),
     [favorites],
   );
 
@@ -26,7 +31,7 @@ export function Home() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Rechercher un score, un outil de calcul…"
+          placeholder="Rechercher un score, un outil, un arbre…"
           className="w-full rounded-2xl border border-border bg-surface py-3.5 pl-11 pr-4 text-base text-white outline-none backdrop-blur-xl transition-colors duration-150 placeholder:text-muted focus:border-accent-2"
         />
       </div>
@@ -34,9 +39,13 @@ export function Home() {
       {query.trim() ? (
         <div className="flex flex-col gap-2.5">
           <p className="text-sm text-muted">{results.length} résultat{results.length > 1 ? "s" : ""}</p>
-          {results.map((r) => (
-            <CalculatorListItem key={r.calc.id} calc={r.calc} basePath={r.basePath} />
-          ))}
+          {results.map((r) =>
+            r.kind === "calc" ? (
+              <CalculatorListItem key={r.calc.id} calc={r.calc} basePath={r.basePath} />
+            ) : (
+              <TreeListItem key={r.tree.id} tree={r.tree} />
+            ),
+          )}
           {results.length === 0 && (
             <p className="rounded-xl border border-dashed border-border p-4 text-sm text-muted">
               Aucun résultat pour « {query} ».
