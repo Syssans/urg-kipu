@@ -75,6 +75,7 @@ export type Category =
   | "digestif"
   | "biologie"
   | "pediatrie"
+  | "geriatrie"
   | "conversion"
   | "formule";
 
@@ -104,6 +105,7 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   digestif: "Digestif",
   biologie: "Biologie",
   pediatrie: "Pédiatrie",
+  geriatrie: "Gériatrie",
   conversion: "Conversions",
   formule: "Formules",
 };

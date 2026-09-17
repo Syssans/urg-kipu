@@ -21,6 +21,11 @@ import { spesi } from "./spesi";
 import { asia } from "./asia";
 import { apgar } from "./apgar";
 import { silverman } from "./silverman";
+import { gir } from "./gir";
+import { adl } from "./adl";
+import { iadl } from "./iadl";
+import { nyha } from "./nyha";
+import { mmrc } from "./mmrc";
 
 export const calculators: Calculator[] = [
   gcs,
@@ -45,6 +50,11 @@ export const calculators: Calculator[] = [
   asia,
   apgar,
   silverman,
+  gir,
+  adl,
+  iadl,
+  nyha,
+  mmrc,
 ];
 
 export function getCalculator(id: string): Calculator | undefined {
