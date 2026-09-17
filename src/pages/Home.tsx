@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { searchAll, type CatalogEntry } from "../lib/catalog";
+import { getAny, searchAll, type CatalogEntry } from "../lib/catalog";
 import { CalculatorListItem } from "../components/CalculatorListItem";
 import { TreeListItem } from "../components/TreeListItem";
 import { Disclaimer } from "../components/Disclaimer";
 import { useFavorites } from "../lib/favorites";
+import { timeAgo, useRecentlyUsed } from "../lib/recentlyUsed";
 
 function isCalcEntry(r: CatalogEntry): r is Extract<CatalogEntry, { kind: "calc" }> {
   return r.kind === "calc";
@@ -17,6 +18,14 @@ export function Home() {
   const favCalcs = useMemo(
     () => searchAll("").filter(isCalcEntry).filter((r) => favorites.includes(r.calc.id)),
     [favorites],
+  );
+  const { recent } = useRecentlyUsed();
+  const recentEntries = useMemo(
+    () =>
+      recent
+        .map((r) => ({ ts: r.ts, entry: getAny(r.id) }))
+        .filter((r): r is { ts: number; entry: CatalogEntry } => r.entry !== undefined),
+    [recent],
   );
 
   return (
@@ -106,6 +115,19 @@ export function Home() {
               </p>
             )}
           </div>
+
+          {recentEntries.length > 0 && (
+            <div className="flex flex-col gap-2.5">
+              <h2 className="text-sm font-semibold text-slate-200">Récents</h2>
+              {recentEntries.map(({ ts, entry }) =>
+                entry.kind === "calc" ? (
+                  <CalculatorListItem key={entry.calc.id} calc={entry.calc} basePath={entry.basePath} subtitle={timeAgo(ts)} />
+                ) : (
+                  <TreeListItem key={entry.tree.id} tree={entry.tree} subtitle={timeAgo(ts)} />
+                ),
+              )}
+            </div>
+          )}
         </>
       )}
 

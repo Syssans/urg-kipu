@@ -3,7 +3,15 @@ import type { Calculator } from "../lib/calculators/types";
 import { CATEGORY_COLORS, CATEGORY_LABELS } from "../lib/calculators/types";
 import { useFavorites } from "../lib/favorites";
 
-export function CalculatorListItem({ calc, basePath = "/scores" }: { calc: Calculator; basePath?: "/scores" | "/calcul" }) {
+export function CalculatorListItem({
+  calc,
+  basePath = "/scores",
+  subtitle,
+}: {
+  calc: Calculator;
+  basePath?: "/scores" | "/calcul";
+  subtitle?: string;
+}) {
   const { isFavorite, toggleFavorite } = useFavorites();
   const fav = isFavorite(calc.id);
   const colors = CATEGORY_COLORS[calc.category];
@@ -20,7 +28,7 @@ export function CalculatorListItem({ calc, basePath = "/scores" }: { calc: Calcu
             {CATEGORY_LABELS[calc.category]}
           </span>
         </div>
-        <p className="mt-1 line-clamp-2 text-[13px] leading-snug text-muted">{calc.summary}</p>
+        <p className="mt-1 line-clamp-2 text-[13px] leading-snug text-muted">{subtitle ?? calc.summary}</p>
       </Link>
       <button
         type="button"

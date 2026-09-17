@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Header } from "../components/Header";
 import { CalculatorForm } from "../components/CalculatorForm";
@@ -6,6 +6,7 @@ import { ResultCard } from "../components/ResultCard";
 import { getCalculator } from "../lib/calculators";
 import { defaultValues, type Calculator, type Values } from "../lib/calculators/types";
 import { useFavorites } from "../lib/favorites";
+import { useRecentlyUsed } from "../lib/recentlyUsed";
 
 export function CalculatorPage({ lookup = getCalculator }: { lookup?: (id: string) => Calculator | undefined }) {
   const { id } = useParams();
@@ -34,6 +35,12 @@ function CalculatorPageInner({
   onToggleFavorite: () => void;
 }) {
   const [values, setValues] = useState<Values>(() => defaultValues(calc.fields));
+  const { recordVisit } = useRecentlyUsed();
+
+  useEffect(() => {
+    recordVisit(calc.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [calc.id]);
 
   const missingFieldIds = (calc.requiredNumberFieldIds ?? []).filter((id) => values[id] === undefined);
   const missingRequired = missingFieldIds.length > 0;

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import type { DecisionTree } from "../lib/trees/types";
 
-export function TreeListItem({ tree }: { tree: DecisionTree }) {
+export function TreeListItem({ tree, subtitle }: { tree: DecisionTree; subtitle?: string }) {
   return (
     <Link
       to={`/arbres/${tree.id}`}
@@ -11,7 +11,7 @@ export function TreeListItem({ tree }: { tree: DecisionTree }) {
         <span className="font-medium text-white">{tree.shortName}</span>
         <span className="shrink-0 rounded-full bg-accent-2/15 px-2 py-0.5 text-[11px] font-medium text-accent-2">Arbre</span>
       </div>
-      <p className="mt-1 line-clamp-2 text-[13px] leading-snug text-muted">{tree.summary}</p>
+      <p className="mt-1 line-clamp-2 text-[13px] leading-snug text-muted">{subtitle ?? tree.summary}</p>
     </Link>
   );
 }

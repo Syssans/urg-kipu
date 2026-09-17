@@ -1,11 +1,19 @@
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Header } from "../components/Header";
 import { DecisionTreeView } from "../components/DecisionTreeView";
 import { getTree } from "../lib/trees";
+import { useRecentlyUsed } from "../lib/recentlyUsed";
 
 export function DecisionTreePage() {
   const { id } = useParams();
   const tree = id ? getTree(id) : undefined;
+  const { recordVisit } = useRecentlyUsed();
+
+  useEffect(() => {
+    if (tree) recordVisit(tree.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tree?.id]);
 
   if (!tree) {
     return (
