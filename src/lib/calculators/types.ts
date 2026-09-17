@@ -110,6 +110,20 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   formule: "Formules",
 };
 
+export const CATEGORY_COLORS: Record<Category, { bg: string; text: string }> = {
+  neurologie: { bg: "bg-violet-500/15", text: "text-violet-300" },
+  cardiovasculaire: { bg: "bg-rose-500/15", text: "text-rose-300" },
+  respiratoire: { bg: "bg-sky-500/15", text: "text-sky-300" },
+  infectiologie: { bg: "bg-yellow-500/15", text: "text-yellow-300" },
+  traumatologie: { bg: "bg-orange-500/15", text: "text-orange-300" },
+  digestif: { bg: "bg-lime-500/15", text: "text-lime-300" },
+  biologie: { bg: "bg-cyan-500/15", text: "text-cyan-300" },
+  pediatrie: { bg: "bg-pink-500/15", text: "text-pink-300" },
+  geriatrie: { bg: "bg-indigo-500/15", text: "text-indigo-300" },
+  conversion: { bg: "bg-slate-500/15", text: "text-slate-300" },
+  formule: { bg: "bg-stone-500/15", text: "text-stone-300" },
+};
+
 export function defaultValues(fields: Field[]): Values {
   const values: Values = {};
   for (const f of fields) {

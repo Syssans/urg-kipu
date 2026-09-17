@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import type { Calculator } from "../lib/calculators/types";
-import { CATEGORY_LABELS } from "../lib/calculators/types";
+import { CATEGORY_COLORS, CATEGORY_LABELS } from "../lib/calculators/types";
 import { useFavorites } from "../lib/favorites";
 
 export function CalculatorListItem({ calc, basePath = "/scores" }: { calc: Calculator; basePath?: "/scores" | "/calcul" }) {
   const { isFavorite, toggleFavorite } = useFavorites();
   const fav = isFavorite(calc.id);
+  const colors = CATEGORY_COLORS[calc.category];
 
   return (
     <div className="flex items-center gap-2">
@@ -15,7 +16,7 @@ export function CalculatorListItem({ calc, basePath = "/scores" }: { calc: Calcu
       >
         <div className="flex items-center justify-between gap-2">
           <span className="font-medium text-white">{calc.shortName}</span>
-          <span className="shrink-0 rounded-full bg-surface-2 px-2 py-0.5 text-[11px] text-muted">
+          <span className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ${colors.bg} ${colors.text}`}>
             {CATEGORY_LABELS[calc.category]}
           </span>
         </div>
