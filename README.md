@@ -85,7 +85,8 @@ composant, qui repère les DCI/marques connues et les transforme en lien vers `/
 qu'il faille alourdir le contenu source avec du markup. Pour ajouter un médicament, créer un fichier
 sur le modèle de `src/lib/drugs/clonazepam.ts` et l'enregistrer dans `src/lib/drugs/index.ts` — il
 devient alors automatiquement cliquable partout où son nom apparaît. Actuellement : clonazépam
-(Rivotril®).
+(Rivotril®), midazolam (Hypnovel®), lévétiracétam (Keppra®), néfopam (Acupan®), prednisolone
+(Solupred®).
 
 ## Icônes
 

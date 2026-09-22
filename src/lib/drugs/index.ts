@@ -1,7 +1,11 @@
 import type { Drug } from "./types";
 import { clonazepam } from "./clonazepam";
+import { midazolam } from "./midazolam";
+import { levetiracetam } from "./levetiracetam";
+import { nefopam } from "./nefopam";
+import { prednisolone } from "./prednisolone";
 
-export const drugs: Drug[] = [clonazepam];
+export const drugs: Drug[] = [clonazepam, midazolam, levetiracetam, nefopam, prednisolone];
 
 export function getDrug(id: string): Drug | undefined {
   return drugs.find((d) => d.id === id);
