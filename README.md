@@ -70,7 +70,8 @@ rendu en cartes horizontales navigables et progressivement révélées
 calculateur existant (`calculatorId`) : le score se calcule dans le fil de l'arbre et la branche
 suivante est choisie selon des seuils définis sur le nœud. Les arbres sont indexés dans la
 recherche globale au même titre que les scores et outils. Actuellement : dysnatrémie (hypo/hyper,
-CHU Dijon-Bourgogne).
+CHU Dijon-Bourgogne) ; crise convulsive et état de mal épileptique chez l'adulte (CE-MIR,
+prise en charge pédiatrique à venir).
 
 ## Icônes
 
