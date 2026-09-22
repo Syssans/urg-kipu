@@ -48,9 +48,18 @@ export function DrugPage() {
         </Section>
 
         <Section title="Posologie usuelle">
-          <p className="whitespace-pre-line text-sm leading-snug text-white">
-            <DrugText text={drug.dosage} />
-          </p>
+          <ul className="flex flex-col gap-1.5">
+            {drug.dosage
+              .split("\n")
+              .map((line) => line.trim())
+              .filter(Boolean)
+              .map((line) => (
+                <li key={line} className="flex items-start gap-2 text-sm leading-snug text-white">
+                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-emerald-400" />
+                  <DrugText text={line} />
+                </li>
+              ))}
+          </ul>
         </Section>
 
         <Section title="Contre-indications">

@@ -63,7 +63,7 @@ export function linkifyDrugs(text: string): ReactNode[] {
         <Link
           key={`${term.drugId}-${match.index}-${key++}`}
           to={`/medicaments/${term.drugId}`}
-          className="underline decoration-dotted decoration-accent-2/60 underline-offset-2 text-inherit hover:decoration-solid"
+          className="text-emerald-400 underline decoration-emerald-400/60 decoration-dotted underline-offset-2 hover:decoration-solid"
         >
           {matched}
         </Link>,
