@@ -4,6 +4,7 @@ import { midazolam } from "./midazolam";
 import { levetiracetam } from "./levetiracetam";
 import { nefopam } from "./nefopam";
 import { prednisolone } from "./prednisolone";
+import { normalizeSearch } from "../search";
 
 export const drugs: Drug[] = [clonazepam, midazolam, levetiracetam, nefopam, prednisolone];
 
@@ -12,9 +13,9 @@ export function getDrug(id: string): Drug | undefined {
 }
 
 export function searchDrugs(query: string): Drug[] {
-  const q = query.trim().toLowerCase();
+  const q = normalizeSearch(query.trim());
   if (!q) return drugs;
-  return drugs.filter((d) => [d.dci, ...d.brands].join(" ").toLowerCase().includes(q));
+  return drugs.filter((d) => normalizeSearch([d.dci, ...d.brands].join(" ")).includes(q));
 }
 
 export * from "./types";

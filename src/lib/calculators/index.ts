@@ -1,4 +1,5 @@
 import type { Calculator } from "./types";
+import { normalizeSearch } from "../search";
 import { gcs } from "./gcs";
 import { nihss } from "./nihss";
 import { qsofa } from "./qsofa";
@@ -60,10 +61,10 @@ export function getCalculator(id: string): Calculator | undefined {
 }
 
 export function searchCalculators(query: string): Calculator[] {
-  const q = query.trim().toLowerCase();
+  const q = normalizeSearch(query.trim());
   if (!q) return calculators;
   return calculators.filter((c) => {
-    const haystack = [c.name, c.shortName, c.summary, ...c.keywords].join(" ").toLowerCase();
+    const haystack = normalizeSearch([c.name, c.shortName, c.summary, ...c.keywords].join(" "));
     return haystack.includes(q);
   });
 }
