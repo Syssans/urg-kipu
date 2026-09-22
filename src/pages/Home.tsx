@@ -3,12 +3,24 @@ import { Link } from "react-router-dom";
 import { getAny, searchAll, type CatalogEntry } from "../lib/catalog";
 import { CalculatorListItem } from "../components/CalculatorListItem";
 import { TreeListItem } from "../components/TreeListItem";
+import { DrugListItem } from "../components/DrugListItem";
 import { Disclaimer } from "../components/Disclaimer";
 import { useFavorites } from "../lib/favorites";
 import { timeAgo, useRecentlyUsed } from "../lib/recentlyUsed";
 
 function isCalcEntry(r: CatalogEntry): r is Extract<CatalogEntry, { kind: "calc" }> {
   return r.kind === "calc";
+}
+
+function renderEntry(entry: CatalogEntry, subtitle?: string) {
+  switch (entry.kind) {
+    case "calc":
+      return <CalculatorListItem key={entry.calc.id} calc={entry.calc} basePath={entry.basePath} subtitle={subtitle} />;
+    case "tree":
+      return <TreeListItem key={entry.tree.id} tree={entry.tree} subtitle={subtitle} />;
+    case "drug":
+      return <DrugListItem key={entry.drug.id} drug={entry.drug} subtitle={subtitle} />;
+  }
 }
 
 export function Home() {
@@ -40,7 +52,7 @@ export function Home() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Rechercher un score, un outil, un arbre…"
+          placeholder="Rechercher un score, un outil, un arbre, un médicament…"
           className="w-full rounded-2xl border border-border bg-surface py-3.5 pl-11 pr-4 text-base text-white outline-none backdrop-blur-xl transition-colors duration-150 placeholder:text-muted focus:border-accent-2"
         />
       </div>
@@ -48,13 +60,7 @@ export function Home() {
       {query.trim() ? (
         <div className="flex flex-col gap-2.5">
           <p className="text-sm text-muted">{results.length} résultat{results.length > 1 ? "s" : ""}</p>
-          {results.map((r) =>
-            r.kind === "calc" ? (
-              <CalculatorListItem key={r.calc.id} calc={r.calc} basePath={r.basePath} />
-            ) : (
-              <TreeListItem key={r.tree.id} tree={r.tree} />
-            ),
-          )}
+          {results.map((r) => renderEntry(r))}
           {results.length === 0 && (
             <p className="rounded-xl border border-dashed border-border p-4 text-sm text-muted">
               Aucun résultat pour « {query} ».
@@ -119,13 +125,7 @@ export function Home() {
           {recentEntries.length > 0 && (
             <div className="flex flex-col gap-2.5">
               <h2 className="text-sm font-semibold text-slate-200">Récents</h2>
-              {recentEntries.map(({ ts, entry }) =>
-                entry.kind === "calc" ? (
-                  <CalculatorListItem key={entry.calc.id} calc={entry.calc} basePath={entry.basePath} subtitle={timeAgo(ts)} />
-                ) : (
-                  <TreeListItem key={entry.tree.id} tree={entry.tree} subtitle={timeAgo(ts)} />
-                ),
-              )}
+              {recentEntries.map(({ ts, entry }) => renderEntry(entry, timeAgo(ts)))}
             </div>
           )}
         </>

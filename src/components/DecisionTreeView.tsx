@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getAny } from "../lib/catalog";
 import { defaultValues, type Values } from "../lib/calculators/types";
 import { CalculatorForm } from "./CalculatorForm";
+import { DrugText } from "./DrugText";
 import type { DecisionTree, TreeLink, TreeNode, TreeScore } from "../lib/trees/types";
 
 interface PathStep {
@@ -83,7 +84,7 @@ function Warning({ text }: { text: string }) {
       <svg viewBox="0 0 24 24" fill="none" className="mt-0.5 h-4 w-4 shrink-0">
         <path d="M12 9v4M12 17h.01M10.3 3.86 1.8 18a1.5 1.5 0 0 0 1.3 2.25h17.8a1.5 1.5 0 0 0 1.3-2.25L13.7 3.86a1.5 1.5 0 0 0-2.6 0Z" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
       </svg>
-      {text}
+      <DrugText text={text} />
     </p>
   );
 }
@@ -118,7 +119,11 @@ function ScoreNodeCard({
     <div className="card-in w-[82vw] max-w-md shrink-0 rounded-2xl border border-border bg-surface p-4 backdrop-blur-xl">
       <p className="text-sm font-semibold text-white">{node.title}</p>
       {node.subtitle && <p className="mt-0.5 text-xs text-muted">{node.subtitle}</p>}
-      {node.detail && <p className="mt-1.5 whitespace-pre-line text-[13px] leading-snug text-muted">{node.detail}</p>}
+      {node.detail && (
+        <p className="mt-1.5 whitespace-pre-line text-[13px] leading-snug text-muted">
+          <DrugText text={node.detail} />
+        </p>
+      )}
       <div className="mt-3">
         <CalculatorForm
           fields={calc.fields}
@@ -166,7 +171,7 @@ function NodeCard({
           {node.items.map((item) => (
             <li key={item} className="flex items-start gap-2 text-sm leading-snug text-white">
               <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent-2" />
-              {item}
+              <DrugText text={item} />
             </li>
           ))}
         </ul>
@@ -177,14 +182,18 @@ function NodeCard({
               {node.treatment.map((item) => (
                 <li key={item} className="flex items-start gap-2 text-sm leading-snug text-white">
                   <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-white/60" />
-                  {item}
+                  <DrugText text={item} />
                 </li>
               ))}
             </ul>
           </>
         )}
         {node.warning && <Warning text={node.warning} />}
-        {node.detail && <p className="mt-2.5 whitespace-pre-line text-[13px] leading-snug text-muted">{node.detail}</p>}
+        {node.detail && (
+          <p className="mt-2.5 whitespace-pre-line text-[13px] leading-snug text-muted">
+            <DrugText text={node.detail} />
+          </p>
+        )}
         {node.link && <NodeLink link={node.link} />}
         {node.links?.map((l) => <NodeLink key={l.to} link={l} />)}
       </div>
@@ -195,7 +204,11 @@ function NodeCard({
     <div className="card-in w-[82vw] max-w-md shrink-0 rounded-2xl border border-border bg-surface p-4 backdrop-blur-xl">
       <p className="text-sm font-semibold text-white">{node.title}</p>
       {node.subtitle && <p className="mt-0.5 text-xs text-muted">{node.subtitle}</p>}
-      {node.detail && <p className="mt-1.5 whitespace-pre-line text-[13px] leading-snug text-muted">{node.detail}</p>}
+      {node.detail && (
+        <p className="mt-1.5 whitespace-pre-line text-[13px] leading-snug text-muted">
+          <DrugText text={node.detail} />
+        </p>
+      )}
       {node.warning && <Warning text={node.warning} />}
       {node.link && <NodeLink link={node.link} />}
       {node.links?.map((l) => <NodeLink key={l.to} link={l} />)}

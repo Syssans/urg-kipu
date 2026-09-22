@@ -1,4 +1,5 @@
 import { LEVEL_STYLES, type Interpretation } from "../lib/calculators/types";
+import { DrugText } from "./DrugText";
 
 export function ResultCard({ result }: { result: Interpretation }) {
   const role = result.role ?? "primary";
@@ -13,7 +14,11 @@ export function ResultCard({ result }: { result: Interpretation }) {
         {result.scoreLabel && (
           <p className="mt-2 text-xl font-bold tabular-nums text-white">{result.scoreLabel}</p>
         )}
-        {result.detail && <p className="mt-1.5 text-sm leading-snug text-muted">{result.detail}</p>}
+        {result.detail && (
+          <p className="mt-1.5 text-sm leading-snug text-muted">
+            <DrugText text={result.detail} />
+          </p>
+        )}
       </div>
     );
   }
@@ -28,7 +33,11 @@ export function ResultCard({ result }: { result: Interpretation }) {
       {result.scoreLabel && (
         <p className="mt-2 text-2xl font-bold tabular-nums text-white">{result.scoreLabel}</p>
       )}
-      {result.detail && <p className="mt-1.5 text-sm leading-snug text-muted">{result.detail}</p>}
+      {result.detail && (
+        <p className="mt-1.5 text-sm leading-snug text-muted">
+          <DrugText text={result.detail} />
+        </p>
+      )}
     </div>
   );
 }

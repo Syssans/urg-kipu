@@ -9,6 +9,7 @@ import { ToolsList } from "./pages/ToolsList";
 import { TreesList } from "./pages/TreesList";
 import { CalculatorPage } from "./pages/CalculatorPage";
 import { DecisionTreePage } from "./pages/DecisionTreePage";
+import { DrugPage } from "./pages/DrugPage";
 import { Favorites } from "./pages/Favorites";
 import { About } from "./pages/About";
 import { getTool } from "./lib/tools";
@@ -32,6 +33,7 @@ export default function App() {
             <Route path="/a-propos" element={<About />} />
             <Route path="/arbres" element={<TreesList />} />
             <Route path="/arbres/:id" element={<DecisionTreePage />} />
+            <Route path="/medicaments/:id" element={<DrugPage />} />
           </Routes>
         </div>
         <BottomNav />

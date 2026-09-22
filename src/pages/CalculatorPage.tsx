@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Header } from "../components/Header";
 import { CalculatorForm } from "../components/CalculatorForm";
 import { ResultCard } from "../components/ResultCard";
+import { DrugText } from "../components/DrugText";
 import { getCalculator } from "../lib/calculators";
 import { defaultValues, type Calculator, type Values } from "../lib/calculators/types";
 import { useFavorites } from "../lib/favorites";
@@ -127,7 +128,11 @@ function CalculatorPageInner({
             <span className="font-medium text-slate-300">Source : </span>
             {calc.source}
           </p>
-          {calc.notes && <p>{calc.notes}</p>}
+          {calc.notes && (
+            <p>
+              <DrugText text={calc.notes} />
+            </p>
+          )}
         </div>
       </div>
     </div>

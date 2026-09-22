@@ -74,6 +74,19 @@ CHU Dijon-Bourgogne) ; crise convulsive et état de mal épileptique, adulte et 
 même arbre avec l'âge du patient comme premier discriminant (CE-MIR pour l'adulte, CNPU pour
 l'enfant).
 
+### Mémo médicaments (`src/lib/drugs/`)
+
+Pas d'onglet ni de page de liste dédiée : chaque médicament est une mini-fiche (DCI, marques
+françaises, formes, posologie usuelle, contre-indications) accessible uniquement via `/medicaments/:id`,
+en cliquant sur son nom partout où il apparaît dans l'app (scores, arbres, outils), et via la
+recherche globale (DCI ou nom de marque). Le lien automatique repose sur `src/lib/drugs/linkify.tsx`
+(`DrugText`) : tout texte affiché par un score, un arbre ou une fiche médicament passe par ce
+composant, qui repère les DCI/marques connues et les transforme en lien vers `/medicaments/:id`, sans
+qu'il faille alourdir le contenu source avec du markup. Pour ajouter un médicament, créer un fichier
+sur le modèle de `src/lib/drugs/clonazepam.ts` et l'enregistrer dans `src/lib/drugs/index.ts` — il
+devient alors automatiquement cliquable partout où son nom apparaît. Actuellement : clonazépam
+(Rivotril®).
+
 ## Icônes
 
 Générées via `scripts/gen-icons.mjs` (nécessite le package `sharp`, déjà en devDependency).

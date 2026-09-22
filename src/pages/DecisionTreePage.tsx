@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Header } from "../components/Header";
 import { DecisionTreeView } from "../components/DecisionTreeView";
+import { DrugText } from "../components/DrugText";
 import { getTree } from "../lib/trees";
 import { useRecentlyUsed } from "../lib/recentlyUsed";
 
@@ -40,7 +41,11 @@ export function DecisionTreePage() {
             <span className="font-medium text-slate-300">Source : </span>
             {tree.source}
           </p>
-          {tree.notes && <p>{tree.notes}</p>}
+          {tree.notes && (
+            <p>
+              <DrugText text={tree.notes} />
+            </p>
+          )}
         </div>
       </div>
     </div>
