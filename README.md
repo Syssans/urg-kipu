@@ -56,7 +56,7 @@ Onglet « Calcul » : conversions d'unités et formules courantes, indépendante
 (pas de protocoles de service ici — ceux-ci varient trop selon pays/établissements pour être
 codés en dur). Même moteur que les calculateurs (`Calculator`, `CalculatorForm`, `CalculatorPage`),
 catégories dédiées `conversion` / `formule`. Actuellement : conversion glycémie (mmol/L ↔ g/L), QT
-corrigé (formule de Bazett), IMC, clairance de la créatinine (Cockcroft-Gault), natrémie corrigée
+corrigé (formule de Framingham), IMC, clairance de la créatinine (Cockcroft-Gault), natrémie corrigée
 (hyperglycémie), déficit hydrique (hypernatrémie), calcémie corrigée (albumine). Pour ajouter un
 outil, créer un fichier sur le modèle de
 `src/lib/tools/bmi.ts` et l'enregistrer dans `src/lib/tools/index.ts`.

@@ -2,11 +2,11 @@ import type { Calculator, Level } from "../calculators/types";
 
 export const qtc: Calculator = {
   id: "qtc",
-  name: "QT corrigé (formule de Bazett)",
+  name: "QT corrigé (formule de Framingham)",
   shortName: "QTc",
   category: "formule",
-  keywords: ["qt", "qtc", "qt corrige", "qt corrigé", "bazett", "ecg", "torsade de pointes", "allongement du qt"],
-  summary: "Calcule le QT corrigé à partir du QT mesuré et de la fréquence cardiaque, selon la formule de Bazett.",
+  keywords: ["qt", "qtc", "qt corrige", "qt corrigé", "framingham", "ecg", "torsade de pointes", "allongement du qt"],
+  summary: "Calcule le QT corrigé à partir du QT mesuré et de la fréquence cardiaque, selon la formule de Framingham.",
   fields: [
     { type: "number", id: "qt", label: "QT mesuré", unit: "ms", step: 1 },
     { type: "number", id: "hr", label: "Fréquence cardiaque", unit: "/min", step: 1 },
@@ -25,7 +25,7 @@ export const qtc: Calculator = {
     const qt = v.qt ?? 0;
     const hr = v.hr ?? 60;
     const rrSec = 60 / hr;
-    return qt / Math.sqrt(rrSec);
+    return qt + 154 * (1 - rrSec);
   },
   interpret: (score, v) => {
     const qtc = score;
@@ -52,6 +52,6 @@ export const qtc: Calculator = {
     const detail = clinicalNote ? `${clinicalNote} ${norms}` : norms;
     return [{ title, level, scoreLabel: `${qtc.toFixed(0)} ms`, detail }];
   },
-  source: "Formule de Bazett (QTc = QT / √RR) ; seuils selon Rautaharju et al., AHA/ACCF/HRS 2009.",
-  notes: "La formule de Bazett surestime le QTc aux fréquences cardiaques élevées et le sous-estime aux fréquences basses.",
+  source: "Formule de Framingham (QTc = QT + 154 × (1 − RR), QT en ms et RR en secondes ; Sagie et al., Am J Cardiol 1992) ; seuils selon Rautaharju et al., AHA/ACCF/HRS 2009.",
+  notes: "La formule de Framingham (correction linéaire) est moins dépendante de la fréquence cardiaque que celle de Bazett, qui surestime le QTc aux fréquences élevées et le sous-estime aux fréquences basses.",
 };
