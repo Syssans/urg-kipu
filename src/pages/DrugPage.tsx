@@ -32,7 +32,7 @@ export function DrugPage() {
           <h2 className="text-lg font-semibold text-white">{drug.dci}</h2>
           <p className="mt-1 text-sm leading-snug text-muted">
             {drug.brands.map((b) => `${b} ®`).join(", ")}
-            {drug.class ? ` — ${drug.class}` : ""}
+            {drug.brands.length > 0 && drug.class ? ` — ${drug.class}` : drug.class ?? ""}
           </p>
         </div>
 
@@ -56,7 +56,7 @@ export function DrugPage() {
               .map((line) => (
                 <li key={line} className="flex items-start gap-2 text-sm leading-snug text-white">
                   <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-emerald-400" />
-                  <DrugText text={line} />
+                  <DrugText text={line} excludeDrugId={drug.id} />
                 </li>
               ))}
           </ul>
@@ -84,7 +84,7 @@ export function DrugPage() {
                 strokeLinejoin="round"
               />
             </svg>
-            <DrugText text={drug.warning} />
+            <DrugText text={drug.warning} excludeDrugId={drug.id} />
           </p>
         )}
 

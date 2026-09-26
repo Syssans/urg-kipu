@@ -11,7 +11,7 @@ export function DrugListItem({ drug, subtitle }: { drug: Drug; subtitle?: string
         <span className="font-medium text-white">{drug.dci}</span>
         <span className="shrink-0 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[11px] font-medium text-emerald-300">Médicament</span>
       </div>
-      <p className="mt-1 line-clamp-2 text-[13px] leading-snug text-muted">{subtitle ?? drug.brands.join(", ")}</p>
+      <p className="mt-1 line-clamp-2 text-[13px] leading-snug text-muted">{subtitle ?? (drug.brands.join(", ") || drug.class)}</p>
     </Link>
   );
 }

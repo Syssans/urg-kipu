@@ -84,9 +84,12 @@ recherche globale (DCI ou nom de marque). Le lien automatique repose sur `src/li
 composant, qui repère les DCI/marques connues et les transforme en lien vers `/medicaments/:id`, sans
 qu'il faille alourdir le contenu source avec du markup. Pour ajouter un médicament, créer un fichier
 sur le modèle de `src/lib/drugs/clonazepam.ts` et l'enregistrer dans `src/lib/drugs/index.ts` — il
-devient alors automatiquement cliquable partout où son nom apparaît. Actuellement : clonazépam
-(Rivotril®), midazolam (Hypnovel®), lévétiracétam (Keppra®), néfopam (Acupan®), prednisolone
-(Solupred®).
+devient alors automatiquement cliquable partout où son nom apparaît. Les noms de marque et les alias
+(`aliases`, ex. « Aspirine ») sont aussi indexés dans la recherche et dans les liens automatiques.
+Actuellement 53 fiches : les 50 médicaments de la liste « Dilutions CRUU/SMUR » du CHU Dijon
+(posologies et préparations issues de ce protocole, `src/lib/drugs/sources.ts`) plus lévétiracétam,
+néfopam et prednisolone. Les contre-indications sont reprises du protocole quand il en donne et
+complétées d'après les RCP : à relire avant usage clinique.
 
 ## Icônes
 
