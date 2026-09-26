@@ -8,8 +8,8 @@ export const atropine: Drug = {
   class: "Anticholinergique",
   forms: ["Ampoule 0,5 mg/1 mL"],
   dosage:
-    "Bradycardie sinusale, BAV, adulte : 1 mg IVD (2 ampoules de 0,5 mg pures, seringue 2 mL).\n" +
-    "Enfant : 0,02 mg/kg IVD (minimum 0,1 mg, maximum 0,5 mg) — 1 ampoule (0,5 mg) + 4 mL NaCl 0,9 % (0,1 mg/mL, seringue 5 mL).",
+    "Bradycardie sinusale, BAV, adulte : 1 mg IVD _(2 ampoules de 0,5 mg pures, seringue 2 mL)_.\n" +
+    "Enfant : 0,02 mg/kg IVD (minimum 0,1 mg, maximum 0,5 mg) — _1 ampoule (0,5 mg) + 4 mL NaCl 0,9 % (0,1 mg/mL, seringue 5 mL)_.",
   contraindications: [
     "Aucune contre-indication absolue dans une bradycardie menaçant le pronostic vital",
     "Glaucome à angle fermé",

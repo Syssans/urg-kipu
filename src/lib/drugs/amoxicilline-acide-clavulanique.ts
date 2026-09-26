@@ -7,7 +7,7 @@ export const amoxicillineAcideClavulanique: Drug = {
   brands: ["Augmentin"],
   class: "Antibiotique (pénicilline + inhibiteur de bêtalactamase)",
   forms: ["Lyophilisat 2 g pour perfusion IV (adulte)"],
-  dosage: "Fracture ouverte, inhalation : 2 g en perfusion IV sur 30 min (2 g dans une poche de 100 mL de NaCl 0,9 %).",
+  dosage: "Fracture ouverte, inhalation : 2 g en perfusion IV sur 30 min _(2 g dans une poche de 100 mL de NaCl 0,9 %)_.",
   contraindications: [
     "Allergie aux pénicillines",
     "Antécédent de réaction allergique grave à une autre bêtalactamine",

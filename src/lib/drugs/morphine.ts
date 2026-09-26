@@ -10,7 +10,7 @@ export const morphine: Drug = {
   dosage:
     "Adulte : 1 à 3 mg IVD toutes les 10 min environ, jusqu'à une EVA < 5.\n" +
     "Enfant : 0,05 à 0,1 mg/kg IVD, puis bolus de 0,01 à 0,05 mg/kg toutes les 5 à 7 min.\n" +
-    "Préparation : 1 ampoule (10 mg) + 9 mL NaCl 0,9 % (1 mg/mL, seringue 10 mL).",
+    "_Préparation : 1 ampoule (10 mg) + 9 mL NaCl 0,9 % (1 mg/mL, seringue 10 mL)._",
   contraindications: [
     "Détresse respiratoire, insuffisance respiratoire décompensée",
     "Insuffisance hépatique sévère",

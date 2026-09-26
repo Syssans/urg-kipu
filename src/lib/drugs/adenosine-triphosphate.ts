@@ -9,7 +9,7 @@ export const adenosineTriphosphate: Drug = {
   class: "Antiarythmique (bloqueur nodal transitoire)",
   forms: ["Ampoule 20 mg/2 mL"],
   dosage:
-    "Tachycardie supraventriculaire, à titre diagnostique et thérapeutique : 1/2 à 1 ampoule (10 à 20 mg) en IVD, pure (seringue 2 mL).",
+    "Tachycardie supraventriculaire, à titre diagnostique et thérapeutique : 1/2 à 1 ampoule (10 à 20 mg) en IVD, _pure (seringue 2 mL)_.",
   contraindications: [
     "BAV de haut degré ou maladie de l'oreillette non appareillés",
     "Asthme, bronchospasme",

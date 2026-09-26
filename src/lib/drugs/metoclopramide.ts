@@ -7,7 +7,7 @@ export const metoclopramide: Drug = {
   brands: ["Primpéran"],
   class: "Antiémétique (antagoniste dopaminergique)",
   forms: ["Ampoule 10 mg/2 mL"],
-  dosage: "Nausées, vomissements : 1 ampoule (10 mg) diluée dans 50 mL de NaCl 0,9 %, en perfusion IV sur 15 min.",
+  dosage: "Nausées, vomissements : 1 ampoule (10 mg) _diluée dans 50 mL de NaCl 0,9 %_, en perfusion IV sur 15 min.",
   contraindications: [
     "Hémorragie, obstruction ou perforation digestive",
     "Phéochromocytome",

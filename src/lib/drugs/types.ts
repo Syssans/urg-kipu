@@ -6,6 +6,8 @@ export interface Drug {
   aliases?: string[];
   class?: string;
   forms: string[];
+  // One line per bullet (\n-separated). Text wrapped in _underscores_ is dilution/preparation
+  // info and is rendered in grey italics on the fiche.
   dosage: string;
   contraindications: string[];
   warning?: string;

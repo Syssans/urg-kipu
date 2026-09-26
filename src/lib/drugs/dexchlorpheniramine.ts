@@ -8,7 +8,7 @@ export const dexchlorpheniramine: Drug = {
   class: "Antihistaminique H1",
   forms: ["Ampoule 5 mg/1 mL"],
   dosage:
-    "Urticaire, réaction allergique : 1 ampoule (5 mg) en IV lente sur 1 min, pure (seringue 5 mL), à répéter au bout de 10 min si persistance.",
+    "Urticaire, réaction allergique : 1 ampoule (5 mg) en IV lente sur 1 min, _pure (seringue 5 mL)_, à répéter au bout de 10 min si persistance.",
   contraindications: [
     "Glaucome à angle fermé",
     "Risque de rétention urinaire (adénome prostatique)",

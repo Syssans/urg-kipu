@@ -10,7 +10,7 @@ export const suxamethonium: Drug = {
   forms: ["Ampoule 100 mg/2 mL"],
   dosage:
     "Intubation en séquence rapide : 1 mg/kg IVD.\n" +
-    "Préparation : 1 ampoule (100 mg) + 8 mL NaCl 0,9 % (10 mg/mL, seringue 10 mL).",
+    "_Préparation : 1 ampoule (100 mg) + 8 mL NaCl 0,9 % (10 mg/mL, seringue 10 mL)._",
   contraindications: [
     "Allergie aux curares",
     "Hyperkaliémie",

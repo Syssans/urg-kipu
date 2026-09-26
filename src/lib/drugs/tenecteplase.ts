@@ -14,7 +14,7 @@ export const tenecteplase: Drug = {
     "70 à < 80 kg : 8 000 UI.\n" +
     "80 à < 90 kg : 9 000 UI.\n" +
     "≥ 90 kg : 10 000 UI.\n" +
-    "Préparation : reconstituer la poudre avec le solvant fourni (10 000 UI/10 mL), seringue spéciale de 10 mL.",
+    "_Préparation : reconstituer la poudre avec le solvant fourni (10 000 UI/10 mL), seringue spéciale de 10 mL._",
   contraindications: [
     "Hémorragie active ou diathèse hémorragique",
     "Antécédent d'hémorragie intracrânienne, AVC ischémique récent (< 6 mois)",

@@ -8,8 +8,8 @@ export const amiodarone: Drug = {
   class: "Antiarythmique de classe III",
   forms: ["Ampoule 150 mg/3 mL"],
   dosage:
-    "Trouble du rythme supraventriculaire ou ventriculaire mal toléré, dose de charge : 5 mg/kg sur 20 à 30 min — 1 à 2 ampoules de 150 mg + G5 % QSP 20 mL (seringue 50 mL), au PSE à 60 mL/h.\n" +
-    "Entretien : 10 à 20 mg/kg/24 h — 3 à 6 ampoules de 150 mg + G5 % QSP 48 mL (seringue 50 mL), au PSE à 2 mL/h.\n" +
+    "Trouble du rythme supraventriculaire ou ventriculaire mal toléré, dose de charge : 5 mg/kg sur 20 à 30 min — _1 à 2 ampoules de 150 mg + G5 % QSP 20 mL (seringue 50 mL)_, au PSE à 60 mL/h.\n" +
+    "Entretien : 10 à 20 mg/kg/24 h — _3 à 6 ampoules de 150 mg + G5 % QSP 48 mL (seringue 50 mL)_, au PSE à 2 mL/h.\n" +
     "ACR avec FV ou TV sans pouls : 300 mg IVD après le 3ᵉ choc électrique externe (5 mg/kg chez l'enfant).",
   contraindications: [
     "Bradycardie sinusale, bloc sino-auriculaire ou BAV non appareillés",

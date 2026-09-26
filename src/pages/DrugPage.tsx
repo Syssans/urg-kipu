@@ -56,7 +56,7 @@ export function DrugPage() {
               .map((line) => (
                 <li key={line} className="flex items-start gap-2 text-sm leading-snug text-white">
                   <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-emerald-400" />
-                  <DrugText text={line} excludeDrugId={drug.id} />
+                  <DosageLine line={line} drugId={drug.id} />
                 </li>
               ))}
           </ul>
@@ -107,5 +107,22 @@ function Section({ title, children }: { title: string; children: React.ReactNode
       <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">{title}</h3>
       {children}
     </div>
+  );
+}
+
+// Text between underscores is dilution/preparation info: secondary, so shown in grey italics.
+function DosageLine({ line, drugId }: { line: string; drugId: string }) {
+  return (
+    <span>
+      {line.split("_").map((segment, i) =>
+        segment === "" ? null : i % 2 === 1 ? (
+          <span key={i} className="italic text-muted">
+            <DrugText text={segment} excludeDrugId={drugId} />
+          </span>
+        ) : (
+          <DrugText key={i} text={segment} excludeDrugId={drugId} />
+        ),
+      )}
+    </span>
   );
 }

@@ -8,7 +8,7 @@ export const glucose30: Drug = {
   aliases: ["Glucosé 30 %"],
   class: "Hyperglycémiant (soluté hypertonique)",
   forms: ["Ampoule 30 % soit 3 g/10 mL"],
-  dosage: "Hypoglycémie : 1 à 2 ampoules en IV lente, pur, sur 10 min (seringue 20 mL).",
+  dosage: "Hypoglycémie : 1 à 2 ampoules en IV lente, _pur_, sur 10 min _(seringue 20 mL)_.",
   contraindications: [
     "Aucune contre-indication dans le traitement d'une hypoglycémie confirmée",
     "En l'absence d'hypoglycémie : hyperglycémie, hyperosmolarité",

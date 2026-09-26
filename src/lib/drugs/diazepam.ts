@@ -8,8 +8,8 @@ export const diazepam: Drug = {
   class: "Benzodiazépine",
   forms: ["Ampoule 10 mg/2 mL"],
   dosage:
-    "Crise convulsive, adulte : 1 ampoule (10 mg) en IV lente sur 1 min (seringue 2 mL), à répéter au bout de 10 min si persistance.\n" +
-    "Crise convulsive, enfant : 0,5 mg/kg par voie rectale (contenu de l'ampoule, seringue 2 mL), à répéter 10 min après si persistance.",
+    "Crise convulsive, adulte : 1 ampoule (10 mg) en IV lente sur 1 min _(seringue 2 mL)_, à répéter au bout de 10 min si persistance.\n" +
+    "Crise convulsive, enfant : 0,5 mg/kg par voie rectale _(contenu de l'ampoule, seringue 2 mL)_, à répéter 10 min après si persistance.",
   contraindications: [
     "Insuffisance respiratoire sévère",
     "Syndrome d'apnées du sommeil",

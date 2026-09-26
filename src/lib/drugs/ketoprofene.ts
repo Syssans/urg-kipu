@@ -9,7 +9,7 @@ export const ketoprofene: Drug = {
   forms: ["Ampoule 100 mg/4 mL"],
   dosage:
     "Douleur (colique néphrétique en particulier) : 50 à 100 mg en perfusion IV sur 20 min.\n" +
-    "Préparation : 50 à 100 mg de kétoprofène dans 100 mL de NaCl 0,9 % (0,5 à 1 mg/mL).",
+    "_Préparation : 50 à 100 mg de kétoprofène dans 100 mL de NaCl 0,9 % (0,5 à 1 mg/mL)._",
   contraindications: [
     "Ulcère gastroduodénal, hémorragie digestive",
     "Allergie aux AINS ou à l'aspirine",

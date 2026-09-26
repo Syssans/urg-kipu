@@ -8,8 +8,8 @@ export const flumazenil: Drug = {
   class: "Antidote des benzodiazépines",
   forms: ["Ampoule 1 mg/10 mL (0,1 mg/mL)"],
   dosage:
-    "Bolus IVD (pur, seringue 10 mL) : dose initiale de 0,2 mg puis 0,1 mg toutes les minutes jusqu'à 1 mg au maximum.\n" +
-    "Entretien au PSE (seringue 50 mL) : 50 % de la dose totale initiale par heure (en mg/h).",
+    "Bolus IVD _(pur, seringue 10 mL)_ : dose initiale de 0,2 mg puis 0,1 mg toutes les minutes jusqu'à 1 mg au maximum.\n" +
+    "Entretien au PSE _(seringue 50 mL)_ : 50 % de la dose totale initiale par heure (en mg/h).",
   contraindications: [
     "Hypersensibilité au flumazénil ou aux benzodiazépines",
     "Épileptique traité par benzodiazépines (risque de crise de sevrage)",

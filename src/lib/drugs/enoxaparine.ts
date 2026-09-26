@@ -11,7 +11,7 @@ export const enoxaparine: Drug = {
   dosage:
     "EP / TVP : 100 UI/kg en SC.\n" +
     "SCA : 50 UI/kg en IVD ; en cas de thrombolyse : 3 000 UI.\n" +
-    "Préparation : prélever dans le flacon la dose nécessaire avec une seringue de 1 mL.",
+    "_Préparation : prélever dans le flacon la dose nécessaire avec une seringue de 1 mL._",
   contraindications: [
     "Insuffisance rénale sévère (adapter la dose ou préférer l'héparine non fractionnée)",
     "Hémorragie active ou lésion à risque hémorragique",

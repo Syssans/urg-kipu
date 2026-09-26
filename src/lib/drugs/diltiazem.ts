@@ -9,7 +9,7 @@ export const diltiazem: Drug = {
   forms: ["Flacon de poudre 25 mg (à diluer)"],
   dosage:
     "Tachycardie jonctionnelle, TACFA : 0,25 à 0,30 mg/kg en IVD sur 2 min.\n" +
-    "Préparation : 2 flacons de 25 mg + 50 mL de NaCl 0,9 % (1 mg/mL), puis prélever la dose nécessaire (seringue de 10, 20 ou 30 mL).",
+    "_Préparation : 2 flacons de 25 mg + 50 mL de NaCl 0,9 % (1 mg/mL), puis prélever la dose nécessaire (seringue de 10, 20 ou 30 mL)._",
   contraindications: [
     "Dysfonction sinusale ou BAV de haut degré non appareillés",
     "Insuffisance cardiaque, dysfonction ventriculaire gauche sévère",

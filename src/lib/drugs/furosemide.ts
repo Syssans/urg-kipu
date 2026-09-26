@@ -7,7 +7,7 @@ export const furosemide: Drug = {
   brands: ["Lasilix"],
   class: "Diurétique de l'anse",
   forms: ["Ampoule 20 mg/2 mL (10 mg/mL)"],
-  dosage: "OAP, poussée hypertensive : 1 mg/kg IVD, pur (10 mg/mL, seringue 10 mL).",
+  dosage: "OAP, poussée hypertensive : 1 mg/kg IVD, _pur (10 mg/mL, seringue 10 mL)_.",
   contraindications: [
     "Hypovolémie, déshydratation",
     "Hypotension artérielle",

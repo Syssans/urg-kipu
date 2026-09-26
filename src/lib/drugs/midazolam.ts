@@ -10,9 +10,9 @@ export const midazolam: Drug = {
   dosage:
     "État de mal épileptique, adulte : 0,15 mg/kg en IM (≈ 10 mg pour 70 kg), en l'absence de voie veineuse rapidement disponible.\n" +
     "État de mal épileptique, enfant : voie buccale, dose adaptée au poids et à l'âge — avis spécialisé.\n" +
-    "Entretien de sédation : 0,1 mg/kg/h au PSE — 1 ampoule de 50 mg + 40 mL NaCl 0,9 % (1 mg/mL, seringue 50 mL).\n" +
-    "Sédation légère : 0,05 mg/kg IVD, pur (5 mg/5 mL, seringue 5 mL).\n" +
-    "Sédation chez l'enfant : 0,025 à 0,05 mg/kg — 1 ampoule de 5 mg + 45 mL NaCl 0,9 % (0,1 mg/mL, seringue 50 mL).",
+    "Entretien de sédation : 0,1 mg/kg/h au PSE — _1 ampoule de 50 mg + 40 mL NaCl 0,9 % (1 mg/mL, seringue 50 mL)_.\n" +
+    "Sédation légère : 0,05 mg/kg IVD, _pur (5 mg/5 mL, seringue 5 mL)_.\n" +
+    "Sédation chez l'enfant : 0,025 à 0,05 mg/kg — _1 ampoule de 5 mg + 45 mL NaCl 0,9 % (0,1 mg/mL, seringue 50 mL)_.",
   contraindications: [
     "Insuffisance respiratoire sévère",
     "Myasthénie",

@@ -16,7 +16,7 @@ export const clonazepam: Drug = {
     "seconde injection identique en cas de persistance des convulsions 5 minutes après la première.\n" +
     "Protocole du service, > 15 ans : 1 mg en IV lente sur 2 à 3 min, renouvelable 4 à 6 fois.\n" +
     "Protocole du service, < 15 ans : 0,25 à 0,5 mg en IV lente sur 2 à 3 min.\n" +
-    "Préparation IV : 1/4 d'ampoule (0,25 mg) à 1 ampoule (1 mg) + 1 mL du solvant spécifique (seringue 2 mL).\n" +
+    "_Préparation IV : 1/4 d'ampoule (0,25 mg) à 1 ampoule (1 mg) + 1 mL du solvant spécifique (seringue 2 mL)._\n" +
     "Par voie orale (traitement de fond ou prévention de la récidive) : instauration à dose faible avec titration progressive, prescription et suivi spécialisés.",
   contraindications: [
     "Insuffisance respiratoire sévère",

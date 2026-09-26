@@ -9,7 +9,7 @@ export const gluconateCalcium: Drug = {
   forms: ["Ampoule 10 % soit 1 g/10 mL"],
   dosage:
     "Hyperkaliémie avec signes ECG : 1 ampoule (1 g), renouvelable, en IV lente sur 20 min.\n" +
-    "Préparation : 1 ampoule dans une poche de 100 mL de NaCl 0,9 % (1 g/100 mL).",
+    "_Préparation : 1 ampoule dans une poche de 100 mL de NaCl 0,9 % (1 g/100 mL)._",
   contraindications: [
     "Patient sous digoxine (risque de troubles du rythme)",
     "Hypercalcémie, hypercalciurie sévère",

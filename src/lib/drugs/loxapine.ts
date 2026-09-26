@@ -8,8 +8,8 @@ export const loxapine: Drug = {
   class: "Neuroleptique (antipsychotique)",
   forms: ["Ampoule 50 mg/2 mL"],
   dosage:
-    "Agitation, agressivité : 1 à 4 ampoules soit 50 à 200 mg en IM directe, non diluée.\n" +
-    "Matériel : seringue de 10 mL + aiguille verte longue.",
+    "Agitation, agressivité : 1 à 4 ampoules soit 50 à 200 mg en IM directe, _non diluée_.\n" +
+    "_Matériel : seringue de 10 mL + aiguille verte longue._",
   contraindications: [
     "Intoxication alcoolique aiguë (potentialisation de la sédation)",
     "Coma",

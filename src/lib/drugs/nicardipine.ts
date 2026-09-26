@@ -8,8 +8,8 @@ export const nicardipine: Drug = {
   class: "Inhibiteur calcique (dihydropyridine)",
   forms: ["Ampoule 10 mg/10 mL (1 mg/mL)"],
   dosage:
-    "Contrôle tensionnel (HTA sévère, dissection aortique, anévrisme, MAP) : sur VVC, 1 mg IVD toutes les 3 min, maximum 10 mg (pur, 1 mg/mL, seringue 50 mL).\n" +
-    "Entretien : 1 mg/h au PSE sur VVP — 1 ampoule de 10 mg + 40 mL de G5 % (10 mg/50 mL soit 0,2 mg/mL, seringue 50 mL).",
+    "Contrôle tensionnel (HTA sévère, dissection aortique, anévrisme, MAP) : sur VVC, 1 mg IVD toutes les 3 min, maximum 10 mg _(pur, 1 mg/mL, seringue 50 mL)_.\n" +
+    "Entretien : 1 mg/h au PSE sur VVP — _1 ampoule de 10 mg + 40 mL de G5 % (10 mg/50 mL soit 0,2 mg/mL, seringue 50 mL)_.",
   contraindications: [
     "Rétrécissement aortique serré",
     "Infarctus du myocarde récent, angor instable",
