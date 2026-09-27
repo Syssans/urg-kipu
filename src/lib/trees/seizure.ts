@@ -6,6 +6,7 @@ export const seizure: DecisionTree = {
   shortName: "Convulsions",
   summary:
     "Diagnostic et prise en charge chronométrée d'une crise convulsive tonico-clonique généralisée et de l'état de mal épileptique, chez l'adulte et chez l'enfant.",
+  keywords: ["convulsion", "crise convulsive", "épilepsie", "état de mal épileptique", "EME", "EMETCG", "crise fébrile", "benzodiazépine"],
   rootId: "age-gate",
   nodes: {
     "age-gate": {

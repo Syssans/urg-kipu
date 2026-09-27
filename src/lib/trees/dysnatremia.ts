@@ -5,6 +5,7 @@ export const dysnatremia: DecisionTree = {
   name: "Diagnostic d'une dysnatrémie",
   shortName: "Dysnatrémie",
   summary: "Diagnostic et prise en charge d'une dysnatrémie, à partir des protocoles de service SAU & SAMU du CHU Dijon-Bourgogne.",
+  keywords: ["natrémie", "sodium", "hyponatrémie", "hypernatrémie", "dysnatrémie", "sérum salé hypertonique"],
   rootId: "natremie",
   nodes: {
     natremie: {

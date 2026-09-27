@@ -1,5 +1,6 @@
 import type { Calculator } from "../calculators/types";
-import { normalizeSearch } from "../search";
+import { searchRanked } from "../search";
+import { calculatorSearchFields } from "../calculators";
 import { glycemiaConversion } from "./glycemiaConversion";
 import { qtc } from "./qtc";
 import { bmi } from "./bmi";
@@ -15,10 +16,5 @@ export function getTool(id: string): Calculator | undefined {
 }
 
 export function searchTools(query: string): Calculator[] {
-  const q = normalizeSearch(query.trim());
-  if (!q) return tools;
-  return tools.filter((c) => {
-    const haystack = normalizeSearch([c.name, c.shortName, c.summary, ...c.keywords].join(" "));
-    return haystack.includes(q);
-  });
+  return searchRanked(tools, query, calculatorSearchFields);
 }

@@ -57,6 +57,7 @@ export interface DecisionTree {
   name: string;
   shortName: string;
   summary: string;
+  keywords?: string[];
   rootId: string;
   nodes: Record<string, TreeNode>;
   source: string;

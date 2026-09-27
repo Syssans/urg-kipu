@@ -52,7 +52,7 @@ import { sulfateMagnesium } from "./sulfate-magnesium";
 import { suxamethonium } from "./suxamethonium";
 import { tenecteplase } from "./tenecteplase";
 import { thiopental } from "./thiopental";
-import { normalizeSearch } from "../search";
+import { searchRanked, W, type SearchField } from "../search";
 
 export const drugs: Drug[] = [
   acetylsalicylateLysine,
@@ -114,10 +114,20 @@ export function getDrug(id: string): Drug | undefined {
   return drugs.find((d) => d.id === id);
 }
 
+// Dosage lines start with the indication ("Anaphylaxie adulte : ...", "ACR : ..."), so indexing
+// them lets a search by indication find the drug.
+export function drugSearchFields(d: Drug): SearchField[] {
+  return [
+    { text: d.dci, weight: W.name },
+    ...d.brands.map((b) => ({ text: b, weight: W.name })),
+    ...(d.aliases ?? []).map((a) => ({ text: a, weight: W.keyword })),
+    { text: d.class ?? "", weight: W.category },
+    { text: d.dosage, weight: W.body },
+  ];
+}
+
 export function searchDrugs(query: string): Drug[] {
-  const q = normalizeSearch(query.trim());
-  if (!q) return drugs;
-  return drugs.filter((d) => normalizeSearch([d.dci, ...d.brands, ...(d.aliases ?? [])].join(" ")).includes(q));
+  return searchRanked(drugs, query, drugSearchFields);
 }
 
 export * from "./types";

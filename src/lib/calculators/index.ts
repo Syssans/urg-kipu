@@ -1,5 +1,6 @@
 import type { Calculator } from "./types";
-import { normalizeSearch } from "../search";
+import { searchRanked, W, type SearchField } from "../search";
+import { CATEGORY_LABELS } from "./types";
 import { gcs } from "./gcs";
 import { nihss } from "./nihss";
 import { qsofa } from "./qsofa";
@@ -60,13 +61,18 @@ export function getCalculator(id: string): Calculator | undefined {
   return calculators.find((c) => c.id === id);
 }
 
+export function calculatorSearchFields(c: Calculator): SearchField[] {
+  return [
+    { text: c.shortName, weight: W.name },
+    { text: c.name, weight: W.name },
+    ...c.keywords.map((k) => ({ text: k, weight: W.keyword })),
+    { text: CATEGORY_LABELS[c.category], weight: W.category },
+    { text: c.summary, weight: W.summary },
+  ];
+}
+
 export function searchCalculators(query: string): Calculator[] {
-  const q = normalizeSearch(query.trim());
-  if (!q) return calculators;
-  return calculators.filter((c) => {
-    const haystack = normalizeSearch([c.name, c.shortName, c.summary, ...c.keywords].join(" "));
-    return haystack.includes(q);
-  });
+  return searchRanked(calculators, query, calculatorSearchFields);
 }
 
 export * from "./types";
