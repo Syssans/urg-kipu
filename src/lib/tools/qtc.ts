@@ -8,8 +8,8 @@ export const qtc: Calculator = {
   keywords: ["qt", "qtc", "qt corrige", "qt corrigé", "framingham", "ecg", "torsade de pointes", "allongement du qt"],
   summary: "Calcule le QT corrigé à partir du QT mesuré et de la fréquence cardiaque, selon la formule de Framingham.",
   fields: [
-    { type: "number", id: "qt", label: "QT mesuré", unit: "ms", step: 1 },
-    { type: "number", id: "hr", label: "Fréquence cardiaque", unit: "/min", step: 1 },
+    { type: "number", id: "qt", min: 150, max: 800, label: "QT mesuré", unit: "ms", step: 1 },
+    { type: "number", id: "hr", min: 20, max: 300, label: "Fréquence cardiaque", unit: "/min", step: 1 },
     {
       type: "select",
       id: "sex",

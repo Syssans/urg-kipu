@@ -24,9 +24,9 @@ export const childPugh: Calculator = {
   keywords: ["child pugh", "child-pugh", "cirrhose", "insuffisance hepatique", "insuffisance hépatique", "hepatopathie", "hépatopathie"],
   summary: "Sévérité d'une cirrhose et pronostic, à partir de 3 paramètres biologiques et 2 critères cliniques.",
   fields: [
-    { type: "number", id: "bilirubin", label: "Bilirubine totale", unit: "µmol/L", step: 1 },
-    { type: "number", id: "albumin", label: "Albuminémie", unit: "g/L", step: 1 },
-    { type: "number", id: "inr", label: "INR", step: 0.01 },
+    { type: "number", id: "bilirubin", min: 0, max: 1000, label: "Bilirubine totale", unit: "µmol/L", step: 1 },
+    { type: "number", id: "albumin", min: 5, max: 60, label: "Albuminémie", unit: "g/L", step: 1 },
+    { type: "number", id: "inr", min: 0.5, max: 15, label: "INR", step: 0.01 },
     {
       type: "select",
       id: "ascites",

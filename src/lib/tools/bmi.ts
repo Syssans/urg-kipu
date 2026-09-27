@@ -8,8 +8,8 @@ export const bmi: Calculator = {
   keywords: ["imc", "bmi", "poids", "taille", "masse corporelle", "obesite", "obésité", "corpulence"],
   summary: "Calcule l'indice de masse corporelle à partir du poids et de la taille.",
   fields: [
-    { type: "number", id: "poids", label: "Poids", unit: "kg", step: 0.1 },
-    { type: "number", id: "taille", label: "Taille", unit: "cm", step: 1 },
+    { type: "number", id: "poids", min: 0.5, max: 400, label: "Poids", unit: "kg", step: 0.1 },
+    { type: "number", id: "taille", min: 30, max: 250, label: "Taille", unit: "cm", step: 1 },
   ],
   requiredNumberFieldIds: ["poids", "taille"],
   compute: (v) => {

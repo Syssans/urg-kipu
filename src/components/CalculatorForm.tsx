@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import type { Field, Values } from "../lib/calculators/types";
+import { plausibleRangeText, type Field, type Values } from "../lib/calculators/types";
 
 interface Props {
   fields: Field[];
   values: Values;
   onChange: (id: string, value: number | undefined) => void;
   requiredFieldIds?: string[];
+  // Selects still unanswered, and numbers outside their plausibility bounds.
+  missingIds?: string[];
+  implausibleIds?: string[];
 }
 
 function groupFields(fields: Field[]): { group: string | null; fields: Field[] }[] {
@@ -47,7 +50,7 @@ function groupIntoRows(fields: Field[]): Field[][] {
   return rows;
 }
 
-export function CalculatorForm({ fields, values, onChange, requiredFieldIds }: Props) {
+export function CalculatorForm({ fields, values, onChange, requiredFieldIds, missingIds, implausibleIds }: Props) {
   const visibleFields = fields.filter((f) => f.visibleIf?.(values) ?? true);
   const groups = groupFields(visibleFields);
   const hasRequiredFields = (requiredFieldIds?.length ?? 0) > 0;
@@ -72,6 +75,8 @@ export function CalculatorForm({ fields, values, onChange, requiredFieldIds }: P
                   required={required}
                   optional={hasRequiredFields && field.type === "number" && !required}
                   showOptionalTag={hasRequiredFields && field.type === "number" && !required && !groupSaysOptional}
+                  unanswered={missingIds?.includes(field.id) ?? false}
+                  implausible={implausibleIds?.includes(field.id) ?? false}
                 />
               );
             });
@@ -103,6 +108,7 @@ function NumberInput({
   onChange,
   placeholder,
   missing,
+  describedBy,
   centered,
 }: {
   id: string;
@@ -110,6 +116,7 @@ function NumberInput({
   onChange: (v: number | undefined) => void;
   placeholder: string;
   missing: boolean;
+  describedBy?: string;
   centered?: boolean;
 }) {
   const [raw, setRaw] = useState(value !== undefined ? String(value) : "");
@@ -157,6 +164,7 @@ function NumberInput({
       onChange={(e) => handleChange(e.target.value)}
       onBlur={handleBlur}
       aria-invalid={missing}
+      aria-describedby={describedBy}
       className={`rounded-xl border px-4 py-3 text-white outline-none backdrop-blur-xl transition-colors duration-150 focus:border-accent-2 ${
         centered ? "w-32 text-center text-lg" : "w-full text-base"
       } ${missing ? "border-red-500 bg-red-500/10 placeholder:text-red-400/70" : "border-border bg-surface"}`}
@@ -171,6 +179,8 @@ function FieldControl({
   required,
   optional,
   showOptionalTag,
+  unanswered,
+  implausible,
 }: {
   field: Field;
   value: number | undefined;
@@ -178,6 +188,8 @@ function FieldControl({
   required: boolean;
   optional: boolean;
   showOptionalTag: boolean;
+  unanswered: boolean;
+  implausible: boolean;
 }) {
   if (field.type === "boolean") {
     const checked = (value ?? 0) === 1;
@@ -216,7 +228,15 @@ function FieldControl({
     const showPoints = field.showPoints ?? false;
     return (
       <div className="flex h-full flex-col gap-1.5">
-        <label className={compact ? "text-xs font-medium text-slate-200" : "text-sm font-medium text-slate-200"}>{field.label}</label>
+        <label className={compact ? "text-xs font-medium text-slate-200" : "text-sm font-medium text-slate-200"}>
+          {field.label}
+          {unanswered && (
+            <>
+              <span aria-hidden="true" className="ml-1.5 inline-block h-1.5 w-1.5 rounded-full bg-amber-400 align-middle" />
+              <span className="sr-only">(à renseigner)</span>
+            </>
+          )}
+        </label>
         <div className={compact ? `mt-auto grid gap-1.5 ${field.options.length === 2 ? "grid-cols-2" : "grid-cols-3"}` : "flex flex-col gap-2"}>
           {field.options.map((opt) => {
             const active = value === opt.value;
@@ -255,8 +275,14 @@ function FieldControl({
   }
 
   // number
-  const missing = required && value === undefined;
+  const missing = (required && value === undefined) || implausible;
   const dimmed = optional && value === undefined;
+  const warningId = `${field.id}-warning`;
+  const warning = implausible ? (
+    <p id={warningId} className="text-xs leading-snug text-red-300">
+      Valeur improbable (attendu {plausibleRangeText(field)}) : vérifiez la saisie.
+    </p>
+  ) : null;
 
   if (field.compact) {
     return (
@@ -273,8 +299,10 @@ function FieldControl({
           onChange={onChange}
           placeholder={field.placeholder ?? "—"}
           missing={missing}
+          describedBy={implausible ? warningId : undefined}
           centered
         />
+        {warning}
       </div>
     );
   }
@@ -294,9 +322,11 @@ function FieldControl({
           onChange={onChange}
           placeholder={field.placeholder ?? "—"}
           missing={missing}
+          describedBy={implausible ? warningId : undefined}
         />
         {field.unit && <span className="shrink-0 text-sm text-muted">{field.unit}</span>}
       </div>
+      {warning}
     </div>
   );
 }

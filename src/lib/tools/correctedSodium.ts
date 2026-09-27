@@ -8,8 +8,8 @@ export const correctedSodium: Calculator = {
   keywords: ["natremie corrigee", "natrémie corrigée", "hyperglycemie", "hyperglycémie", "hyponatremie", "hyponatrémie", "katz", "sodium corrige"],
   summary: "Corrige la natrémie mesurée pour l'effet dilutionnel de l'hyperglycémie, sans avoir besoin d'osmolalité.",
   fields: [
-    { type: "number", id: "na", label: "Natrémie mesurée", unit: "mmol/L", step: 1 },
-    { type: "number", id: "glycemie", label: "Glycémie", unit: "mmol/L", step: 0.1 },
+    { type: "number", id: "na", min: 100, max: 200, label: "Natrémie mesurée", unit: "mmol/L", step: 1 },
+    { type: "number", id: "glycemie", min: 0.5, max: 120, label: "Glycémie", unit: "mmol/L", step: 0.1 },
   ],
   requiredNumberFieldIds: ["na", "glycemie"],
   compute: (v) => {

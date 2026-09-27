@@ -5,7 +5,7 @@ import { CalculatorForm } from "../components/CalculatorForm";
 import { ResultCard } from "../components/ResultCard";
 import { DrugText } from "../components/DrugText";
 import { getCalculator } from "../lib/calculators";
-import { defaultValues, type Calculator, type Values } from "../lib/calculators/types";
+import { defaultValues, implausibleFields, missingFields, plausibleRangeText, type Calculator, type Values } from "../lib/calculators/types";
 import { useFavorites } from "../lib/favorites";
 import { useRecentlyUsed } from "../lib/recentlyUsed";
 
@@ -43,20 +43,18 @@ function CalculatorPageInner({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [calc.id]);
 
-  const missingFieldIds = (calc.requiredNumberFieldIds ?? []).filter((id) => values[id] === undefined);
-  const missingRequired = missingFieldIds.length > 0;
-  const missingFieldLabels = missingFieldIds
-    .map((id) => calc.fields.find((f) => f.id === id)?.label)
-    .filter((label): label is string => Boolean(label));
+  const missing = missingFields(calc, values);
+  const implausible = implausibleFields(calc, values);
+  const blocked = missing.length > 0 || implausible.length > 0;
 
   const recommendedFieldIds = calc.getRecommendedFieldIds?.(values) ?? [];
   const highlightFieldIds = [...(calc.requiredNumberFieldIds ?? []), ...recommendedFieldIds];
 
   const results = useMemo(() => {
-    if (missingRequired) return null;
+    if (blocked) return null;
     const score = calc.compute(values);
     return calc.interpret(score, values);
-  }, [calc, values, missingRequired]);
+  }, [calc, values, blocked]);
 
   return (
     <div>
@@ -90,6 +88,8 @@ function CalculatorPageInner({
           values={values}
           onChange={(id, v) => setValues((prev) => ({ ...prev, [id]: v }))}
           requiredFieldIds={highlightFieldIds}
+          missingIds={missing.filter((f) => f.type === "select").map((f) => f.id)}
+          implausibleIds={implausible.map((f) => f.id)}
         />
 
         <button
@@ -102,17 +102,27 @@ function CalculatorPageInner({
 
         <div className="flex flex-col gap-2.5 border-t border-border pt-5">
           <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">Résultat</h3>
-          {missingRequired ? (
+          {implausible.length > 0 ? (
             <div className="flex items-start gap-2.5 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 backdrop-blur-xl">
               <svg viewBox="0 0 24 24" fill="none" className="mt-0.5 h-5 w-5 shrink-0 text-red-400">
                 <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth={1.8} />
                 <path d="M12 8v5" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" />
                 <circle cx="12" cy="16" r="1" fill="currentColor" />
               </svg>
-              <p className="text-sm leading-snug text-red-300">
-                Champ{missingFieldLabels.length > 1 ? "s" : ""} obligatoire{missingFieldLabels.length > 1 ? "s" : ""} manquant
-                {missingFieldLabels.length > 1 ? "s" : ""} : {missingFieldLabels.join(", ")}.
-              </p>
+              <div className="flex flex-col gap-1 text-sm leading-snug text-red-300">
+                <p className="font-medium">Valeur improbable, vérifiez la saisie :</p>
+                {implausible.map((f) => (
+                  <p key={f.id}>
+                    {f.label} = {String(values[f.id]).replace(".", ",")}
+                    {f.unit ? ` ${f.unit}` : ""} (attendu {plausibleRangeText(f)})
+                  </p>
+                ))}
+              </div>
+            </div>
+          ) : missing.length > 0 ? (
+            <div className="rounded-2xl border border-dashed border-border p-4 text-sm leading-snug text-muted">
+              <span className="font-medium text-slate-300">À compléter : </span>
+              {missing.map((f) => f.label.replace(/\s*\?$/, "")).join(", ")}.
             </div>
           ) : (
             <div className="flex flex-col gap-2.5">

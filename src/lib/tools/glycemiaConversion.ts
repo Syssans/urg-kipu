@@ -11,8 +11,8 @@ export const glycemiaConversion: Calculator = {
   keywords: ["glycemie", "glycémie", "glucose", "conversion", "mmol", "g/l", "sucre"],
   summary: "Convertit une glycémie entre mmol/L (unité SI) et g/L (unité encore courante en France).",
   fields: [
-    { type: "number", id: "mmolL", label: "mmol/L", step: 0.1, placeholder: "—", compact: true },
-    { type: "number", id: "gL", label: "g/L", step: 0.01, placeholder: "—", compact: true },
+    { type: "number", id: "mmolL", min: 0, max: 120, label: "mmol/L", step: 0.1, placeholder: "—", compact: true },
+    { type: "number", id: "gL", min: 0, max: 22, label: "g/L", step: 0.01, placeholder: "—", compact: true },
   ],
   compute: () => 0,
   interpret: (_score, v) => {

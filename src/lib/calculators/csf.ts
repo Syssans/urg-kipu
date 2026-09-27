@@ -122,12 +122,12 @@ export const csf: Calculator = {
   keywords: ["lcr", "liquide cephalo-rachidien", "liquide céphalo-rachidien", "meningite", "méningite", "ponction lombaire"],
   summary: "Orientation étiologique d'une analyse de LCR (méningite bactérienne, virale, hémorragie méningée...).",
   fields: [
-    { type: "number", id: "leucocytes", label: "Leucocytes (éléments)", unit: "/mm³", min: 0, step: 1 },
-    { type: "number", id: "pnnPercent", label: "Dont polynucléaires neutrophiles", unit: "%", min: 0, max: 100, step: 1 },
-    { type: "number", id: "protein", label: "Protéinorachie", unit: "g/L", min: 0, step: 0.05 },
-    { type: "number", id: "glycorachie", label: "Glycorachie", unit: "mmol/L", min: 0, step: 0.1 },
-    { type: "number", id: "glycemie", label: "Glycémie concomitante", unit: "mmol/L", min: 0, step: 0.1 },
-    { type: "number", id: "lactateLcr", label: "Lactate du LCR", unit: "mmol/L", min: 0, step: 0.1 },
+    { type: "number", id: "leucocytes", min: 0, max: 100000, label: "Leucocytes (éléments)", unit: "/mm³", step: 1 },
+    { type: "number", id: "pnnPercent", min: 0, max: 100, label: "Dont polynucléaires neutrophiles", unit: "%", step: 1 },
+    { type: "number", id: "protein", min: 0, max: 20, label: "Protéinorachie", unit: "g/L", step: 0.05 },
+    { type: "number", id: "glycorachie", min: 0, max: 30, label: "Glycorachie", unit: "mmol/L", step: 0.1 },
+    { type: "number", id: "glycemie", min: 0, max: 60, label: "Glycémie concomitante", unit: "mmol/L", step: 0.1 },
+    { type: "number", id: "lactateLcr", min: 0, max: 30, label: "Lactate du LCR", unit: "mmol/L", step: 0.1 },
     {
       type: "select",
       id: "aspect",

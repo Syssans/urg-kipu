@@ -8,8 +8,8 @@ export const waterDeficit: Calculator = {
   keywords: ["deficit hydrique", "déficit hydrique", "hypernatremie", "hypernatrémie", "deshydratation", "déshydratation", "eau", "perfusion"],
   summary: "Volume d'eau à apporter pour corriger une hypernatrémie, et rythme de correction sur 24h.",
   fields: [
-    { type: "number", id: "poids", label: "Poids habituel", unit: "kg", step: 0.1 },
-    { type: "number", id: "na", label: "Natrémie mesurée", unit: "mmol/L", step: 1 },
+    { type: "number", id: "poids", min: 1, max: 400, label: "Poids habituel", unit: "kg", step: 0.1 },
+    { type: "number", id: "na", min: 100, max: 200, label: "Natrémie mesurée", unit: "mmol/L", step: 1 },
   ],
   requiredNumberFieldIds: ["poids", "na"],
   compute: (v) => {

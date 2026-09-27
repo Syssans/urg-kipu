@@ -11,8 +11,8 @@ export const correctedCalcium: Calculator = {
   keywords: ["calcemie corrigee", "calcémie corrigée", "calcium corrige", "calcium corrigé", "hypocalcemie", "hypocalcémie", "hypercalcemie", "hypercalcémie", "albumine"],
   summary: "Corrige la calcémie totale mesurée pour le niveau d'albuminémie, sans avoir besoin du calcium ionisé.",
   fields: [
-    { type: "number", id: "ca", label: "Calcémie totale mesurée", unit: "mmol/L", step: 0.01 },
-    { type: "number", id: "albumin", label: "Albuminémie", unit: "g/L", step: 1 },
+    { type: "number", id: "ca", min: 0.5, max: 5, label: "Calcémie totale mesurée", unit: "mmol/L", step: 0.01 },
+    { type: "number", id: "albumin", min: 5, max: 60, label: "Albuminémie", unit: "g/L", step: 1 },
   ],
   requiredNumberFieldIds: ["ca", "albumin"],
   compute: (v) => {

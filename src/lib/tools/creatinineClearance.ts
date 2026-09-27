@@ -8,9 +8,9 @@ export const creatinineClearance: Calculator = {
   keywords: ["clairance", "creatinine", "créatinine", "cockcroft", "gault", "fonction renale", "fonction rénale", "insuffisance renale", "insuffisance rénale"],
   summary: "Estime le débit de filtration glomérulaire à partir de l'âge, du poids, du sexe et de la créatininémie.",
   fields: [
-    { type: "number", id: "age", label: "Âge", unit: "ans", step: 1 },
-    { type: "number", id: "weight", label: "Poids", unit: "kg", step: 0.1 },
-    { type: "number", id: "creatinine", label: "Créatininémie", unit: "µmol/L", step: 1 },
+    { type: "number", id: "age", min: 0, max: 120, label: "Âge", unit: "ans", step: 1 },
+    { type: "number", id: "weight", min: 1, max: 400, label: "Poids", unit: "kg", step: 0.1 },
+    { type: "number", id: "creatinine", min: 10, max: 3000, label: "Créatininémie", unit: "µmol/L", step: 1 },
     {
       type: "select",
       id: "sex",

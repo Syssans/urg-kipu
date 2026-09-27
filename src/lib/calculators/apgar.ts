@@ -12,6 +12,7 @@ export const apgar: Calculator = {
       type: "select",
       id: "time",
       label: "Moment de l'évaluation",
+      defaultValue: 1,
       options: [
         { label: "1 min", value: 1 },
         { label: "5 min", value: 5 },

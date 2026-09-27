@@ -49,30 +49,25 @@ export const gcsPediatric: Calculator = {
     },
   ],
   compute: (v) => (v.eye ?? 0) + (v.verbal ?? 0) + (v.motor ?? 0),
-  interpret: (score) => {
+  interpret: (score, v) => {
     let title = "";
     let level: "low" | "moderate" | "critical" = "low";
-    if (score >= 13) {
-      title = "Traumatisme crânien léger";
-      level = "low";
+    let detail = "";
+    if (score === 15) {
+      title = "Conscience normale";
+    } else if (score >= 13) {
+      title = "Altération légère de la conscience";
+      detail = "En contexte traumatique : traumatisme crânien léger (GCS 13-15). Surveillance neurologique rapprochée.";
     } else if (score >= 9) {
-      title = "Traumatisme crânien modéré";
+      title = "Altération modérée de la conscience";
       level = "moderate";
+      detail = "En contexte traumatique : traumatisme crânien modéré (GCS 9-12). Surveillance neurologique rapprochée.";
     } else {
-      title = "Traumatisme crânien sévère";
+      title = "Altération sévère de la conscience (coma)";
       level = "critical";
+      detail = "GCS ≤ 8 : protection des voies aériennes à envisager (intubation). En contexte traumatique : traumatisme crânien grave.";
     }
-    return [
-      {
-        title,
-        level,
-        scoreLabel: `${score} / 15`,
-        detail:
-          score <= 8
-            ? "GCS ≤ 8 : protection des voies aériennes à envisager (intubation)."
-            : "Surveillance neurologique rapprochée recommandée.",
-      },
-    ];
+    return [{ title, level, scoreLabel: `${score} / 15 (Y${v.eye} V${v.verbal} M${v.motor})`, detail: detail || undefined }];
   },
   source: "Adaptation pédiatrique de Teasdale & Jennett (Lancet 1974), James HE, Pediatric Head Injury 1986.",
   notes: "Utilisée principalement chez le nourrisson et l'enfant préverbal (< 2 ans) ; au-delà, le score de Glasgow adulte est généralement utilisable.",

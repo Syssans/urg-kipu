@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAny } from "../lib/catalog";
-import { defaultValues, type Values } from "../lib/calculators/types";
+import { defaultValues, implausibleFields, missingFields, type Values } from "../lib/calculators/types";
 import { CalculatorForm } from "./CalculatorForm";
 import { DrugText } from "./DrugText";
 import type { DecisionTree, TreeLink, TreeNode, TreeScore } from "../lib/trees/types";
@@ -110,7 +110,7 @@ function ScoreNodeCard({
     );
   }
 
-  const missingRequired = (calc.requiredNumberFieldIds ?? []).some((id) => values[id] === undefined);
+  const missingRequired = missingFields(calc, values).length > 0 || implausibleFields(calc, values).length > 0;
   const score = calc.compute(values);
   const matchedIndex = node.branches.findIndex((b) => b.test(score));
   const upToDate = chosenIndex !== undefined && chosenIndex === matchedIndex;
