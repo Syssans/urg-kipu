@@ -58,9 +58,16 @@ export function CalculatorForm({ fields, values, onChange, requiredFieldIds, mis
   return (
     <div className="flex flex-col gap-6">
       {groups.map((group, gi) => (
-        <div key={gi} className="flex flex-col gap-3">
+        <div
+          key={gi}
+          role={group.group ? "group" : undefined}
+          aria-labelledby={group.group ? `field-group-${gi}` : undefined}
+          className="flex flex-col gap-3"
+        >
           {group.group && (
-            <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">{group.group}</h3>
+            <h3 id={`field-group-${gi}`} className="text-xs font-semibold uppercase tracking-wide text-muted">
+              {group.group}
+            </h3>
           )}
           {groupIntoRows(group.fields).map((row, ri) => {
             const groupSaysOptional = group.group?.toLowerCase().includes("optionnel") ?? false;
@@ -227,8 +234,8 @@ function FieldControl({
     const compact = isCompactSelect(field);
     const showPoints = field.showPoints ?? false;
     return (
-      <div className="flex h-full flex-col gap-1.5">
-        <label className={compact ? "text-xs font-medium text-slate-200" : "text-sm font-medium text-slate-200"}>
+      <div role="group" aria-labelledby={`${field.id}-label`} className="flex h-full flex-col gap-1.5">
+        <span id={`${field.id}-label`} className={compact ? "text-xs font-medium text-slate-200" : "text-sm font-medium text-slate-200"}>
           {field.label}
           {unanswered && (
             <>
@@ -236,7 +243,7 @@ function FieldControl({
               <span className="sr-only">(à renseigner)</span>
             </>
           )}
-        </label>
+        </span>
         <div className={compact ? `mt-auto grid gap-1.5 ${field.options.length === 2 ? "grid-cols-2" : "grid-cols-3"}` : "flex flex-col gap-2"}>
           {field.options.map((opt) => {
             const active = value === opt.value;

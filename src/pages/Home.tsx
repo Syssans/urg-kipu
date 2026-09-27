@@ -52,7 +52,8 @@ export function Home() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Rechercher un score, un outil, un arbre, un médicament…"
+          aria-label="Rechercher un score, un outil, un arbre ou un médicament"
+          placeholder="Score, outil, arbre, médicament…"
           className="w-full rounded-2xl border border-border bg-surface py-3.5 pl-11 pr-4 text-base text-white outline-none backdrop-blur-xl transition-colors duration-150 placeholder:text-muted focus:border-accent-2"
         />
       </div>

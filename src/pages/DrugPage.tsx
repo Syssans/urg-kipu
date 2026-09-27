@@ -29,8 +29,7 @@ export function DrugPage() {
       <Header title={drug.dci} back />
       <div className="page-in mx-auto flex max-w-xl flex-col gap-6 px-4 pb-28 pt-4">
         <div>
-          <h2 className="text-lg font-semibold text-white">{drug.dci}</h2>
-          <p className="mt-1 text-sm leading-snug text-muted">
+          <p className="text-sm leading-snug text-muted">
             {drug.brands.map((b) => `${b} ®`).join(", ")}
             {drug.brands.length > 0 && drug.class ? ` — ${drug.class}` : drug.class ?? ""}
           </p>

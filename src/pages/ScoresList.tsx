@@ -28,6 +28,7 @@ export function ScoresList() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          aria-label="Filtrer les scores"
           placeholder="Filtrer…"
           className="w-full rounded-2xl border border-border bg-surface px-4 py-3 text-base text-white outline-none backdrop-blur-xl transition-colors duration-150 placeholder:text-muted focus:border-accent-2"
         />
@@ -35,6 +36,7 @@ export function ScoresList() {
           <button
             type="button"
             onClick={() => setCategory(null)}
+            aria-pressed={category === null}
             className={`shrink-0 rounded-full border px-3 py-1.5 text-[13px] font-medium transition-colors duration-150 ${
               category === null ? "border-accent-2/60 bg-accent-2/15 text-white" : "border-border bg-surface text-muted"
             }`}
@@ -49,6 +51,7 @@ export function ScoresList() {
                 key={cat}
                 type="button"
                 onClick={() => setCategory(active ? null : cat)}
+                aria-pressed={active}
                 className={`shrink-0 rounded-full border px-3 py-1.5 text-[13px] font-medium transition-colors duration-150 ${
                   active ? `border-transparent ${colors.bg} ${colors.text}` : "border-border bg-surface text-muted"
                 }`}

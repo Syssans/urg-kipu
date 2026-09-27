@@ -22,6 +22,7 @@ export function ToolsList() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          aria-label="Filtrer les outils de calcul"
           placeholder="Filtrer…"
           className="w-full rounded-2xl border border-border bg-surface px-4 py-3 text-base text-white outline-none backdrop-blur-xl transition-colors duration-150 placeholder:text-muted focus:border-accent-2"
         />
