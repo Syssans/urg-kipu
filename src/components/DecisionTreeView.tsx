@@ -45,8 +45,11 @@ export function DecisionTreeView({ tree }: { tree: DecisionTree }) {
   });
 
   const showCard = (i: number) => {
-    const card = scrollRef.current?.children[i] as HTMLElement | undefined;
-    card?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    const row = scrollRef.current;
+    const card = row?.children[i] as HTMLElement | undefined;
+    if (!row || !card) return;
+    const offset = card.getBoundingClientRect().left - row.getBoundingClientRect().left;
+    row.scrollTo({ left: row.scrollLeft + offset - (row.clientWidth - card.clientWidth) / 2, behavior: "smooth" });
   };
 
   return (

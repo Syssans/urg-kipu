@@ -19,7 +19,7 @@ export default function App() {
 
   return (
     <HashRouter>
-      <div className="relative flex h-dvh flex-col overflow-hidden bg-bg">
+      <div className="relative flex h-dvh flex-col overflow-clip bg-bg">
         <ScrollToTop />
         {showSplash && <Splash onDone={() => setShowSplash(false)} />}
         <div id="scroll-area" className="flex-1 overflow-y-auto">

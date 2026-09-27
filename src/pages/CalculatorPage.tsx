@@ -177,7 +177,13 @@ function CalculatorPageInner({
           results={results}
           missingCount={missing.length}
           implausible={implausible.length > 0}
-          onClick={() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+          onClick={() => {
+            const area = document.getElementById("scroll-area");
+            const el = resultRef.current;
+            if (!area || !el) return;
+            const top = el.getBoundingClientRect().top - area.getBoundingClientRect().top + area.scrollTop - 16;
+            area.scrollTo({ top, behavior: "smooth" });
+          }}
         />
       )}
     </div>
