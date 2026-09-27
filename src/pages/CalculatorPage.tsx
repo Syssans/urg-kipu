@@ -1,11 +1,20 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Header } from "../components/Header";
 import { CalculatorForm } from "../components/CalculatorForm";
 import { ResultCard } from "../components/ResultCard";
 import { DrugText } from "../components/DrugText";
 import { getCalculator } from "../lib/calculators";
-import { defaultValues, implausibleFields, missingFields, plausibleRangeText, type Calculator, type Values } from "../lib/calculators/types";
+import {
+  defaultValues,
+  implausibleFields,
+  LEVEL_STYLES,
+  missingFields,
+  plausibleRangeText,
+  type Calculator,
+  type Interpretation,
+  type Values,
+} from "../lib/calculators/types";
 import { useFavorites } from "../lib/favorites";
 import { useRecentlyUsed } from "../lib/recentlyUsed";
 
@@ -56,6 +65,21 @@ function CalculatorPageInner({
     return calc.interpret(score, values);
   }, [calc, values, blocked]);
 
+  // The result sits below a possibly long form: while it is out of view (below the fold),
+  // a compact copy floats above the bottom nav and scrolls to it when tapped.
+  const resultRef = useRef<HTMLDivElement>(null);
+  const [resultBelow, setResultBelow] = useState(false);
+  useEffect(() => {
+    const el = resultRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setResultBelow(!entry.isIntersecting && entry.boundingClientRect.top > 0),
+      { rootMargin: "0px 0px -150px 0px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div>
       <Header title={calc.shortName} back />
@@ -100,7 +124,7 @@ function CalculatorPageInner({
           Réinitialiser
         </button>
 
-        <div className="flex flex-col gap-2.5 border-t border-border pt-5">
+        <div ref={resultRef} className="flex scroll-mt-4 flex-col gap-2.5 border-t border-border pt-5">
           <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">Résultat</h3>
           {implausible.length > 0 ? (
             <div className="flex items-start gap-2.5 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 backdrop-blur-xl">
@@ -145,6 +169,56 @@ function CalculatorPageInner({
           )}
         </div>
       </div>
+      {resultBelow && (
+        <ResultPeek
+          results={results}
+          missingCount={missing.length}
+          implausible={implausible.length > 0}
+          onClick={() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+        />
+      )}
     </div>
+  );
+}
+
+function ResultPeek({
+  results,
+  missingCount,
+  implausible,
+  onClick,
+}: {
+  results: Interpretation[] | null;
+  missingCount: number;
+  implausible: boolean;
+  onClick: () => void;
+}) {
+  const primary = results?.find((r) => (r.role ?? "primary") === "primary") ?? results?.[0];
+  let dot = "bg-muted";
+  let text = "text-slate-200";
+  let label: string;
+  if (implausible) {
+    dot = "bg-red-400";
+    text = "text-red-300";
+    label = "Valeur improbable, vérifiez la saisie";
+  } else if (missingCount > 0 || !primary) {
+    label = `À compléter : ${missingCount} élément${missingCount > 1 ? "s" : ""}`;
+  } else {
+    dot = LEVEL_STYLES[primary.level].dot;
+    text = LEVEL_STYLES[primary.level].text;
+    label = primary.scoreLabel ? `${primary.scoreLabel} · ${primary.title}` : primary.title;
+  }
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="fixed inset-x-3 bottom-[calc(env(safe-area-inset-bottom)+5.5rem)] z-30 mx-auto flex max-w-xl items-center gap-2.5 rounded-2xl border border-border bg-surface-2 px-4 py-2.5 text-left shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+    >
+      <span aria-hidden="true" className={`h-2.5 w-2.5 shrink-0 rounded-full ${dot}`} />
+      <span className={`min-w-0 flex-1 truncate text-sm font-semibold ${text}`}>{label}</span>
+      <span className="sr-only">Aller au résultat</span>
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-4 w-4 shrink-0 text-muted">
+        <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </button>
   );
 }

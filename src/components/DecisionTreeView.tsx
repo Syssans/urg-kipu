@@ -37,20 +37,55 @@ export function DecisionTreeView({ tree }: { tree: DecisionTree }) {
     setPath((prev) => [...prev.slice(0, nodeIndex), { nodeId: nodesToShow[nodeIndex].id, choiceIndex }]);
   };
 
+  const answers = path.map((step, i) => {
+    const node = nodesToShow[i];
+    if (node?.type === "question") return node.options[step.choiceIndex]?.label;
+    if (node?.type === "score") return node.branches[step.choiceIndex]?.label;
+    return undefined;
+  });
+
+  const showCard = (i: number) => {
+    const card = scrollRef.current?.children[i] as HTMLElement | undefined;
+    card?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  };
+
   return (
     <div className="flex flex-col gap-3">
-      <div ref={scrollRef} className="no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2">
+      {answers.length > 0 && (
+        <nav aria-label="Réponses données">
+          <ol className="flex flex-wrap items-center gap-1.5">
+            {answers.map((label, i) =>
+              label ? (
+                <li key={i} className="flex min-w-0 items-center gap-1.5">
+                  {i > 0 && (
+                    <span aria-hidden="true" className="text-xs text-muted">
+                      ›
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => showCard(i)}
+                    title={label}
+                    className="max-w-[14rem] truncate rounded-full border border-accent-2/40 bg-accent-2/10 px-2.5 py-1 text-xs text-slate-200 transition-colors duration-150 active:bg-accent-2/20"
+                  >
+                    {label}
+                  </button>
+                </li>
+              ) : null,
+            )}
+          </ol>
+        </nav>
+      )}
+      <div ref={scrollRef} className="no-scrollbar flex snap-x snap-mandatory items-start gap-3 overflow-x-auto pb-2">
         {nodesToShow.map((node, i) => (
-          <div key={node.id} className="flex shrink-0 snap-center items-center gap-3">
+          <div key={node.id} className="flex shrink-0 snap-center items-start gap-3">
             <NodeCard
               node={node}
               chosenIndex={path[i]?.choiceIndex}
               onChoose={(choiceIndex) => choose(i, choiceIndex)}
             />
             {i < nodesToShow.length - 1 && (
-              <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5 shrink-0 text-muted">
-                <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <span aria-hidden="true" className="mt-8 h-px w-3 shrink-0 bg-border" />
             )}
           </div>
         ))}
