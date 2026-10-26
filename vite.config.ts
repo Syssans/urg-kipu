@@ -4,14 +4,18 @@ import { VitePWA } from 'vite-plugin-pwa'
 import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
-const base = '/urg-kipu/'
-
-export default defineConfig({
+// `vite build --mode native` makes the bundle for the iOS app (Capacitor):
+// relative paths, and no service worker since the files ship inside the app.
+export default defineConfig(({ mode }) => {
+  const native = mode === 'native'
+  const base = native ? './' : '/urg-kipu/'
+  return {
   base,
+  build: native ? { outDir: 'dist-native' } : undefined,
   plugins: [
     react(),
     tailwindcss(),
-    VitePWA({
+    !native && VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.png', 'icons/icon.svg'],
       manifest: {
@@ -37,4 +41,5 @@ export default defineConfig({
       },
     }),
   ],
+}
 })
