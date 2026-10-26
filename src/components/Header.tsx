@@ -1,6 +1,22 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { isNative, setNativeNav } from "../lib/native";
 
 export function Header({ title, back }: { title: string; back?: boolean }) {
+  return isNative ? <NativeHeader title={title} back={!!back} /> : <WebHeader title={title} back={back} />;
+}
+
+// In the iOS app the title and back button live in the native nav bar, which floats
+// over the page: only leave room for it.
+function NativeHeader({ title, back }: { title: string; back: boolean }) {
+  useEffect(() => {
+    setNativeNav(title, back);
+    return () => setNativeNav(null, false);
+  }, [title, back]);
+  return <div aria-hidden className="h-(--chrome-top)" />;
+}
+
+function WebHeader({ title, back }: { title: string; back?: boolean }) {
   const navigate = useNavigate();
   return (
     <header className="safe-top sticky top-0 z-30 border-b border-border bg-surface backdrop-blur-xl">

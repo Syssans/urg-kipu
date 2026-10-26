@@ -1,4 +1,6 @@
-import { NavLink } from "react-router-dom";
+import { useEffect } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { isNative, onNativeBack, onNativeTab, setNativeTab } from "../lib/native";
 
 const items = [
   { to: "/", label: "Accueil", icon: HomeIcon, end: true },
@@ -9,6 +11,29 @@ const items = [
 ];
 
 export function BottomNav() {
+  return isNative ? <NativeTabs /> : <WebNav />;
+}
+
+// In the iOS app the tab bar is native: keep its highlight in sync with the route
+// and turn its taps (and the native back button) into navigation.
+function NativeTabs() {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const index = items.findIndex((item) => (item.end ? pathname === item.to : pathname.startsWith(item.to)));
+    setNativeTab(index);
+  }, [pathname]);
+
+  useEffect(() => {
+    const handles = [onNativeTab((index) => navigate(items[index].to)), onNativeBack(() => navigate(-1))];
+    return () => handles.forEach((h) => h.then((l) => l.remove()));
+  }, [navigate]);
+
+  return null;
+}
+
+function WebNav() {
   return (
     <nav className="absolute inset-x-0 bottom-0 z-40 px-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
       <div className="mx-auto flex max-w-xl items-stretch justify-between gap-1 rounded-full border border-border bg-surface p-1.5 shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl">

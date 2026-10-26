@@ -17,6 +17,7 @@ import {
 } from "../lib/calculators/types";
 import { useFavorites } from "../lib/favorites";
 import { useRecentlyUsed } from "../lib/recentlyUsed";
+import { topObstruction } from "../lib/native";
 
 export function CalculatorPage({ lookup = getCalculator }: { lookup?: (id: string) => Calculator | undefined }) {
   const { id } = useParams();
@@ -181,7 +182,7 @@ function CalculatorPageInner({
             const area = document.getElementById("scroll-area");
             const el = resultRef.current;
             if (!area || !el) return;
-            const top = el.getBoundingClientRect().top - area.getBoundingClientRect().top + area.scrollTop - 16;
+            const top = el.getBoundingClientRect().top - area.getBoundingClientRect().top + area.scrollTop - topObstruction() - 16;
             area.scrollTo({ top, behavior: "smooth" });
           }}
         />
@@ -220,7 +221,7 @@ function ResultPeek({
     <button
       type="button"
       onClick={onClick}
-      className="fixed inset-x-3 bottom-[calc(env(safe-area-inset-bottom)+5.5rem)] z-30 mx-auto flex max-w-xl items-center gap-2.5 rounded-2xl border border-border bg-surface-2 px-4 py-2.5 text-left shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+      className="peek-bottom fixed inset-x-3 z-30 mx-auto flex max-w-xl items-center gap-2.5 rounded-2xl border border-border bg-surface-2 px-4 py-2.5 text-left shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl"
     >
       <span aria-hidden="true" className={`h-2.5 w-2.5 shrink-0 rounded-full ${dot}`} />
       <span className={`min-w-0 flex-1 truncate text-sm font-semibold ${text}`}>{label}</span>
