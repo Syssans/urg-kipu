@@ -1,0 +1,72 @@
+# Builds the iOS app on a GitHub-hosted Mac, without code signing, and publishes
+# Kipu.ipa as a run artifact. Install it on an iPhone from Windows with Sideloadly
+# (free Apple ID), which signs it on the fly. See README, "Tester l'app iOS sans Mac".
+name: Build iOS IPA
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - src/**
+      - ios/**
+      - public/**
+      - index.html
+      - package.json
+      - package-lock.json
+      - capacitor.config.ts
+      - vite.config.ts
+      - .github/workflows/ios-ipa.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-ipa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build:native
+      - run: npx cap sync ios
+
+      - name: Build App.app (unsigned)
+        working-directory: ios/App
+        run: |
+          xcodebuild build \
+            -project App.xcodeproj \
+            -scheme App \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CURRENT_PROJECT_VERSION=${{ github.run_number }} \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
+
+      - name: Package Kipu.ipa
+        working-directory: ios/App
+        run: |
+          mkdir Payload
+          cp -R build/Build/Products/Release-iphoneos/App.app Payload/
+          zip -qry Kipu.ipa Payload
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Kipu-ipa-${{ github.run_number }}
+          path: ios/App/Kipu.ipa
+          retention-days: 30

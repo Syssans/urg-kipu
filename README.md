@@ -27,6 +27,28 @@ npm run build    # build de production dans dist/
 npm run preview  # prévisualiser le build
 ```
 
+## Tester l'app iOS sans Mac
+
+L'app iOS (Capacitor, dossier `ios/`) est compilée par GitHub Actions sur un Mac hébergé par
+GitHub (workflow `.github/workflows/ios-ipa.yml`), sans signature. Pas besoin de Xcode, d'Expo Go
+ni de l'App Store.
+
+1. **Récupérer l'IPA** : onglet *Actions* du dépôt → *Build iOS IPA* → dernier run réussi →
+   section *Artifacts* → télécharger `Kipu-ipa-N` et le dézipper (contient `Kipu.ipa`). Le build
+   se lance à chaque push qui touche l'app, ou à la main via *Run workflow*.
+2. **Installer [Sideloadly](https://sideloadly.io/)** sur Windows, ainsi qu'iTunes et iCloud
+   *version site Apple* (pas celles du Microsoft Store), nécessaires au pilote USB de l'iPhone.
+3. **Brancher l'iPhone** en USB, accepter « Faire confiance à cet ordinateur ».
+4. Dans Sideloadly : glisser `Kipu.ipa`, saisir un identifiant Apple (un compte gratuit suffit,
+   idéalement un compte secondaire), cliquer *Start*.
+5. **Sur l'iPhone** : Réglages → Confidentialité et sécurité → *Mode développeur* → activer
+   (redémarrage), puis Réglages → Général → VPN et gestion de l'appareil → faire confiance au
+   profil de votre identifiant Apple.
+
+Avec un identifiant Apple gratuit, l'app expire au bout de **7 jours** (la réinstaller via
+Sideloadly, les données sont conservées) et 3 apps sideloadées maximum. Avec un compte développeur
+payant, la signature dure 1 an.
+
 ## Contenu actuel
 
 ### Calculateurs et interprétateurs (`src/lib/calculators/`)
