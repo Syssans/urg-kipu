@@ -116,11 +116,13 @@ complétées d'après les RCP : à relire avant usage clinique.
 ### Examen clinique (`src/lib/exam/`)
 
 Accessible depuis l'accueil (`/examen`) : rédige la partie examen clinique d'une observation, à
-copier-coller dans le dossier patient. Tout est normal par défaut (formulation de l'auteur) ;
-chaque constatation peut passer en anormal, avec une phrase modifiable et des suggestions. Les
+copier-coller dans le dossier patient. Rien n'est inclus par défaut : chaque constatation se coche
+« Normal » (formulation habituelle de l'auteur) ou « Anormal », qui ouvre des options détaillées
+(localisation, aspect, côté…) et une précision libre. « Tout normal » coche d'un coup l'examen
+habituel d'une section (les constatations marquées `optional` restent à cocher à la main). Les
 constantes et le Glasgow (Y/V/M) sont saisis à part. Rien n'est enregistré (ni stockage local, ni
 historique de saisie du navigateur) et aucun champ d'identité n'existe : quitter la page efface
-tout. La formulation se modifie dans `src/lib/exam/template.ts`, la mise en forme du texte dans
+tout. Formulations et options dans `src/lib/exam/template.ts`, mise en forme du texte dans
 `src/lib/exam/render.ts`.
 
 ## Icônes

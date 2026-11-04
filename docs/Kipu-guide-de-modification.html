@@ -646,34 +646,56 @@ compute: (v) =&gt; ((v.age ?? 0) &gt;= 65 ? 1 : 0) + (v.diabete ?? 0),</pre>
 <!-- ============ 10 ============ -->
 <section class="chapter" id="c10">
   <h1><span class="num">10</span>L'examen clinique</h1>
-  <p class="lead">Toutes tes phrases sont dans <code>src/lib/exam/template.ts</code>. La mise en forme du texte final (constantes, virgules, majuscules, paragraphes) est dans <code>src/lib/exam/render.ts</code>.</p>
-  <h2>Structure de <code>template.ts</code></h2>
+  <p class="lead">Toutes tes phrases et toutes les options sont dans <code>src/lib/exam/template.ts</code>. La mise en forme du texte final (constantes, virgules, majuscules, paragraphes) est dans <code>src/lib/exam/render.ts</code>.</p>
+  <h2>Le principe</h2>
+  <ul>
+    <li>Rien n'est dans l'examen tant que la ligne n'est pas cochée <b>Normal</b> ou <b>Anormal</b>. Retoucher le bouton actif retire la ligne.</li>
+    <li><b>Normal</b> écrit ta phrase habituelle (<code>normal</code>).</li>
+    <li><b>Anormal</b> écrit le début de phrase (<code>abnormal</code>), puis les options choisies dans chaque groupe (<code>choices</code>), dans l'ordre du fichier, puis la précision libre.</li>
+    <li><b>Tout normal</b> (par section) et <b>Tout l'examen habituel normal</b> cochent « Normal » sur les lignes non cochées, sauf celles marquées <code>optional: true</code>.</li>
+  </ul>
+  <h2>Une constatation, exemple commenté</h2>
 <pre>{
-  id: "cardio",                     <span class="c">// identifiant unique de la section</span>
-  title: "Cardiovasculaire",        <span class="c">// titre de la carte à l'écran (pas dans le texte copié)</span>
-  end: ".",                         <span class="c">// facultatif : ajouté à la fin de la phrase</span>
-  sameParagraph: true,              <span class="c">// facultatif : collée à la section précédente, sans ligne vide</span>
-  findings: [
-    {
-      id: "chest-pain",             <span class="c">// identifiant unique dans la section</span>
-      normal: "Pas de douleur thoracique",           <span class="c">// ta phrase quand c'est normal</span>
-      abnormal: ["Douleur thoracique", "Douleur thoracique atypique"],  <span class="c">// suggestions si anormal</span>
-    },
-    …
+  id: "cough",                     <span class="c">// identifiant unique dans la section</span>
+  label: "Toux",                   <span class="c">// nom à l'écran (pas dans le texte)</span>
+  normal: "pas de toux",           <span class="c">// phrase quand c'est normal</span>
+  abnormal: "toux",                <span class="c">// début de la phrase anormale (peut être "")</span>
+  choices: [
+    { id: "sputum", label: "Expectorations",
+      options: ["sans expectoration", "avec expectorations"] },
+    { id: "colour", label: "Aspect des expectorations", multi: true,
+      options: ["claires", "jaunâtres", "verdâtres", "hémoptoïques"],
+      showIf: { choice: "sputum", any: ["avec expectorations"] } },   <span class="c">// n'apparaît que si…</span>
   ],
-},</pre>
+}
+<span class="c">// Toux + « avec expectorations » + « verdâtres » + « hémoptoïques »</span>
+<span class="c">// → « toux avec expectorations verdâtres et hémoptoïques »</span></pre>
+
+  <h2>Les réglages d'un groupe d'options (<code>choices</code>)</h2>
+  <table>
+    <tr><th style="width:30%">Réglage</th><th>Effet</th></tr>
+    <tr><td><code>label</code></td><td>Titre du groupe de boutons à l'écran.</td></tr>
+    <tr><td><code>options</code></td><td>Les boutons, écrits exactement comme ils apparaîtront dans le texte (avec la préposition : « en fosse iliaque droite »).</td></tr>
+    <tr><td><code>multi: true</code></td><td>Plusieurs choix possibles, reliés en « a, b et c ». Sans lui, un seul choix.</td></tr>
+    <tr><td><code>before: "à "</code> / <code>after: ")"</code></td><td>Texte ajouté avant / après les choix. Exemple : <code>before: "("</code> et <code>after: ")"</code> pour mettre les signes entre parenthèses ; <code>before: "coté à "</code> pour « coté à 3/5 ».</td></tr>
+    <tr><td><code>sep: ", "</code></td><td>Séparateur avec ce qui précède. Par défaut une espace (« souffle systolique <b>3/6</b> ») ; <code>", "</code> pour une nouvelle idée (« …, <b>reproductible à la palpation</b> »).</td></tr>
+    <tr><td><code>showIf</code></td><td>Le groupe n'apparaît, et n'est écrit, que si une des options listées est choisie dans un autre groupe.</td></tr>
+  </table>
+
+  <h2>Modifications courantes</h2>
   <table>
     <tr><th style="width:36%">Je veux…</th><th>Je fais…</th></tr>
-    <tr><td>Reformuler une phrase normale</td><td>Change le texte de <code>normal</code>.</td></tr>
-    <tr><td>Changer les suggestions d'anomalie</td><td>Modifie la liste <code>abnormal</code>. La première est pré-remplie quand on passe la ligne en anormal ; les autres apparaissent en boutons s'il y en a au moins deux.</td></tr>
-    <tr><td>Ajouter une constatation</td><td>Ajoute un bloc <code>{ id, normal, abnormal }</code> dans <code>findings</code>, à la place voulue (l'ordre est celui du texte).</td></tr>
-    <tr><td>Ajouter une section (ex. cutané, ORL)</td><td>Ajoute un bloc complet dans la liste <code>sections</code>, à la place voulue.</td></tr>
-    <tr><td>Changer l'ordre des sections</td><td>Déplace les blocs dans la liste.</td></tr>
-    <tr><td>Changer la présentation des constantes</td><td>Fonction <code>vitalsLines</code> de <code>render.ts</code> : par exemple <code>`FC: ${clean(v.hr)}/min`</code>.</td></tr>
+    <tr><td>Reformuler une phrase normale</td><td>Change <code>normal</code>.</td></tr>
+    <tr><td>Ajouter une option (ex. une localisation)</td><td>Ajoute le texte dans la liste <code>options</code> du bon groupe.</td></tr>
+    <tr><td>Ajouter un groupe d'options</td><td>Ajoute un bloc <code>{ id, label, options }</code> dans <code>choices</code>, à la place voulue dans la phrase.</td></tr>
+    <tr><td>Ajouter une constatation</td><td>Ajoute un bloc complet dans <code>findings</code>. Ajoute <code>optional: true</code> si elle ne doit pas être cochée par « Tout normal ».</td></tr>
+    <tr><td>Ajouter une section (ex. cutané, ORL)</td><td>Ajoute un bloc <code>{ id, title, findings: [...] }</code> dans la liste <code>sections</code>. <code>end: "."</code> ferme la phrase par un point ; <code>sameParagraph: true</code> la colle à la section précédente.</td></tr>
+    <tr><td>Réutiliser une liste</td><td>Les listes communes sont déclarées en haut du fichier (<code>ABDO_REGIONS</code>, <code>LUNG_AREAS</code>, <code>SIDES</code>) : modifie-les une fois, ça change partout.</td></tr>
+    <tr><td>Changer la présentation des constantes</td><td>Fonction <code>vitalsLines</code> de <code>render.ts</code>.</td></tr>
     <tr><td>Changer l'écriture du Glasgow</td><td>Fonction <code>findingText</code> de <code>render.ts</code> : <code>`Glasgow ${…} (Y${g.y}V${g.v}M${g.m})`</code>.</td></tr>
   </table>
   <div class="box info"><span class="t">Majuscules automatiques</span>
-    <p>Chaque section commence par une majuscule et les éléments suivants passent en minuscule (« Douleur thoracique » devient « douleur thoracique » en milieu de phrase). Les sigles comme « TRC » ou « ROT » sont laissés tels quels. Tu peux donc écrire tes phrases avec ou sans majuscule.</p>
+    <p>Chaque section commence par une majuscule et les éléments suivants passent en minuscule ; les sigles comme « TRC » ou « ROT » sont laissés tels quels. Tu peux écrire tes phrases avec ou sans majuscule.</p>
   </div>
   <div class="box danger"><span class="t">Confidentialité : ce qu'il ne faut pas changer</span>
     <p>La page n'enregistre rien et n'a aucun champ d'identité. Ne lui ajoute pas de sauvegarde (<code>localStorage</code>) ni de champ nom, date de naissance ou IPP. C'est ce qui permet de l'utiliser sur un poste partagé sans risque.</p>
