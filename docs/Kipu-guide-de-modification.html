@@ -1,0 +1,1109 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kipu — Guide de modification</title>
+<style>
+  @page { size: A4; margin: 17mm 17mm 18mm 17mm; }
+  :root {
+    --ink: #1b1b1f; --muted: #5d5d66; --line: #dedde3; --violet: #6d4fd8; --violet-soft: #f1edff;
+    --amber-soft: #fff6e0; --amber: #a86a00; --red-soft: #ffecec; --red: #b42318; --green-soft: #e9f8ef; --green: #18794e;
+    --code-bg: #f6f6f8;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family: "Inter", sans-serif; color: var(--ink); font-size: 9.8pt; line-height: 1.45; margin: 0; }
+  h1, h2, h3, h4 { font-family: "Inter Display", "Inter", sans-serif; line-height: 1.2; break-after: avoid; }
+  h1 { font-size: 24pt; margin: 0 0 4mm; letter-spacing: -0.02em; }
+  h1 .num { color: var(--violet); margin-right: 3mm; }
+  h2 { font-size: 14pt; margin: 8mm 0 2.5mm; padding-bottom: 1.5mm; border-bottom: 1px solid var(--line); }
+  h3 { font-size: 11.5pt; margin: 5mm 0 1.5mm; }
+  p { margin: 0 0 2.6mm; }
+  ul, ol { margin: 0 0 3mm; padding-left: 6mm; }
+  li { margin-bottom: 1mm; }
+  a { color: var(--violet); text-decoration: none; }
+  code { font-family: "JetBrains Mono", monospace; font-size: 8.6pt; background: var(--code-bg); border: 1px solid #ececf0; border-radius: 3px; padding: 0 1.2mm; }
+  pre { font-family: "JetBrains Mono", monospace; font-size: 8.1pt; line-height: 1.45; background: var(--code-bg); border: 1px solid #e6e6ec; border-left: 3px solid var(--violet); border-radius: 4px; padding: 3mm 3.5mm; margin: 0 0 3.5mm; white-space: pre-wrap; word-break: break-word; break-inside: avoid; }
+  pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+  pre .c { color: #7a7a85; font-style: italic; }
+  pre .k { color: var(--violet); font-weight: 600; }
+  pre.long { break-inside: auto; }
+  .chapter { break-before: page; }
+  .lead { font-size: 11pt; color: var(--muted); margin-bottom: 5mm; }
+  .box { border-radius: 5px; padding: 3mm 4mm; margin: 0 0 3.5mm; break-inside: avoid; border: 1px solid; }
+  .box p:last-child, .box ul:last-child { margin-bottom: 0; }
+  .box .t { font-weight: 700; display: block; margin-bottom: 1mm; }
+  .tip { background: var(--green-soft); border-color: #bfe6cf; }
+  .tip .t { color: var(--green); }
+  .warn { background: var(--amber-soft); border-color: #f1d79a; }
+  .warn .t { color: var(--amber); }
+  .danger { background: var(--red-soft); border-color: #f3c0bb; }
+  .danger .t { color: var(--red); }
+  .info { background: var(--violet-soft); border-color: #d9cffb; }
+  .info .t { color: var(--violet); }
+  table { width: 100%; border-collapse: collapse; margin: 0 0 4mm; font-size: 9pt; break-inside: auto; }
+  th, td { border: 1px solid var(--line); padding: 1.6mm 2.2mm; text-align: left; vertical-align: top; }
+  th { background: #f3f2f7; font-weight: 600; }
+  tr { break-inside: avoid; }
+  .steps { counter-reset: s; list-style: none; padding-left: 0; }
+  .steps > li { counter-increment: s; position: relative; padding-left: 9mm; margin-bottom: 2.4mm; }
+  .steps > li::before { content: counter(s); position: absolute; left: 0; top: -0.2mm; width: 6mm; height: 6mm; border-radius: 50%; background: var(--violet); color: white; font-weight: 700; font-size: 8.5pt; display: flex; align-items: center; justify-content: center; }
+  .kbd { font-family: "JetBrains Mono", monospace; font-size: 8.4pt; border: 1px solid #c9c8d2; border-bottom-width: 2px; border-radius: 3px; padding: 0 1.2mm; background: white; }
+  .tree { font-family: "JetBrains Mono", monospace; font-size: 8.2pt; line-height: 1.5; }
+  .muted { color: var(--muted); }
+  .flow { display: flex; align-items: stretch; gap: 2mm; margin: 2mm 0 5mm; break-inside: avoid; }
+  .flow div { flex: 1; border: 1px solid var(--line); border-radius: 5px; padding: 2.5mm; font-size: 8.8pt; background: #fbfbfd; }
+  .flow div b { display: block; color: var(--violet); margin-bottom: 1mm; font-size: 9.2pt; }
+  .flow span { align-self: center; color: var(--violet); font-weight: 700; }
+  /* Cover */
+  .cover { height: 250mm; display: flex; flex-direction: column; justify-content: center; }
+  .cover .logo { width: 30mm; height: 30mm; margin-bottom: 10mm; }
+  .cover h1 { font-size: 34pt; margin-bottom: 3mm; }
+  .cover .sub { font-size: 14pt; color: var(--muted); margin-bottom: 14mm; }
+  .cover .meta { font-size: 10pt; color: var(--muted); border-top: 1px solid var(--line); padding-top: 4mm; }
+  .toc { columns: 1; }
+  .toc ol { padding-left: 0; list-style: none; counter-reset: t; }
+  .toc li { counter-increment: t; padding: 1.6mm 0; border-bottom: 1px dotted var(--line); display: flex; gap: 3mm; }
+  .toc li::before { content: counter(t, decimal-leading-zero); color: var(--violet); font-weight: 700; width: 8mm; }
+  .toc li span { color: var(--muted); font-size: 9pt; margin-left: auto; text-align: right; }
+</style>
+</head>
+<body>
+
+<!-- ============ COUVERTURE ============ -->
+<section class="cover">
+  <svg class="logo" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#0a0a0b"/><path d="M190 150 L190 362" stroke="#a78bfa" stroke-width="56" stroke-linecap="round"/><path d="M196 256 L348 150" stroke="#a78bfa" stroke-width="56" stroke-linecap="round"/><path d="M196 256 L348 362" stroke="#a78bfa" stroke-width="56" stroke-linecap="round"/></svg>
+  <h1>Modifier Kipu en autonomie</h1>
+  <p class="sub">Scores, outils, arbres, médicaments, examen clinique, affichage, publication sur le web et sur iPhone, avec ou sans Xcode.</p>
+  <div class="meta">
+    Dépôt : <b>github.com/Syssans/urg-kipu</b> · Site : <b>syssans.github.io/urg-kipu</b><br>
+    Version du guide : novembre 2026 · Écrit pour l'état du code à cette date
+  </div>
+</section>
+
+<!-- ============ SOMMAIRE ============ -->
+<section class="chapter toc">
+  <h1>Sommaire</h1>
+  <ol>
+    <li><a href="#c1">Comment Kipu fonctionne</a><span>le circuit d'une modification</span></li>
+    <li><a href="#c2">Installer ses outils</a><span>navigateur seul, ou PC Windows</span></li>
+    <li><a href="#c3">Le minimum de code à connaître</a><span>lire et écrire sans casser</span></li>
+    <li><a href="#c4">La carte du projet</a><span>quel fichier fait quoi</span></li>
+    <li><a href="#c5">Modifier un score existant</a><span>libellés, points, interprétation</span></li>
+    <li><a href="#c6">Ajouter un nouveau score</a><span>modèle complet</span></li>
+    <li><a href="#c7">Les outils de calcul</a><span>onglet « Calcul »</span></li>
+    <li><a href="#c8">Les arbres décisionnels</a><span>questions, feuilles, scores intégrés</span></li>
+    <li><a href="#c9">Les fiches médicaments</a><span>et les liens automatiques</span></li>
+    <li><a href="#c10">L'examen clinique</a><span>tes phrases, tes sections</span></li>
+    <li><a href="#c11">Modifier l'affichage</a><span>couleurs, textes, accueil, icônes, nom</span></li>
+    <li><a href="#c12">Vérifier avant de publier</a><span>build, lint, lire une erreur</span></li>
+    <li><a href="#c13">Publier</a><span>site web et fichier .ipa</span></li>
+    <li><a href="#c14">Passer par Xcode</a><span>si tu as un Mac qui le fait tourner</span></li>
+    <li><a href="#c15">La partie native iOS</a><span>barre d'onglets, Swift</span></li>
+    <li><a href="#c16">Dépannage</a><span>symptôme → solution</span></li>
+    <li><a href="#c17">Bonnes pratiques et annulation</a><span>revenir en arrière</span></li>
+    <li><a href="#c18">Annexes</a><span>modèles à copier, aide-mémoire</span></li>
+  </ol>
+  <div class="box info"><span class="t">Comment lire ce guide</span>
+    <p>Les chapitres 1 à 4 sont à lire une fois, dans l'ordre. Ensuite, chaque chapitre se lit seul, comme une fiche : tu vas directement à celui qui correspond à ce que tu veux modifier. Les modèles prêts à copier sont regroupés en annexe (chapitre 18).</p>
+  </div>
+</section>
+
+<!-- ============ 1 ============ -->
+<section class="chapter" id="c1">
+  <h1><span class="num">1</span>Comment Kipu fonctionne</h1>
+  <p class="lead">Kipu est un site web. L'app iPhone est ce même site, emballé dans une coque native. Tu modifies donc un seul code, qui sert aux deux.</p>
+
+  <h2>Les briques</h2>
+  <table>
+    <tr><th style="width:28%">Brique</th><th>Rôle, en une phrase</th></tr>
+    <tr><td><b>React + TypeScript</b></td><td>Le langage de l'app. Chaque écran est un fichier <code>.tsx</code>, chaque score un fichier <code>.ts</code>.</td></tr>
+    <tr><td><b>Vite</b></td><td>L'outil qui transforme le code en site prêt à publier (<code>npm run build</code>) et qui affiche l'app en direct pendant que tu codes (<code>npm run dev</code>).</td></tr>
+    <tr><td><b>Tailwind CSS</b></td><td>La mise en forme : des mots-clés comme <code>text-sm</code> ou <code>rounded-xl</code> directement dans le code des écrans.</td></tr>
+    <tr><td><b>Capacitor</b></td><td>La coque qui transforme le site en app iOS (dossier <code>ios/</code>).</td></tr>
+    <tr><td><b>GitHub</b></td><td>Garde le code et son historique complet. Chaque version est sauvegardée, on peut toujours revenir en arrière.</td></tr>
+    <tr><td><b>GitHub Actions</b></td><td>Des robots gratuits qui, à chaque modification, reconstruisent le site et l'app iOS sur des serveurs de GitHub (dont des Mac).</td></tr>
+  </table>
+
+  <h2>Le circuit d'une modification</h2>
+  <div class="flow">
+    <div><b>1. Tu modifies</b>un fichier, dans le navigateur (github.dev) ou sur ton PC.</div><span>→</span>
+    <div><b>2. Tu enregistres sur GitHub</b>un « commit » sur la branche <code>main</code>.</div><span>→</span>
+    <div><b>3. GitHub reconstruit</b>le site (≈ 1 min) et l'app iOS (≈ 2 min).</div><span>→</span>
+    <div><b>4. Tu testes</b>sur le site, puis sur l'iPhone via Sideloadly.</div>
+  </div>
+  <div class="box tip"><span class="t">Filet de sécurité</span>
+    <p>Si ton code contient une erreur, l'étape 3 échoue et <b>le site en ligne reste sur la version précédente</b>, qui fonctionne. Une erreur ne peut donc pas casser le site que tu utilises à l'hôpital. Elle bloque juste la mise à jour, jusqu'à ce que tu la corriges (chapitre 12).</p>
+  </div>
+
+  <h2>Vocabulaire Git (le strict nécessaire)</h2>
+  <table>
+    <tr><th style="width:22%">Mot</th><th>Ce que ça veut dire</th></tr>
+    <tr><td><b>Dépôt</b> (repository)</td><td>Le dossier du projet, sur GitHub : <code>Syssans/urg-kipu</code>.</td></tr>
+    <tr><td><b>Commit</b></td><td>Une sauvegarde nommée de tes modifications (« Ajoute le score HEART »). Chaque commit est une version vers laquelle on peut revenir.</td></tr>
+    <tr><td><b>Push</b></td><td>Envoyer tes commits de ton PC vers GitHub. Inutile si tu travailles directement dans le navigateur.</td></tr>
+    <tr><td><b>Pull / Fetch</b></td><td>Récupérer sur ton PC ce qui a changé sur GitHub.</td></tr>
+    <tr><td><b>Branche</b></td><td>Une version parallèle du code. Le site est construit à partir de <code>main</code> : c'est la seule qui compte pour toi. Travaille directement dessus.</td></tr>
+  </table>
+</section>
+
+<!-- ============ 2 ============ -->
+<section class="chapter" id="c2">
+  <h1><span class="num">2</span>Installer ses outils</h1>
+  <p class="lead">Deux façons de travailler. Commence par la A, qui ne demande rien. Passe à la B quand tu veux voir le résultat avant de publier.</p>
+
+  <h2>Méthode A : tout dans le navigateur (github.dev)</h2>
+  <p>Fonctionne sur n'importe quel ordinateur, même celui de l'hôpital si GitHub n'est pas filtré. Rien à installer.</p>
+  <ol class="steps">
+    <li>Connecte-toi sur <b>github.com</b>, ouvre le dépôt <b>Syssans/urg-kipu</b>.</li>
+    <li>Appuie sur la touche <span class="kbd">.</span> (point) du clavier. Un éditeur de code (Visual Studio Code, version web) s'ouvre sur <b>github.dev</b>. Tu peux aussi remplacer <code>github.com</code> par <code>github.dev</code> dans l'adresse.</li>
+    <li>À gauche, l'explorateur de fichiers. Ouvre un fichier, modifie-le. Les fichiers modifiés prennent une lettre <b>M</b>.</li>
+    <li>Clique sur l'icône <b>Contrôle de code source</b> (trois ronds reliés, à gauche, ou <span class="kbd">Ctrl</span>+<span class="kbd">Maj</span>+<span class="kbd">G</span>).</li>
+    <li>Écris un message court qui décrit le changement, puis clique sur <b>Commit &amp; Push</b>. Vérifie que la branche affichée en bas à gauche est <code>main</code>.</li>
+    <li>Va dans l'onglet <b>Actions</b> du dépôt sur github.com : une coche verte au bout d'une minute ou deux veut dire que le site est à jour.</li>
+  </ol>
+  <div class="box warn"><span class="t">Limite de la méthode A</span>
+    <p>Tu ne vois pas le résultat avant de publier. Si tu as fait une faute de frappe, tu ne le sauras qu'en voyant une croix rouge dans Actions. Ce n'est pas grave (le site reste sur l'ancienne version), mais pour les grosses modifications, la méthode B est plus confortable.</p>
+  </div>
+
+  <h2>Méthode B : sur ton PC Windows</h2>
+  <h3>Installer (une seule fois)</h3>
+  <table>
+    <tr><th style="width:24%">Logiciel</th><th>Où le trouver</th><th style="width:38%">À quoi il sert</th></tr>
+    <tr><td><b>GitHub Desktop</b></td><td>desktop.github.com</td><td>Récupérer le projet et envoyer tes modifications, avec des boutons plutôt que des commandes.</td></tr>
+    <tr><td><b>Node.js</b> (version LTS)</td><td>nodejs.org → bouton « LTS »</td><td>Faire tourner l'app sur ton PC et vérifier le code. Prends la version LTS (≥ 22).</td></tr>
+    <tr><td><b>Visual Studio Code</b></td><td>code.visualstudio.com</td><td>L'éditeur de code. Gratuit.</td></tr>
+  </table>
+  <p>Facultatif dans VS Code : l'extension <b>Tailwind CSS IntelliSense</b> (onglet Extensions, à gauche), qui propose les classes de mise en forme pendant que tu tapes.</p>
+
+  <h3>Récupérer le projet</h3>
+  <ol class="steps">
+    <li>Ouvre GitHub Desktop, connecte-toi avec ton compte GitHub.</li>
+    <li><b>File → Clone repository</b>, choisis <code>Syssans/urg-kipu</code>, garde le dossier proposé (par exemple <code>Documents\GitHub\urg-kipu</code>), clique sur <b>Clone</b>.</li>
+    <li>En haut, vérifie que <b>Current branch</b> indique <code>main</code>. Sinon, clique dessus et choisis <code>main</code>.</li>
+    <li>Clique sur <b>Open in Visual Studio Code</b> (ou dans VS Code : Fichier → Ouvrir le dossier).</li>
+  </ol>
+
+  <h3>Lancer l'app sur ton PC</h3>
+  <ol class="steps">
+    <li>Dans VS Code : menu <b>Terminal → Nouveau terminal</b>. Une ligne de commande s'ouvre en bas, déjà placée dans le dossier du projet.</li>
+    <li>La première fois seulement (et après chaque mise à jour de <code>package.json</code>) : tape <code>npm install</code> puis <span class="kbd">Entrée</span>. Ça télécharge les dépendances (1 à 2 minutes).</li>
+    <li>Tape <code>npm run dev</code>. Ouvre l'adresse affichée dans ton navigateur : <b>http://localhost:5173/urg-kipu/</b>.</li>
+    <li>Modifie un fichier et enregistre (<span class="kbd">Ctrl</span>+<span class="kbd">S</span>) : la page se met à jour toute seule, en une seconde.</li>
+    <li>Pour arrêter : clique dans le terminal et fais <span class="kbd">Ctrl</span>+<span class="kbd">C</span>.</li>
+  </ol>
+  <div class="box tip"><span class="t">Voir l'app sur ton téléphone pendant que tu codes</span>
+    <p>Lance <code>npm run dev -- --host</code>. Le terminal affiche une seconde adresse, « Network », du type <code>http://192.168.1.20:5173/urg-kipu/</code>. Ouvre-la dans Safari sur ton iPhone, connecté au <b>même Wi-Fi</b>. Si Windows demande d'autoriser Node.js dans le pare-feu, accepte pour les réseaux privés.</p>
+  </div>
+
+  <h3>Envoyer tes modifications</h3>
+  <ol class="steps">
+    <li>Dans GitHub Desktop, la colonne de gauche liste les fichiers modifiés, avec les lignes changées en vert et rouge à droite. Relis-les.</li>
+    <li>En bas à gauche, écris un résumé (« Corrige le libellé du qSOFA »), clique sur <b>Commit to main</b>.</li>
+    <li>Clique sur <b>Push origin</b> en haut. C'est envoyé.</li>
+  </ol>
+  <div class="box warn"><span class="t">Avant de commencer à travailler</span>
+    <p>Clique toujours sur <b>Fetch origin</b> (puis <b>Pull origin</b> s'il apparaît) dans GitHub Desktop. Tu récupères ainsi les changements faits ailleurs, par exemple depuis github.dev, et tu évites les conflits.</p>
+  </div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section class="chapter" id="c3">
+  <h1><span class="num">3</span>Le minimum de code à connaître</h1>
+  <p class="lead">Pour modifier les scores, les arbres ou les médicaments, tu n'as pas besoin de « savoir programmer ». Tu dois juste savoir lire et respecter quelques signes. Voici tout ce qu'il faut.</p>
+
+  <h2>Les briques de base</h2>
+  <table>
+    <tr><th style="width:30%">Ce que tu vois</th><th>Ce que c'est</th></tr>
+    <tr><td><code>"Glasgow"</code></td><td>Un <b>texte</b>, toujours entre guillemets droits <code>"</code>. Les accents sont permis.</td></tr>
+    <tr><td><code>15</code>, <code>2.5</code></td><td>Un <b>nombre</b>, sans guillemets. La virgule décimale s'écrit avec un <b>point</b> : <code>2.5</code>.</td></tr>
+    <tr><td><code>true</code> / <code>false</code></td><td>Vrai / faux.</td></tr>
+    <tr><td><code>{ label: "Oui", value: 1 }</code></td><td>Un <b>objet</b> : une fiche avec des cases nommées (<code>nom: valeur</code>), séparées par des virgules, entre accolades.</td></tr>
+    <tr><td><code>[ "a", "b", "c" ]</code></td><td>Une <b>liste</b>, entre crochets, éléments séparés par des virgules.</td></tr>
+    <tr><td><code>// commentaire</code></td><td>Une note pour les humains, ignorée par l'ordinateur. Utile pour te laisser des rappels.</td></tr>
+    <tr><td><code>(v) =&gt; v.age ?? 0</code></td><td>Une <b>fonction</b> courte : « à partir des valeurs saisies <code>v</code>, donne l'âge, ou 0 s'il est vide ». Le <code>??</code> veut dire « sinon ».</td></tr>
+    <tr><td><code>a ? b : c</code></td><td>« Si a, alors b, sinon c ». Exemple : <code>score &gt;= 2 ? "positif" : "négatif"</code>.</td></tr>
+    <tr><td><code>`${score} / 3`</code></td><td>Un texte entre <b>accents graves</b> (<span class="kbd">AltGr</span>+<span class="kbd">7</span> puis <span class="kbd">Espace</span>), dans lequel <code>${…}</code> insère une valeur. Donne « 2 / 3 ».</td></tr>
+  </table>
+
+  <h2>Comparaisons et calculs</h2>
+  <table>
+    <tr><th style="width:20%">Signe</th><th>Sens</th><th style="width:20%">Signe</th><th>Sens</th></tr>
+    <tr><td><code>===</code></td><td>est égal à</td><td><code>!==</code></td><td>est différent de</td></tr>
+    <tr><td><code>&gt;=</code> / <code>&lt;=</code></td><td>supérieur / inférieur ou égal</td><td><code>&gt;</code> / <code>&lt;</code></td><td>strictement supérieur / inférieur</td></tr>
+    <tr><td><code>&amp;&amp;</code></td><td>ET</td><td><code>||</code></td><td>OU</td></tr>
+    <tr><td><code>+ - * /</code></td><td>opérations</td><td><code>Math.round(x)</code></td><td>arrondi</td></tr>
+    <tr><td><code>x.toFixed(1)</code></td><td>texte avec 1 décimale</td><td><code>Math.max(a, b)</code></td><td>le plus grand des deux</td></tr>
+  </table>
+
+  <h2>Les 6 pièges qui causent 90 % des erreurs</h2>
+  <ol>
+    <li><b>Virgule oubliée</b> entre deux éléments d'une liste ou d'un objet. Une virgule en trop à la fin, en revanche, est autorisée : n'hésite pas à en mettre.</li>
+    <li><b>Guillemets typographiques</b> <code>« »</code> ou <code>“ ”</code> à la place de <code>"</code> autour d'un texte, souvent après un copier-coller depuis Word. À l'<i>intérieur</i> d'un texte, ils sont autorisés.</li>
+    <li><b>Guillemet droit à l'intérieur d'un texte</b> : <code>"le signe "positif""</code> casse tout. Écris <code>"le signe « positif »"</code> ou <code>"le signe \"positif\""</code>. L'apostrophe <code>'</code> ne pose pas de problème entre <code>"</code>.</li>
+    <li><b>Accolade ou crochet non refermé</b>. Dans VS Code, clique juste après une accolade : sa partenaire s'éclaire.</li>
+    <li><b>Virgule décimale</b> dans un nombre : <code>2,5</code> se lit comme deux nombres. Écris <code>2.5</code>. Dans un <i>texte</i> affiché, en revanche, écris « 2,5 ».</li>
+    <li><b>Identifiant en double</b> : deux scores avec le même <code>id</code>, ou deux champs avec le même <code>id</code> dans un même score.</li>
+  </ol>
+  <div class="box tip"><span class="t">VS Code te prévient</span>
+    <p>Une erreur apparaît en <b>soulignement rouge ondulé</b>. Passe la souris dessus pour lire le problème. Le panneau <b>Problèmes</b> (<span class="kbd">Ctrl</span>+<span class="kbd">Maj</span>+<span class="kbd">M</span>) les liste toutes. Ça marche aussi dans github.dev.</p>
+  </div>
+  <div class="box info"><span class="t">Raccourcis utiles dans VS Code</span>
+    <ul>
+      <li><span class="kbd">Ctrl</span>+<span class="kbd">P</span> : ouvrir un fichier en tapant son nom (« qsofa »).</li>
+      <li><span class="kbd">Ctrl</span>+<span class="kbd">Maj</span>+<span class="kbd">F</span> : chercher un texte dans tout le projet, par exemple une phrase vue dans l'app, pour trouver où elle est écrite.</li>
+      <li><span class="kbd">Ctrl</span>+<span class="kbd">Z</span> : annuler. <span class="kbd">Ctrl</span>+<span class="kbd">/</span> : mettre une ligne en commentaire.</li>
+      <li><span class="kbd">Maj</span>+<span class="kbd">Alt</span>+<span class="kbd">F</span> : remettre en forme proprement le fichier.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section class="chapter" id="c4">
+  <h1><span class="num">4</span>La carte du projet</h1>
+  <p class="lead">Quatre-vingt-dix pour cent de tes modifications se feront dans <code>src/lib/</code>, qui contient le contenu médical sous forme de fiches. Les écrans sont dans <code>src/pages/</code> et <code>src/components/</code>.</p>
+<pre class="tree">urg-kipu/
+├── <span class="k">src/</span>                         <span class="c">← tout le code de l'app</span>
+│   ├── <span class="k">lib/</span>                     <span class="c">← le CONTENU</span>
+│   │   ├── calculators/         <span class="c">scores (un fichier par score) + index.ts (la liste)</span>
+│   │   │   └── types.ts         <span class="c">définition de ce qu'est un score, catégories, couleurs</span>
+│   │   ├── tools/               <span class="c">outils de l'onglet Calcul + index.ts</span>
+│   │   ├── trees/               <span class="c">arbres décisionnels + index.ts</span>
+│   │   ├── drugs/               <span class="c">fiches médicaments + index.ts + sources.ts</span>
+│   │   ├── exam/                <span class="c">examen clinique : template.ts (tes phrases), render.ts</span>
+│   │   ├── search.ts            <span class="c">recherche + synonymes (ACR = arrêt cardiaque…)</span>
+│   │   ├── favorites.ts         <span class="c">favoris (stockés dans le navigateur)</span>
+│   │   └── native.ts            <span class="c">lien avec la partie iOS native</span>
+│   ├── <span class="k">pages/</span>                   <span class="c">← les ÉCRANS (Home.tsx = accueil, About.tsx = À propos…)</span>
+│   ├── <span class="k">components/</span>              <span class="c">← les BRIQUES d'écran (barre du bas, en-tête, carte résultat…)</span>
+│   ├── App.tsx                  <span class="c">la liste des adresses (routes) de l'app</span>
+│   └── index.css                <span class="c">les couleurs générales et animations</span>
+├── <span class="k">public/</span>                      <span class="c">← images et icônes du site</span>
+├── <span class="k">ios/</span>                         <span class="c">← le projet Xcode (app iPhone)</span>
+│   └── App/App/                 <span class="c">code Swift, icônes, Info.plist</span>
+├── <span class="k">scripts/</span>gen-icons.mjs        <span class="c">génère les icônes à partir du dessin du « K »</span>
+├── <span class="k">.github/workflows/</span>           <span class="c">← les robots : deploy.yml (site), ios-ipa.yml (app)</span>
+├── vite.config.ts               <span class="c">nom de l'app installable (PWA), adresse du site</span>
+├── capacitor.config.ts          <span class="c">nom et identifiant de l'app iOS</span>
+├── package.json                 <span class="c">dépendances et commandes npm</span>
+└── README.md                    <span class="c">présentation du projet</span></pre>
+
+  <h2>Les adresses de l'app</h2>
+  <p>Chaque écran a une adresse, définie dans <code>src/App.tsx</code>. Utile pour les liens dans les arbres (chapitre 8).</p>
+  <table>
+    <tr><th style="width:38%">Adresse</th><th>Écran</th></tr>
+    <tr><td><code>/</code></td><td>Accueil (recherche, favoris, récents)</td></tr>
+    <tr><td><code>/scores</code> · <code>/scores/qsofa</code></td><td>Liste des scores · un score (par son <code>id</code>)</td></tr>
+    <tr><td><code>/calcul</code> · <code>/calcul/imc</code></td><td>Liste des outils · un outil</td></tr>
+    <tr><td><code>/arbres</code> · <code>/arbres/dysnatremie</code></td><td>Liste des arbres · un arbre</td></tr>
+    <tr><td><code>/medicaments/clonazepam</code></td><td>Une fiche médicament (pas de liste)</td></tr>
+    <tr><td><code>/examen</code></td><td>Examen clinique</td></tr>
+    <tr><td><code>/favoris</code> · <code>/a-propos</code></td><td>Favoris · À propos</td></tr>
+  </table>
+  <div class="box info"><span class="t">Retrouver où un texte est écrit</span>
+    <p>Tu vois une phrase dans l'app et tu veux la changer ? <span class="kbd">Ctrl</span>+<span class="kbd">Maj</span>+<span class="kbd">F</span> dans VS Code, colle un morceau de la phrase (sans accents compliqués si possible) : le fichier apparaît. C'est la méthode la plus rapide pour tout.</p>
+  </div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section class="chapter" id="c5">
+  <h1><span class="num">5</span>Modifier un score existant</h1>
+  <p class="lead">Chaque score est un fichier dans <code>src/lib/calculators/</code>. Exemple complet avec le qSOFA, le plus simple.</p>
+<pre><span class="k">import</span> type { Calculator } from "./types";        <span class="c">// ne pas toucher</span>
+
+<span class="k">export const</span> qsofa: Calculator = {
+  id: "qsofa",                                   <span class="c">// identifiant unique, sans accent ni espace → adresse /scores/qsofa</span>
+  name: "quick SOFA (qSOFA)",                    <span class="c">// nom complet, en haut de la page du score</span>
+  shortName: "qSOFA",                            <span class="c">// nom court, dans les listes</span>
+  category: "infectiologie",                     <span class="c">// voir le tableau des catégories</span>
+  keywords: ["qsofa", "sepsis", "choc septique", "infection"],   <span class="c">// mots qui le font trouver dans la recherche</span>
+  summary: "Repérage rapide au chevet d'un patient à risque de sepsis…",  <span class="c">// sous-titre dans les listes</span>
+  fields: [                                      <span class="c">// les questions posées</span>
+    { type: "boolean", id: "rr",  label: "Fréquence respiratoire ≥ 22/min", points: 1 },
+    { type: "boolean", id: "gcs", label: "Altération de la conscience (Glasgow &lt; 15)", points: 1 },
+    { type: "boolean", id: "sbp", label: "Pression artérielle systolique ≤ 100 mmHg", points: 1 },
+  ],
+  compute: (v) =&gt; (v.rr ?? 0) + (v.gcs ?? 0) + (v.sbp ?? 0),   <span class="c">// le calcul du score</span>
+  interpret: (score) =&gt; [                         <span class="c">// ce qui s'affiche selon le résultat</span>
+    {
+      title: score &gt;= 2 ? "qSOFA positif" : "qSOFA négatif",
+      level: score &gt;= 2 ? "high" : "low",        <span class="c">// la couleur de la carte résultat</span>
+      scoreLabel: `${score} / 3`,
+      detail: score &gt;= 2 ? "Risque accru de mortalité…" : "Ne permet pas d'exclure un sepsis…",
+    },
+  ],
+  source: "Singer et al. (Sepsis-3), JAMA 2016.", <span class="c">// affichée sous le résultat</span>
+  notes: "Outil de repérage, pas un outil diagnostique du sepsis.",  <span class="c">// facultatif</span>
+};</pre>
+
+  <h2>Les modifications courantes</h2>
+  <table>
+    <tr><th style="width:34%">Je veux…</th><th>Je change…</th></tr>
+    <tr><td>Reformuler une question</td><td>Le <code>label</code> du champ.</td></tr>
+    <tr><td>Changer le nombre de points</td><td>Le <code>points</code> (case à cocher) ou le <code>value</code> d'une option (liste de choix). Vérifie ensuite que <code>compute</code> et les seuils de <code>interpret</code> sont toujours cohérents.</td></tr>
+    <tr><td>Changer un seuil d'interprétation</td><td>Les comparaisons dans <code>interpret</code> (<code>score &gt;= 2</code>…).</td></tr>
+    <tr><td>Changer le texte du résultat</td><td><code>title</code> (titre de la carte) et <code>detail</code> (paragraphe dessous).</td></tr>
+    <tr><td>Changer la couleur du résultat</td><td><code>level</code> (tableau ci-dessous).</td></tr>
+    <tr><td>Faire trouver le score par un autre mot</td><td>Ajoute le mot dans <code>keywords</code>. Pour un synonyme valable partout (ex. « IDM » ↔ « infarctus »), ajoute-le dans <code>SYNONYM_GROUPS</code> de <code>src/lib/search.ts</code>.</td></tr>
+    <tr><td>Changer sa catégorie</td><td><code>category</code>.</td></tr>
+    <tr><td>Retirer un score de l'app</td><td>Dans <code>src/lib/calculators/index.ts</code>, supprime son nom de la liste <code>calculators</code> et sa ligne <code>import</code>. Tu peux garder le fichier.</td></tr>
+  </table>
+
+  <h2>Les couleurs de résultat (<code>level</code>)</h2>
+  <table>
+    <tr><th style="width:20%">Valeur</th><th style="width:20%">Couleur</th><th>Usage habituel</th></tr>
+    <tr><td><code>"low"</code></td><td style="color:#18794e;font-weight:600">vert</td><td>Rassurant, normal, risque faible</td></tr>
+    <tr><td><code>"moderate"</code></td><td style="color:#a86a00;font-weight:600">jaune ambré</td><td>Intermédiaire, à surveiller</td></tr>
+    <tr><td><code>"high"</code></td><td style="color:#c2410c;font-weight:600">orange</td><td>Élevé, action nécessaire</td></tr>
+    <tr><td><code>"critical"</code></td><td style="color:#b42318;font-weight:600">rouge</td><td>Grave, urgence</td></tr>
+    <tr><td><code>"info"</code></td><td style="color:#5d5d66;font-weight:600">gris</td><td>Information neutre, sans jugement de gravité</td></tr>
+  </table>
+
+  <h2>Les catégories (<code>category</code>)</h2>
+  <p><code>"neurologie"</code>, <code>"cardiovasculaire"</code>, <code>"respiratoire"</code>, <code>"infectiologie"</code>, <code>"traumatologie"</code>, <code>"digestif"</code>, <code>"biologie"</code>, <code>"pediatrie"</code>, <code>"geriatrie"</code> pour les scores ; <code>"conversion"</code> et <code>"formule"</code> pour les outils de calcul. Le nom affiché et la couleur de chaque catégorie sont dans <code>CATEGORY_LABELS</code> et <code>CATEGORY_COLORS</code> de <code>src/lib/calculators/types.ts</code>.</p>
+  <div class="box warn"><span class="t">Ajouter une nouvelle catégorie</span>
+    <p>Dans <code>types.ts</code>, il faut l'ajouter à <b>trois</b> endroits : la liste <code>Category</code> (<code>| "urologie"</code>), <code>CATEGORY_LABELS</code> (<code>urologie: "Urologie",</code>) et <code>CATEGORY_COLORS</code> (<code>urologie: { bg: "bg-teal-500/15", text: "text-teal-300" },</code>). Si tu en oublies un, VS Code souligne l'erreur en rouge.</p>
+  </div>
+</section>
+
+<!-- ============ 5 bis: fields ============ -->
+<section class="chapter">
+  <h2 style="margin-top:0">Les trois types de questions (<code>fields</code>)</h2>
+
+  <h3>1. Case à cocher : <code>"boolean"</code></h3>
+  <p>Vaut 1 si cochée, 0 sinon. Idéal pour les scores « 1 point par critère ».</p>
+<pre>{ type: "boolean", id: "age65", label: "Âge ≥ 65 ans", points: 1 },
+{ type: "boolean", id: "atcdEp", label: "Antécédent de TVP ou d'EP", points: 1.5, hint: "Précision affichée en petit" },</pre>
+  <p>Dans <code>compute</code>, une case cochée vaut <b>1</b>, pas son nombre de points. Les <code>points</code> servent à l'affichage (« +1,5 » à droite). Pour un score pondéré, multiplie : <code>(v.atcdEp ?? 0) * 1.5</code>. Voir l'astuce page suivante pour additionner automatiquement.</p>
+
+  <h3>2. Liste de choix : <code>"select"</code></h3>
+  <p>Une seule réponse possible. Chaque option a un texte (<code>label</code>) et une valeur (<code>value</code>).</p>
+<pre>{
+  type: "select",
+  id: "eye",
+  label: "Ouverture des yeux (Y)",
+  showPoints: true,             <span class="c">// affiche la valeur à droite de chaque option</span>
+  options: [
+    { label: "Spontanée", value: 4 },
+    { label: "À la demande verbale", value: 3 },
+    { label: "À la douleur", value: 2 },
+    { label: "Absente", value: 1 },
+  ],
+},</pre>
+  <ul>
+    <li>Tant qu'une liste n'a pas de réponse, le résultat ne s'affiche pas et la question est marquée d'un point orange.</li>
+    <li><code>defaultValue: 0</code> pré-sélectionne une option. À réserver aux choix de contexte (artériel/veineux, adulte/enfant), jamais à un item qui compte des points.</li>
+    <li>Sans <code>showPoints</code> et avec 3 options ou moins, la liste s'affiche en boutons compacts côte à côte.</li>
+  </ul>
+
+  <h3>3. Nombre : <code>"number"</code></h3>
+<pre>{
+  type: "number",
+  id: "age",
+  label: "Âge",
+  unit: "ans",
+  min: 0, max: 120,          <span class="c">// hors de ces bornes : « valeur improbable », pas de résultat</span>
+  step: 1,
+  placeholder: "ex. 65",     <span class="c">// texte gris dans le champ vide</span>
+  normText: "7,35–7,45",     <span class="c">// normale affichée en petit à côté du libellé (facultatif)</span>
+},</pre>
+  <p>Un champ nombre est <b>facultatif</b> par défaut. Pour l'exiger avant d'afficher un résultat, ajoute son <code>id</code> au score : <code>requiredNumberFieldIds: ["age", "poids"],</code>.</p>
+
+  <h3>Options communes à tous les types</h3>
+  <table>
+    <tr><th style="width:30%">Option</th><th>Effet</th></tr>
+    <tr><td><code>group: "Critères cliniques"</code></td><td>Regroupe sous un même intertitre toutes les questions qui ont le même <code>group</code>.</td></tr>
+    <tr><td><code>visibleIf: (v) =&gt; v.mode === 1</code></td><td>N'affiche la question que si une autre réponse vaut une certaine valeur. Ici : seulement si le champ <code>mode</code> vaut 1.</td></tr>
+  </table>
+</section>
+
+<section class="chapter">
+  <h2 style="margin-top:0">Écrire <code>compute</code> et <code>interpret</code></h2>
+  <h3><code>compute</code> : calculer le score</h3>
+  <p>Reçoit <code>v</code>, l'ensemble des réponses, rangées par <code>id</code>. <code>v.age</code> est la réponse au champ dont l'<code>id</code> est <code>"age"</code>. Une réponse vide vaut <code>undefined</code>, d'où le <code>?? 0</code> systématique.</p>
+<pre><span class="c">// Somme simple de cases à cocher ou de listes</span>
+compute: (v) =&gt; (v.a ?? 0) + (v.b ?? 0) + (v.c ?? 0),
+
+<span class="c">// Somme pondérée</span>
+compute: (v) =&gt; (v.fc ?? 0) * 1.5 + (v.atcd ?? 0) * 1.5 + (v.cancer ?? 0),
+
+<span class="c">// Somme automatique de tous les champs, avec les points des cases à cocher</span>
+compute: (v) =&gt; monScore.fields.reduce((total, f) =&gt;
+  total + (f.type === "boolean" ? (v[f.id] ?? 0) * (f.points ?? 1) : (v[f.id] ?? 0)), 0),
+
+<span class="c">// Point attribué selon un nombre saisi</span>
+compute: (v) =&gt; ((v.age ?? 0) &gt;= 65 ? 1 : 0) + (v.diabete ?? 0),</pre>
+  <p>Dans la troisième formule, remplace <code>monScore</code> par le nom de la constante déclarée en haut du fichier (<code>export const monScore</code>).</p>
+
+  <h3><code>interpret</code> : choisir le message</h3>
+  <p>Reçoit le score calculé (et les réponses <code>v</code> si besoin). Renvoie une <b>liste</b> de cartes résultat : la première est la carte principale, colorée.</p>
+<pre>interpret: (score) =&gt; {
+  <span class="k">if</span> (score &gt;= 4) {
+    <span class="k">return</span> [{ title: "Risque élevé", level: "high", scoreLabel: `${score} points`,
+              detail: "Conduite à tenir…" }];
+  }
+  <span class="k">if</span> (score &gt;= 2) {
+    <span class="k">return</span> [{ title: "Risque intermédiaire", level: "moderate", scoreLabel: `${score} points` }];
+  }
+  <span class="k">return</span> [{ title: "Risque faible", level: "low", scoreLabel: `${score} points` }];
+},</pre>
+  <p>Les seuils se testent du plus haut au plus bas : le premier <code>if</code> vrai renvoie son message, les suivants ne sont pas lus.</p>
+  <h3>Plusieurs cartes</h3>
+<pre><span class="k">return</span> [
+  { title: "Risque élevé", level: "high", scoreLabel: `${score} / 10` },
+  { title: "À retenir", level: "info", role: "secondary", detail: "Un complément, en carte violette discrète." },
+];</pre>
+  <table>
+    <tr><th style="width:26%">Case du résultat</th><th>Rôle</th></tr>
+    <tr><td><code>title</code> (obligatoire)</td><td>Titre de la carte.</td></tr>
+    <tr><td><code>level</code> (obligatoire)</td><td>Couleur : <code>low</code>, <code>moderate</code>, <code>high</code>, <code>critical</code>, <code>info</code>.</td></tr>
+    <tr><td><code>scoreLabel</code></td><td>Le chiffre en grand (« 3 / 5 », « 27,4 kg/m² »).</td></tr>
+    <tr><td><code>detail</code></td><td>Paragraphe explicatif.</td></tr>
+    <tr><td><code>role: "secondary"</code></td><td>Carte complémentaire, plate et violette, sans halo coloré.</td></tr>
+  </table>
+  <div class="box tip"><span class="t">Les médicaments deviennent cliquables tout seuls</span>
+    <p>Si un <code>detail</code> contient le nom d'un médicament qui a une fiche (« clonazépam », « Rivotril »), il devient un lien vers sa fiche automatiquement. Rien à faire.</p>
+  </div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section class="chapter" id="c6">
+  <h1><span class="num">6</span>Ajouter un nouveau score</h1>
+  <p class="lead">Trois étapes : créer le fichier, l'inscrire dans la liste, vérifier.</p>
+  <ol class="steps">
+    <li><b>Crée le fichier</b> dans <code>src/lib/calculators/</code>, par exemple <code>monScore.ts</code>. Dans VS Code : clic droit sur le dossier → Nouveau fichier. Le plus simple : copie le fichier d'un score qui a la même structure (cases à cocher → <code>qsofa.ts</code> ; listes de choix → <code>gcs.ts</code> ; nombres → <code>spesi.ts</code> ou un outil), puis adapte-le. Ou pars du modèle de l'annexe A.</li>
+    <li><b>Donne-lui un nom de constante unique</b> : la ligne <code>export const monScore: Calculator = {</code>. Et un <code>id</code> unique, en minuscules, sans accent ni espace (des tirets sont permis) : <code>id: "mon-score"</code>.</li>
+    <li><b>Inscris-le</b> dans <code>src/lib/calculators/index.ts</code>, à deux endroits :
+<pre><span class="k">import</span> { monScore } from "./monScore";   <span class="c">// avec les autres imports, en haut</span>
+
+<span class="k">export const</span> calculators: Calculator[] = [
+  gcs,
+  nihss,
+  …
+  mmrc,
+  monScore,                              <span class="c">// ← ajouté ; l'ordre ici est l'ordre d'affichage</span>
+];</pre></li>
+    <li><b>Vérifie</b> : avec <code>npm run dev</code>, ouvre <code>/scores/mon-score</code>, teste les cas limites (score minimal, score maximal, chaque seuil). Puis <code>npm run build</code> (chapitre 12).</li>
+    <li><b>Publie</b> (chapitre 13).</li>
+  </ol>
+  <div class="box danger"><span class="t">Exactitude médicale</span>
+    <p>Le code ne vérifie pas que ton score est juste. Recopie les critères et les seuils depuis la publication de référence, mets-la dans <code>source</code>, et teste au moins un cas dont tu connais le résultat. Le dépôt est public : n'y mets jamais de donnée patient, même dans un commentaire ou un exemple.</p>
+  </div>
+  <div class="box info"><span class="t">Le nouveau score apparaît partout automatiquement</span>
+    <p>Une fois inscrit dans <code>index.ts</code>, il est dans l'onglet Scores (sous sa catégorie), dans la recherche, peut être mis en favori et intégré dans un arbre. Rien d'autre à brancher.</p>
+  </div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section class="chapter" id="c7">
+  <h1><span class="num">7</span>Les outils de calcul</h1>
+  <p class="lead">Les outils de l'onglet « Calcul » (IMC, clairance, QTc…) sont construits exactement comme les scores. Seuls le dossier et la liste changent.</p>
+  <table>
+    <tr><th style="width:30%"></th><th>Score</th><th>Outil</th></tr>
+    <tr><td>Dossier</td><td><code>src/lib/calculators/</code></td><td><code>src/lib/tools/</code></td></tr>
+    <tr><td>Liste à compléter</td><td><code>calculators/index.ts</code></td><td><code>tools/index.ts</code> (liste <code>tools</code>)</td></tr>
+    <tr><td>Catégorie</td><td>neurologie, cardio…</td><td><code>"conversion"</code> ou <code>"formule"</code></td></tr>
+    <tr><td>Import du type</td><td><code>from "./types"</code></td><td><code>from "../calculators/types"</code></td></tr>
+    <tr><td>Adresse</td><td><code>/scores/&lt;id&gt;</code></td><td><code>/calcul/&lt;id&gt;</code></td></tr>
+  </table>
+  <h2>Exemple commenté : l'IMC (<code>src/lib/tools/bmi.ts</code>)</h2>
+<pre><span class="k">import</span> type { Calculator, Level } from "../calculators/types";
+
+<span class="k">export const</span> bmi: Calculator = {
+  id: "imc",
+  name: "Indice de masse corporelle (IMC)",
+  shortName: "IMC",
+  category: "formule",
+  keywords: ["imc", "bmi", "poids", "taille", "obésité"],
+  summary: "Calcule l'indice de masse corporelle à partir du poids et de la taille.",
+  fields: [
+    { type: "number", id: "poids",  min: 0.5, max: 400, label: "Poids",  unit: "kg", step: 0.1 },
+    { type: "number", id: "taille", min: 30,  max: 250, label: "Taille", unit: "cm", step: 1 },
+  ],
+  requiredNumberFieldIds: ["poids", "taille"],     <span class="c">// pas de résultat tant que les deux sont vides</span>
+  compute: (v) =&gt; {
+    <span class="k">const</span> poids = v.poids ?? 0;
+    <span class="k">const</span> tailleM = (v.taille ?? 0) / 100;
+    <span class="k">return</span> tailleM &gt; 0 ? poids / (tailleM * tailleM) : 0;   <span class="c">// éviter la division par 0</span>
+  },
+  interpret: (score) =&gt; {
+    <span class="k">let</span> level: Level = "low";
+    <span class="k">let</span> title = "Corpulence normale";
+    <span class="k">if</span> (score &lt; 18.5) { level = "moderate"; title = "Maigreur"; }
+    <span class="k">else if</span> (score &gt;= 30) { level = "high"; title = "Obésité"; }
+    <span class="k">return</span> [{ title, level, scoreLabel: `${score.toFixed(1)} kg/m²` }];
+  },
+  source: "Classification de l'IMC, Organisation mondiale de la santé.",
+};</pre>
+  <div class="box tip"><span class="t">Afficher un résultat à la française</span>
+    <p><code>score.toFixed(1)</code> donne « 27.4 » avec un point. Pour une virgule : <code>score.toFixed(1).replace(".", ",")</code>.</p>
+  </div>
+  <div class="box info"><span class="t">Champ compact</span>
+    <p>Pour un convertisseur à une seule valeur, ajoute <code>compact: true</code> au champ nombre : il s'affiche centré, en plus petit.</p>
+  </div>
+</section>
+
+<!-- ============ 8 ============ -->
+<section class="chapter" id="c8">
+  <h1><span class="num">8</span>Les arbres décisionnels</h1>
+  <p class="lead">Un arbre est une liste de cartes (« nœuds ») reliées entre elles. Fichiers dans <code>src/lib/trees/</code>, liste dans <code>trees/index.ts</code>.</p>
+
+  <h2>Les trois sortes de cartes</h2>
+  <table>
+    <tr><th style="width:18%">Type</th><th>Ce que c'est</th><th style="width:36%">Cases principales</th></tr>
+    <tr><td><code>"question"</code></td><td>Une question avec des réponses, chacune menant à une autre carte.</td><td><code>title</code>, <code>options</code> : liste de <code>{ label, next }</code></td></tr>
+    <tr><td><code>"leaf"</code></td><td>Une feuille : la conclusion, au bout d'un chemin.</td><td><code>title</code>, <code>items</code> (liste à puces), <code>treatment</code> (liste)</td></tr>
+    <tr><td><code>"score"</code></td><td>Un score de Kipu affiché dans l'arbre ; la suite dépend du résultat.</td><td><code>calculatorId</code>, <code>branches</code> : liste de <code>{ label, test, next }</code></td></tr>
+  </table>
+  <p>Cases facultatives des questions et des feuilles : <code>subtitle</code> (précision sous le titre), <code>detail</code> (paragraphe), <code>warning</code> (encadré d'alerte), <code>link</code> ou <code>links</code> (boutons vers une autre page de l'app).</p>
+
+  <h2>Squelette d'un arbre</h2>
+<pre><span class="k">import</span> type { DecisionTree } from "./types";
+
+<span class="k">export const</span> monArbre: DecisionTree = {
+  id: "mon-arbre",                       <span class="c">// adresse /arbres/mon-arbre</span>
+  name: "Nom complet de l'arbre",
+  shortName: "Nom court",
+  summary: "Une phrase de description.",
+  keywords: ["mot", "autre mot"],
+  rootId: "debut",                       <span class="c">// la carte affichée en premier</span>
+  nodes: {
+    debut: {
+      type: "question",
+      id: "debut",                       <span class="c">// identique à la clé juste au-dessus</span>
+      title: "Première question ?",
+      options: [
+        { label: "Oui", next: "feuille-oui" },     <span class="c">// next = id d'une autre carte</span>
+        { label: "Non", next: "glasgow" },
+      ],
+    },
+    "feuille-oui": {                     <span class="c">// guillemets obligatoires si la clé contient un tiret</span>
+      type: "leaf",
+      id: "feuille-oui",
+      title: "Conclusion",
+      items: ["Premier point", "Deuxième point"],
+      treatment: ["Traitement proposé"],
+      warning: "Alerte éventuelle.",
+      link: { label: "Voir le score qSOFA", to: "/scores/qsofa" },
+    },
+    glasgow: {
+      type: "score",
+      id: "glasgow",
+      title: "Évaluer la conscience",
+      calculatorId: "gcs",               <span class="c">// l'id d'un score ou d'un outil existant</span>
+      branches: [                        <span class="c">// testées dans l'ordre, la première vraie gagne</span>
+        { label: "Glasgow ≤ 8",  test: (s) =&gt; s &lt;= 8, next: "feuille-grave" },
+        { label: "Glasgow &gt; 8",  test: (s) =&gt; s &gt; 8,  next: "feuille-oui" },
+      ],
+    },
+    "feuille-grave": { type: "leaf", id: "feuille-grave", title: "…", items: ["…"] },
+  },
+  source: "Protocole de service …, date, rédacteur, validateur.",
+};</pre>
+  <p>Puis, dans <code>src/lib/trees/index.ts</code> : <code>import { monArbre } from "./monArbre";</code> et ajoute <code>monArbre</code> dans <code>export const trees = [dysnatremia, seizure, monArbre];</code>.</p>
+  <div class="box warn"><span class="t">Les erreurs typiques des arbres</span>
+    <ul>
+      <li>Un <code>next</code> qui pointe vers un <code>id</code> qui n'existe pas (faute de frappe) : le bouton ne fait rien apparaître. Vérifie chaque <code>next</code>.</li>
+      <li>La clé de la carte et son <code>id</code> doivent être identiques.</li>
+      <li>Des branches de score qui ne couvrent pas tous les cas (un trou entre deux seuils).</li>
+    </ul>
+  </div>
+  <p class="muted">Pour s'inspirer d'un arbre réel complet : <code>src/lib/trees/dysnatremia.ts</code> (questions et feuilles) et <code>seizure.ts</code>.</p>
+</section>
+
+<!-- ============ 9 ============ -->
+<section class="chapter" id="c9">
+  <h1><span class="num">9</span>Les fiches médicaments</h1>
+  <p class="lead">Une fiche par fichier dans <code>src/lib/drugs/</code>, liste dans <code>drugs/index.ts</code>. Une fois inscrit, le nom du médicament devient cliquable partout dans l'app.</p>
+<pre><span class="k">import</span> type { Drug } from "./types";
+
+<span class="k">export const</span> clonazepam: Drug = {
+  id: "clonazepam",                           <span class="c">// adresse /medicaments/clonazepam</span>
+  dci: "Clonazépam",
+  brands: ["Rivotril"],                       <span class="c">// noms de marque, cherchables et cliquables</span>
+  aliases: ["…"],                             <span class="c">// facultatif : autres noms courants (ex. « Aspirine »)</span>
+  class: "Benzodiazépine anticonvulsivante",
+  forms: ["Comprimé sécable 2 mg", "Ampoule 1 mg/1 mL"],
+  dosage:
+    "Première ligne de posologie.\n" +         <span class="c">// \n = nouvelle puce</span>
+    "Deuxième ligne.\n" +
+    "_Préparation : 1 ampoule + 1 mL de solvant._",   <span class="c">// _entre tirets bas_ = gris italique</span>
+  contraindications: ["Insuffisance respiratoire sévère", "Myasthénie"],
+  warning: "Encadré d'alerte (facultatif).",
+  notes: "Remarque (facultatif).",
+  source: "RCP Rivotril® (ANSM) ; …",
+};</pre>
+  <ul>
+    <li><code>dosage</code> est un seul texte : chaque <code>\n</code> crée une nouvelle puce. Les morceaux se collent avec <code>+</code> en fin de ligne.</li>
+    <li>Le texte entre tirets bas <code>_…_</code> s'affiche en gris italique, pour les dilutions et préparations.</li>
+    <li>La source commune du protocole de Dijon est dans <code>src/lib/drugs/sources.ts</code> (<code>DIJON_DILUTIONS_SOURCE</code>).</li>
+  </ul>
+  <div class="box tip"><span class="t">Liens automatiques</span>
+    <p>Tout texte de score, d'arbre ou de fiche qui contient la DCI, une marque ou un alias d'une fiche est transformé en lien. Si un nom ne devient pas cliquable, vérifie l'orthographe exacte dans <code>dci</code>, <code>brands</code> ou ajoute la forme écrite dans <code>aliases</code>.</p>
+  </div>
+</section>
+
+<!-- ============ 10 ============ -->
+<section class="chapter" id="c10">
+  <h1><span class="num">10</span>L'examen clinique</h1>
+  <p class="lead">Toutes tes phrases sont dans <code>src/lib/exam/template.ts</code>. La mise en forme du texte final (constantes, virgules, majuscules, paragraphes) est dans <code>src/lib/exam/render.ts</code>.</p>
+  <h2>Structure de <code>template.ts</code></h2>
+<pre>{
+  id: "cardio",                     <span class="c">// identifiant unique de la section</span>
+  title: "Cardiovasculaire",        <span class="c">// titre de la carte à l'écran (pas dans le texte copié)</span>
+  end: ".",                         <span class="c">// facultatif : ajouté à la fin de la phrase</span>
+  sameParagraph: true,              <span class="c">// facultatif : collée à la section précédente, sans ligne vide</span>
+  findings: [
+    {
+      id: "chest-pain",             <span class="c">// identifiant unique dans la section</span>
+      normal: "Pas de douleur thoracique",           <span class="c">// ta phrase quand c'est normal</span>
+      abnormal: ["Douleur thoracique", "Douleur thoracique atypique"],  <span class="c">// suggestions si anormal</span>
+    },
+    …
+  ],
+},</pre>
+  <table>
+    <tr><th style="width:36%">Je veux…</th><th>Je fais…</th></tr>
+    <tr><td>Reformuler une phrase normale</td><td>Change le texte de <code>normal</code>.</td></tr>
+    <tr><td>Changer les suggestions d'anomalie</td><td>Modifie la liste <code>abnormal</code>. La première est pré-remplie quand on passe la ligne en anormal ; les autres apparaissent en boutons s'il y en a au moins deux.</td></tr>
+    <tr><td>Ajouter une constatation</td><td>Ajoute un bloc <code>{ id, normal, abnormal }</code> dans <code>findings</code>, à la place voulue (l'ordre est celui du texte).</td></tr>
+    <tr><td>Ajouter une section (ex. cutané, ORL)</td><td>Ajoute un bloc complet dans la liste <code>sections</code>, à la place voulue.</td></tr>
+    <tr><td>Changer l'ordre des sections</td><td>Déplace les blocs dans la liste.</td></tr>
+    <tr><td>Changer la présentation des constantes</td><td>Fonction <code>vitalsLines</code> de <code>render.ts</code> : par exemple <code>`FC: ${clean(v.hr)}/min`</code>.</td></tr>
+    <tr><td>Changer l'écriture du Glasgow</td><td>Fonction <code>findingText</code> de <code>render.ts</code> : <code>`Glasgow ${…} (Y${g.y}V${g.v}M${g.m})`</code>.</td></tr>
+  </table>
+  <div class="box info"><span class="t">Majuscules automatiques</span>
+    <p>Chaque section commence par une majuscule et les éléments suivants passent en minuscule (« Douleur thoracique » devient « douleur thoracique » en milieu de phrase). Les sigles comme « TRC » ou « ROT » sont laissés tels quels. Tu peux donc écrire tes phrases avec ou sans majuscule.</p>
+  </div>
+  <div class="box danger"><span class="t">Confidentialité : ce qu'il ne faut pas changer</span>
+    <p>La page n'enregistre rien et n'a aucun champ d'identité. Ne lui ajoute pas de sauvegarde (<code>localStorage</code>) ni de champ nom, date de naissance ou IPP. C'est ce qui permet de l'utiliser sur un poste partagé sans risque.</p>
+  </div>
+</section>
+
+<!-- ============ 11 ============ -->
+<section class="chapter" id="c11">
+  <h1><span class="num">11</span>Modifier l'affichage</h1>
+  <p class="lead">L'apparence se règle avec des « classes » Tailwind : des mots-clés dans <code>className="…"</code> des fichiers <code>.tsx</code>. Les couleurs générales sont dans <code>src/index.css</code>.</p>
+
+  <h2>Les couleurs de l'app</h2>
+  <p>Dans <code>src/index.css</code>, bloc <code>@theme</code> :</p>
+<pre>--color-bg: #0a0a0b;                        <span class="c">// fond noir</span>
+--color-surface: rgb(255 255 255 / 0.07);   <span class="c">// fond des cartes (blanc à 7 %)</span>
+--color-surface-2: rgb(255 255 255 / 0.12); <span class="c">// cartes appuyées</span>
+--color-border: rgb(255 255 255 / 0.12);    <span class="c">// bordures</span>
+--color-accent: #e11d2f;                    <span class="c">// rouge</span>
+--color-accent-2: #a78bfa;                  <span class="c">// violet Kipu (boutons actifs, liens)</span>
+--color-muted: #9a9aa1;                     <span class="c">// texte gris secondaire</span></pre>
+  <p>Changer <code>--color-accent-2</code> change le violet <b>partout</b> d'un coup. Les codes couleur se choisissent sur n'importe quel « color picker » en ligne (format <code>#rrggbb</code>).</p>
+  <div class="box warn"><span class="t">Le violet est aussi écrit ailleurs</span>
+    <p>Dans l'app iPhone, la couleur des onglets natifs est dans <code>ios/App/App/KipuViewController.swift</code> (<code>static let accent = UIColor(red: 0xa7…, green: 0x8b…, blue: 0xfa…)</code>), et celle des icônes dans <code>scripts/gen-icons.mjs</code> (<code>const K = "#a78bfa"</code>).</p>
+  </div>
+
+  <h2>Aide-mémoire Tailwind</h2>
+  <table>
+    <tr><th style="width:34%">Classe</th><th>Effet</th></tr>
+    <tr><td><code>text-xs</code> <code>text-sm</code> <code>text-base</code> <code>text-lg</code> <code>text-2xl</code></td><td>Taille du texte, du plus petit au plus grand</td></tr>
+    <tr><td><code>font-medium</code> <code>font-semibold</code> <code>font-bold</code></td><td>Graisse du texte</td></tr>
+    <tr><td><code>text-white</code> <code>text-muted</code> <code>text-accent-2</code> <code>text-red-400</code></td><td>Couleur du texte</td></tr>
+    <tr><td><code>bg-surface</code> <code>bg-accent-2/15</code></td><td>Couleur de fond (<code>/15</code> = opacité 15 %)</td></tr>
+    <tr><td><code>p-4</code> <code>px-4</code> <code>py-3</code> <code>pt-2</code></td><td>Marge intérieure (tout, horizontale, verticale, en haut). 1 unité = 0,25 rem ≈ 4 px</td></tr>
+    <tr><td><code>m-2</code> <code>mt-4</code> <code>gap-3</code></td><td>Marge extérieure ; espace entre éléments</td></tr>
+    <tr><td><code>rounded-lg</code> <code>rounded-xl</code> <code>rounded-2xl</code> <code>rounded-full</code></td><td>Coins arrondis</td></tr>
+    <tr><td><code>border</code> <code>border-border</code> <code>border-dashed</code></td><td>Bordure, sa couleur, en pointillés</td></tr>
+    <tr><td><code>flex</code> <code>flex-col</code> <code>items-center</code> <code>justify-between</code></td><td>Disposition : en ligne, en colonne, centré, écarté</td></tr>
+    <tr><td><code>grid grid-cols-3</code></td><td>Grille de 3 colonnes</td></tr>
+    <tr><td><code>hidden</code></td><td>Masquer</td></tr>
+  </table>
+  <p>Couleurs disponibles : <code>slate</code>, <code>red</code>, <code>orange</code>, <code>amber</code>, <code>yellow</code>, <code>lime</code>, <code>green</code>, <code>emerald</code>, <code>teal</code>, <code>cyan</code>, <code>sky</code>, <code>blue</code>, <code>indigo</code>, <code>violet</code>, <code>purple</code>, <code>pink</code>, <code>rose</code>, chacune en nuances de <code>50</code> (très clair) à <code>950</code> (très foncé) : <code>text-sky-300</code>, <code>bg-rose-500/15</code>.</p>
+</section>
+
+<section class="chapter">
+  <h2 style="margin-top:0">Modifications d'affichage courantes</h2>
+  <table>
+    <tr><th style="width:34%">Je veux…</th><th>Fichier et méthode</th></tr>
+    <tr><td>Changer le texte « À propos »</td><td><code>src/pages/About.tsx</code> : modifie le texte entre les balises <code>&lt;p&gt;…&lt;/p&gt;</code>.</td></tr>
+    <tr><td>Changer l'avertissement</td><td><code>src/components/Disclaimer.tsx</code> (version longue et version courte « compact »).</td></tr>
+    <tr><td>Modifier l'accueil (tuiles, carte Examen clinique, titres)</td><td><code>src/pages/Home.tsx</code>. Chaque tuile est un bloc <code>&lt;Link to="/scores" …&gt;…&lt;/Link&gt;</code> : copie un bloc complet pour en ajouter une, en changeant <code>to</code> et le texte.</td></tr>
+    <tr><td>Changer les catégories de couleur des scores</td><td><code>CATEGORY_COLORS</code> dans <code>src/lib/calculators/types.ts</code>.</td></tr>
+    <tr><td>Changer les couleurs des résultats</td><td><code>LEVEL_STYLES</code> dans le même fichier.</td></tr>
+    <tr><td>Changer le titre d'une page</td><td>La ligne <code>&lt;Header title="…" /&gt;</code> de la page concernée.</td></tr>
+    <tr><td>Changer le nom de l'app installée (PWA)</td><td><code>vite.config.ts</code> : <code>name</code> et <code>short_name</code>.</td></tr>
+    <tr><td>Changer le nom sous l'icône iPhone</td><td><code>capacitor.config.ts</code> (<code>appName</code>) <b>et</b> <code>ios/App/App/Info.plist</code> (<code>CFBundleDisplayName</code>).</td></tr>
+    <tr><td>Changer le titre de l'onglet du navigateur</td><td><code>index.html</code>, balise <code>&lt;title&gt;</code>.</td></tr>
+  </table>
+
+  <h2>Les règles du code d'écran (JSX)</h2>
+  <p>Les fichiers <code>.tsx</code> mélangent du code et des balises ressemblant à du HTML :</p>
+<pre>&lt;p className="text-sm text-muted"&gt;
+  Kipu est développé par &lt;span className="text-slate-200"&gt;Anton Millien&lt;/span&gt;.
+&lt;/p&gt;</pre>
+  <ul>
+    <li>Chaque balise ouverte <code>&lt;p&gt;</code> se referme <code>&lt;/p&gt;</code>. Une balise sans contenu se ferme elle-même : <code>&lt;Header title="Examen" /&gt;</code>.</li>
+    <li>On écrit <code>className</code>, pas <code>class</code>.</li>
+    <li>Pour écrire les signes <code>{</code> <code>}</code> <code>&lt;</code> <code>&gt;</code> dans un texte affiché, entoure-les : <code>{"&lt; 3 secondes"}</code>.</li>
+    <li>Modifier du texte et des classes est sans risque. Pour ajouter des comportements (boutons qui font quelque chose), inspire-toi d'un écran existant.</li>
+  </ul>
+
+  <h2>Les icônes de l'app</h2>
+  <ol class="steps">
+    <li>Le dessin du « K » est dans <code>scripts/gen-icons.mjs</code> (couleurs <code>BG</code> et <code>K</code>, tracés <code>&lt;path&gt;</code>).</li>
+    <li>Après modification, lance dans le terminal : <code>node scripts/gen-icons.mjs</code>. Les images de <code>public/icons/</code> sont régénérées.</li>
+    <li>L'icône de l'app iPhone est une image séparée : <code>ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png</code> (1024 × 1024 px, sans transparence). Remplace-la par une image de même nom et de même taille.</li>
+  </ol>
+</section>
+
+<!-- ============ 12 ============ -->
+<section class="chapter" id="c12">
+  <h1><span class="num">12</span>Vérifier avant de publier</h1>
+  <p class="lead">Deux commandes à lancer dans le terminal avant chaque envoi (méthode B). Elles font exactement ce que fera GitHub : si elles passent chez toi, elles passeront chez GitHub.</p>
+  <table>
+    <tr><th style="width:26%">Commande</th><th>Ce qu'elle vérifie</th></tr>
+    <tr><td><code>npm run build</code></td><td>Que tout le code est valide (TypeScript) et que le site se construit. <b>C'est la vérification essentielle.</b> Termine par « ✓ built in … » si tout va bien.</td></tr>
+    <tr><td><code>npm run lint</code></td><td>Les maladresses de code (variable inutilisée…). Moins grave : un avertissement n'empêche pas la publication.</td></tr>
+  </table>
+
+  <h2>Lire un message d'erreur</h2>
+<pre>src/lib/calculators/monScore.ts(14,5): error TS1005: ',' expected.</pre>
+  <ul>
+    <li><b>Le fichier</b> : <code>src/lib/calculators/monScore.ts</code>.</li>
+    <li><b>La position</b> : <code>(14,5)</code> = ligne 14, 5ᵉ caractère. Dans VS Code, <span class="kbd">Ctrl</span>+<span class="kbd">G</span> puis <code>14</code> pour y aller.</li>
+    <li><b>Le problème</b> : « ',' expected » = une virgule manque. Regarde la ligne 14 et <b>la ligne juste avant</b> : l'oubli est souvent à la fin de la ligne précédente.</li>
+  </ul>
+
+  <h2>Les erreurs les plus fréquentes, traduites</h2>
+  <table>
+    <tr><th style="width:42%">Message</th><th>Traduction et solution</th></tr>
+    <tr><td><code>',' expected</code></td><td>Virgule manquante entre deux éléments.</td></tr>
+    <tr><td><code>'}' expected</code> / <code>']' expected</code></td><td>Accolade ou crochet non refermé, souvent plus haut que la ligne indiquée.</td></tr>
+    <tr><td><code>Unterminated string literal</code></td><td>Un texte dont le guillemet de fin manque, ou un guillemet droit <code>"</code> à l'intérieur du texte.</td></tr>
+    <tr><td><code>Invalid character</code></td><td>Un caractère interdit hors d'un texte : souvent des guillemets typographiques <code>“ ”</code> collés depuis Word.</td></tr>
+    <tr><td><code>Cannot find name 'monScore'</code></td><td>Le nom est utilisé mais pas importé (ligne <code>import</code> manquante dans <code>index.ts</code>) ou mal orthographié.</td></tr>
+    <tr><td><code>Type '"neuro"' is not assignable to type 'Category'</code></td><td>Valeur non autorisée : ici la catégorie s'écrit <code>"neurologie"</code>. Le message liste souvent les valeurs possibles.</td></tr>
+    <tr><td><code>Property 'source' is missing</code></td><td>Une case obligatoire manque (ici <code>source</code>).</td></tr>
+    <tr><td><code>Object literal may only specify known properties</code></td><td>Une case au nom inconnu, souvent une faute de frappe (<code>lable</code> au lieu de <code>label</code>).</td></tr>
+    <tr><td><code>Cannot find module './monscore'</code></td><td>Le nom de fichier dans l'<code>import</code> ne correspond pas exactement (majuscules comprises) au fichier réel.</td></tr>
+  </table>
+
+  <h2>Si tu travailles dans le navigateur (méthode A)</h2>
+  <ol class="steps">
+    <li>Après ton commit, ouvre l'onglet <b>Actions</b> du dépôt.</li>
+    <li>Une croix rouge sur « Deploy to GitHub Pages » ? Clique dessus, puis sur le job <b>build</b>, puis sur l'étape <b>Run npm run build</b> qui est rouge.</li>
+    <li>Le message d'erreur est au même format que ci-dessus. Corrige le fichier dans github.dev, refais un commit : le site se reconstruit.</li>
+  </ol>
+</section>
+
+<!-- ============ 13 ============ -->
+<section class="chapter" id="c13">
+  <h1><span class="num">13</span>Publier</h1>
+  <p class="lead">Publier, c'est envoyer un commit sur <code>main</code>. Tout le reste est automatique.</p>
+
+  <h2>Le site web</h2>
+  <ol class="steps">
+    <li>Envoie ton commit sur <code>main</code> (Commit &amp; Push dans github.dev, ou Commit + Push origin dans GitHub Desktop).</li>
+    <li>Onglet <b>Actions</b> : « Deploy to GitHub Pages » tourne (rond jaune), puis coche verte au bout d'une à deux minutes.</li>
+    <li>Ouvre <b>syssans.github.io/urg-kipu</b>. L'app garde une copie hors ligne : si tu vois l'ancienne version, <b>recharge la page une ou deux fois</b>. Sur l'app installée sur l'écran d'accueil, ferme-la complètement et rouvre-la.</li>
+  </ol>
+
+  <h2>L'app iPhone (sans Mac)</h2>
+  <p>Chaque envoi qui touche l'app lance aussi « Build iOS IPA », sur un Mac de GitHub. Gratuit tant que le dépôt est public.</p>
+  <ol class="steps">
+    <li>Onglet <b>Actions</b> → <b>Build iOS IPA</b> → le dernier run avec une coche verte → en bas, section <b>Artifacts</b> → télécharge <code>Kipu-ipa-N</code>. Dézippe : tu obtiens <code>Kipu.ipa</code>. Pour relancer une compilation à la main : bouton <b>Run workflow</b>.</li>
+    <li>Sur Windows, ouvre <b>Sideloadly</b> (installé avec iTunes et iCloud <i>téléchargés depuis le site d'Apple</i>, pas depuis le Microsoft Store).</li>
+    <li>Branche l'iPhone en USB, glisse <code>Kipu.ipa</code> dans Sideloadly, entre ton identifiant Apple, clique sur <b>Start</b>.</li>
+    <li>Première fois seulement, sur l'iPhone : Réglages → Confidentialité et sécurité → <b>Mode développeur</b> (redémarrage), puis Réglages → Général → <b>VPN et gestion de l'appareil</b> → faire confiance à ton identifiant Apple.</li>
+  </ol>
+  <div class="box warn"><span class="t">La limite des 7 jours</span>
+    <p>Avec un identifiant Apple gratuit, l'app installée par Sideloadly cesse de s'ouvrir au bout de 7 jours. Il suffit de la réinstaller de la même façon (les favoris sont conservés). Avec un compte développeur Apple payant (99 €/an), c'est un an.</p>
+  </div>
+  <div class="box info"><span class="t">Les fichiers .ipa sont gardés 30 jours</span>
+    <p>Passé ce délai, l'artefact disparaît de GitHub. Relance simplement <b>Run workflow</b> sur « Build iOS IPA » pour en produire un nouveau.</p>
+  </div>
+</section>
+
+<!-- ============ 14 ============ -->
+<section class="chapter" id="c14">
+  <h1><span class="num">14</span>Passer par Xcode</h1>
+  <p class="lead">Xcode n'est pas indispensable : GitHub Actions compile l'app à ta place. Mais si tu as accès à un Mac qui le fait tourner, il permet d'installer directement sur l'iPhone et de déboguer.</p>
+
+  <h2>Prérequis</h2>
+  <ul>
+    <li>Un Mac avec une version de macOS récente, compatible avec <b>Xcode 26</b> (nécessaire pour l'apparence iOS 26 de l'app).</li>
+    <li>De la place : Xcode et le kit iOS occupent plusieurs dizaines de Go. Les simulateurs supplémentaires sont facultatifs.</li>
+    <li>Xcode (gratuit, sur le Mac App Store), Node.js LTS, et le projet cloné (GitHub Desktop existe aussi sur Mac).</li>
+    <li>Un identifiant Apple (gratuit) et l'iPhone avec son câble.</li>
+  </ul>
+
+  <h2>Première installation sur l'iPhone</h2>
+  <ol class="steps">
+    <li>Dans le Terminal du Mac, place-toi dans le dossier du projet, puis : <code>npm install</code> et <code>npm run ios</code>. Cette commande construit l'app web pour iOS, la copie dans le projet Xcode, et ouvre Xcode.</li>
+    <li>Dans Xcode, la colonne de gauche montre le projet <b>App</b>. Clique sur <b>App</b> tout en haut, puis sur la cible <b>App</b>, onglet <b>Signing &amp; Capabilities</b>.</li>
+    <li><b>Team</b> → <b>Add an Account…</b> → connecte ton identifiant Apple → choisis « (Personal Team) ». Laisse « Automatically manage signing » coché.</li>
+    <li>Si Xcode affiche « Failed to register bundle identifier », change <b>Bundle Identifier</b> pour quelque chose d'unique, par exemple <code>fr.kipu.urgences.anton</code>.</li>
+    <li>Branche l'iPhone, déverrouille-le, accepte « Faire confiance ». En haut de la fenêtre Xcode, choisis ton iPhone comme destination.</li>
+    <li>Clique sur <b>▶</b> (Run) ou <span class="kbd">⌘</span>+<span class="kbd">R</span>. Première fois : active le Mode développeur et fais confiance au profil sur l'iPhone (comme au chapitre 13), puis relance ▶.</li>
+  </ol>
+
+  <h2>Après chaque modification du code web</h2>
+  <p>Xcode ne voit pas tout seul les changements de <code>src/</code>. Dans le Terminal :</p>
+<pre>npm run build:native     <span class="c"># construit l'app web en version iOS (dossier dist-native)</span>
+npx cap sync ios         <span class="c"># la copie dans le projet Xcode</span></pre>
+  <p>Puis ▶ dans Xcode. (<code>npm run ios</code> fait les deux et rouvre Xcode.)</p>
+  <div class="box tip"><span class="t">Tester plus vite</span>
+    <p>Pour des modifications de contenu (scores, textes), le site en local (<code>npm run dev</code>) ou sur l'iPhone via <code>--host</code> suffit. Passe par Xcode seulement pour vérifier le rendu dans l'app native ou modifier la partie Swift.</p>
+  </div>
+
+  <h2>Déboguer avec Safari</h2>
+  <ol class="steps">
+    <li>Sur l'iPhone : Réglages → Apps → Safari → Avancé → <b>Inspecteur web</b> activé.</li>
+    <li>Sur le Mac : Safari → Réglages → Avancé → cocher « Afficher les fonctionnalités pour les développeurs web ».</li>
+    <li>App lancée depuis Xcode, dans Safari du Mac : menu <b>Développement</b> → ton iPhone → Kipu. Tu vois la console (erreurs en rouge) et peux inspecter chaque élément de la page.</li>
+  </ol>
+  <p class="muted">L'inspection n'est possible qu'avec une app lancée depuis Xcode en mode Debug. L'.ipa de GitHub Actions est compilée en mode Release.</p>
+</section>
+
+<!-- ============ 15 ============ -->
+<section class="chapter" id="c15">
+  <h1><span class="num">15</span>La partie native iOS</h1>
+  <p class="lead">Dans l'app iPhone, la barre de titre et la barre d'onglets du bas sont de vrais éléments iOS, dessinés en Swift. Sur le site, ce sont des éléments web. Les deux doivent rester synchronisés.</p>
+  <h2>Les fichiers</h2>
+  <table>
+    <tr><th style="width:44%">Fichier</th><th>Rôle</th></tr>
+    <tr><td><code>ios/App/App/KipuViewController.swift</code></td><td>Barre de titre, bouton retour, barre d'onglets, couleur violette native.</td></tr>
+    <tr><td><code>src/lib/native.ts</code></td><td>Le pont entre le code web et le Swift.</td></tr>
+    <tr><td><code>src/components/BottomNav.tsx</code></td><td>Barre d'onglets du site, et synchronisation avec les onglets natifs.</td></tr>
+    <tr><td><code>src/components/Header.tsx</code></td><td>Barre de titre web, ou envoi du titre à la barre native.</td></tr>
+    <tr><td><code>ios/App/App/Assets.xcassets/tab-*.imageset</code></td><td>Icônes des onglets natifs (PNG 50 × 50 et 75 × 75 px, forme sur fond transparent : iOS applique lui-même la couleur).</td></tr>
+    <tr><td><code>ios/App/App/Info.plist</code></td><td>Nom affiché, orientations, réglages système.</td></tr>
+  </table>
+
+  <h2>Modifier les onglets du bas</h2>
+  <p>Les onglets sont décrits <b>deux fois</b>, dans le même ordre, et doivent correspondre :</p>
+<pre><span class="c">// src/components/BottomNav.tsx</span>
+<span class="k">const</span> items = [
+  { to: "/", label: "Accueil", icon: HomeIcon, end: true },
+  { to: "/scores", label: "Scores", icon: CalcIcon },
+  …
+];
+
+<span class="c">// ios/App/App/KipuViewController.swift</span>
+<span class="k">private let</span> tabs: [(title: String, icon: String)] = [
+    ("Accueil", "tab-home"),
+    ("Scores", "tab-scores"),
+    …
+]</pre>
+  <ul>
+    <li><b>Renommer un onglet</b> : change le <code>label</code> dans BottomNav.tsx et le titre dans le Swift.</li>
+    <li><b>Changer l'ordre</b> : déplace la ligne dans les deux listes. L'iPhone repère l'onglet touché par sa position : si l'ordre diffère, un appui ouvre le mauvais écran.</li>
+    <li><b>Ajouter un onglet</b> : une ligne dans chaque liste, une icône web (fonction <code>…Icon</code> en bas de BottomNav.tsx) et un nouveau dossier <code>tab-xxx.imageset</code> (copie un dossier existant, remplace les deux PNG, et corrige les noms dans son <code>Contents.json</code>). iOS affiche bien 5 onglets ; au-delà, prévois plutôt une tuile sur l'accueil.</li>
+  </ul>
+  <div class="box warn"><span class="t">Modifier du Swift sans Mac</span>
+    <p>C'est possible : modifie le fichier dans github.dev ou VS Code, publie, et regarde le résultat de « Build iOS IPA ». En cas d'erreur Swift, la croix rouge apparaît à l'étape <b>Build App.app (unsigned)</b> ; le message indique le fichier, la ligne et le problème, comme pour TypeScript. Reste sur de petites modifications (textes, couleurs, ordre).</p>
+  </div>
+</section>
+
+<!-- ============ 16 ============ -->
+<section class="chapter" id="c16">
+  <h1><span class="num">16</span>Dépannage</h1>
+  <table>
+    <tr><th style="width:32%">Symptôme</th><th style="width:28%">Cause probable</th><th>Solution</th></tr>
+    <tr><td>« npm n'est pas reconnu »</td><td>Node.js pas installé, ou terminal ouvert avant l'installation.</td><td>Installe Node.js LTS, puis ferme et rouvre VS Code.</td></tr>
+    <tr><td>« L'exécution de scripts est désactivée sur ce système »</td><td>Sécurité de PowerShell sous Windows.</td><td>Dans le terminal VS Code, choisis le profil <b>Command Prompt</b> (flèche à côté du +), ou tape une fois : <code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code> et confirme si une question s'affiche.</td></tr>
+    <tr><td>Page blanche en local</td><td>Mauvaise adresse, ou erreur dans le code.</td><td>L'adresse doit finir par <code>/urg-kipu/</code>. Sinon, regarde le terminal et la console du navigateur (<span class="kbd">F12</span> → Console).</td></tr>
+    <tr><td>« Port 5173 is in use »</td><td>Un autre <code>npm run dev</code> tourne déjà.</td><td>Ferme l'autre terminal, ou utilise l'adresse avec le nouveau port affiché.</td></tr>
+    <tr><td>Croix rouge dans Actions</td><td>Erreur dans le code.</td><td>Lis l'erreur (chapitre 12), corrige, refais un commit. Le site en ligne n'est pas touché en attendant.</td></tr>
+    <tr><td>Le site n'a pas changé après publication</td><td>Copie hors ligne de l'app, ou déploiement pas fini.</td><td>Vérifie la coche verte dans Actions, puis recharge deux fois. Sur l'app installée : ferme-la complètement.</td></tr>
+    <tr><td>Mon nouveau score n'apparaît pas</td><td>Pas inscrit dans <code>index.ts</code>.</td><td>Ajoute l'<code>import</code> et le nom dans la liste (chapitre 6).</td></tr>
+    <tr><td>Le résultat ne s'affiche jamais</td><td>Une liste de choix sans réponse, un nombre obligatoire vide ou hors bornes.</td><td>Repère le point orange ou la mention « valeur improbable ». Vérifie <code>min</code>/<code>max</code> et <code>requiredNumberFieldIds</code>.</td></tr>
+    <tr><td>Le score calculé est faux</td><td>Oubli dans <code>compute</code>, ou <code>id</code> mal recopié (<code>v.ag</code> au lieu de <code>v.age</code>).</td><td>Chaque <code>v.xxx</code> doit correspondre exactement à un <code>id</code> de champ.</td></tr>
+    <tr><td>Un bouton d'arbre ne fait rien apparaître</td><td><code>next</code> vers un <code>id</code> inexistant.</td><td>Corrige l'orthographe du <code>next</code>.</td></tr>
+    <tr><td>GitHub Desktop : « conflict »</td><td>Le même fichier a été modifié sur GitHub et sur ton PC.</td><td>Ouvre le fichier dans VS Code : il propose « Accept Current / Incoming / Both ». Garde la bonne version, enregistre, puis commit. Pour l'éviter : <b>Fetch</b> avant de commencer.</td></tr>
+    <tr><td>Sideloadly ne voit pas l'iPhone</td><td>iTunes du Microsoft Store, ou iPhone verrouillé.</td><td>Installe iTunes et iCloud depuis le site d'Apple ; déverrouille l'iPhone et accepte « Faire confiance ».</td></tr>
+    <tr><td>L'app iPhone ne s'ouvre plus</td><td>Les 7 jours de signature gratuite sont passés.</td><td>Réinstalle l'.ipa avec Sideloadly.</td></tr>
+    <tr><td>« Build iOS IPA » rouge, étape xcodebuild</td><td>Erreur Swift, ou changement côté GitHub/Apple.</td><td>Lis la première ligne contenant « error: ». Si ton dernier commit ne touche pas à <code>ios/</code>, relance une fois avec <b>Re-run jobs</b>.</td></tr>
+    <tr><td>« Build iOS IPA » ou le site restent « Queued » longtemps</td><td>Incident chez GitHub.</td><td>Patiente ; l'état des services est sur githubstatus.com.</td></tr>
+  </table>
+</section>
+
+<!-- ============ 17 ============ -->
+<section class="chapter" id="c17">
+  <h1><span class="num">17</span>Bonnes pratiques et annulation</h1>
+  <h2>Les bonnes habitudes</h2>
+  <ul>
+    <li><b>Une modification à la fois</b>, un commit par modification, avec un message clair (« Ajoute le score HEART », « Corrige le seuil du CRB-65 »). En cas de problème, tu sauras lequel annuler.</li>
+    <li><b>Copier un fichier qui marche</b> plutôt que partir de zéro.</li>
+    <li><b>Tester les cas limites</b> d'un score : minimum, maximum, et chaque seuil exactement (score = 2 quand le seuil est <code>&gt;= 2</code>).</li>
+    <li><b>Toujours une source</b> dans <code>source</code>, avec l'année. Pour un protocole local : établissement, date, rédacteur, validateur.</li>
+    <li><b>Jamais de donnée patient</b> dans le dépôt : il est public, et tout l'historique reste consultable même après suppression.</li>
+    <li><b>Mettre à jour le README</b> quand tu ajoutes un contenu important : c'est la mémoire du projet.</li>
+  </ul>
+
+  <h2>Revenir en arrière</h2>
+  <table>
+    <tr><th style="width:34%">Situation</th><th>Solution</th></tr>
+    <tr><td>Pas encore de commit, je veux tout annuler sur un fichier</td><td>GitHub Desktop : clic droit sur le fichier → <b>Discard changes</b>. Dans github.dev ou VS Code : icône ↶ à côté du fichier dans « Contrôle de code source ».</td></tr>
+    <tr><td>Commit fait mais pas encore envoyé (Push)</td><td>GitHub Desktop : bouton <b>Undo</b> en bas à gauche, juste après le commit. Les modifications reviennent, non enregistrées.</td></tr>
+    <tr><td>Commit déjà publié, il a cassé quelque chose</td><td>GitHub Desktop : <b>History</b> → clic droit sur le commit → <b>Revert changes in commit</b>, puis <b>Push origin</b>. Un nouveau commit annule l'ancien ; l'historique est conservé.</td></tr>
+    <tr><td>Retrouver l'ancienne version d'un fichier</td><td>Sur github.com, ouvre le fichier → bouton <b>History</b> : chaque version est consultable et copiable.</td></tr>
+  </table>
+  <div class="box tip"><span class="t">Rien n'est jamais perdu</span>
+    <p>Tant qu'une version a été envoyée sur GitHub, elle est récupérable. N'aie pas peur d'essayer : au pire, un « Revert » remet tout comme avant.</p>
+  </div>
+  <h2>Mettre à jour les dépendances (rarement)</h2>
+  <p>Les bibliothèques (React, Vite, Capacitor…) sortent régulièrement de nouvelles versions. Tant que tout fonctionne, <b>ne touche à rien</b> : une mise à jour majeure peut demander des adaptations. Si tu dois le faire, <code>npm outdated</code> les liste ; les versions sont dans <code>package.json</code>.</p>
+</section>
+
+<!-- ============ 18 ============ -->
+<section class="chapter" id="c18">
+  <h1><span class="num">18</span>Annexes</h1>
+  <h2>A. Modèle de score à cases à cocher</h2>
+<pre class="long"><span class="k">import</span> type { Calculator } from "./types";
+
+<span class="k">export const</span> monScore: Calculator = {
+  id: "mon-score",
+  name: "Nom complet du score",
+  shortName: "Nom court",
+  category: "cardiovasculaire",
+  keywords: ["mot-clé", "autre mot-clé"],
+  summary: "À quoi sert ce score, en une phrase.",
+  fields: [
+    { type: "boolean", id: "critere1", label: "Premier critère", points: 1 },
+    { type: "boolean", id: "critere2", label: "Deuxième critère", points: 1 },
+    { type: "boolean", id: "critere3", label: "Troisième critère", points: 2 },
+  ],
+  compute: (v) =&gt; (v.critere1 ?? 0) * 1 + (v.critere2 ?? 0) * 1 + (v.critere3 ?? 0) * 2,
+  interpret: (score) =&gt; {
+    <span class="k">if</span> (score &gt;= 3) {
+      <span class="k">return</span> [{ title: "Risque élevé", level: "high", scoreLabel: `${score} / 4`, detail: "Conduite à tenir." }];
+    }
+    <span class="k">if</span> (score &gt;= 1) {
+      <span class="k">return</span> [{ title: "Risque intermédiaire", level: "moderate", scoreLabel: `${score} / 4` }];
+    }
+    <span class="k">return</span> [{ title: "Risque faible", level: "low", scoreLabel: `${score} / 4` }];
+  },
+  source: "Auteur et al., Revue, année.",
+};</pre>
+
+  <h2>B. Modèle de score à listes de choix</h2>
+<pre class="long"><span class="k">import</span> type { Calculator } from "./types";
+
+<span class="k">export const</span> monScoreListes: Calculator = {
+  id: "mon-score-listes",
+  name: "Nom complet",
+  shortName: "Nom court",
+  category: "neurologie",
+  keywords: ["mot-clé"],
+  summary: "Description.",
+  fields: [
+    {
+      type: "select", id: "item1", label: "Premier item", showPoints: true,
+      options: [
+        { label: "Normal", value: 0 },
+        { label: "Modéré", value: 1 },
+        { label: "Sévère", value: 2 },
+      ],
+    },
+    {
+      type: "select", id: "item2", label: "Deuxième item", showPoints: true,
+      options: [
+        { label: "Absent", value: 0 },
+        { label: "Présent", value: 3 },
+      ],
+    },
+  ],
+  compute: (v) =&gt; (v.item1 ?? 0) + (v.item2 ?? 0),
+  interpret: (score) =&gt; [
+    { title: score &gt;= 3 ? "Positif" : "Négatif", level: score &gt;= 3 ? "high" : "low", scoreLabel: `${score} / 5` },
+  ],
+  source: "Référence.",
+};</pre>
+</section>
+
+<section class="chapter">
+  <h2 style="margin-top:0">C. Modèle d'outil de calcul (onglet Calcul)</h2>
+<pre class="long"><span class="k">import</span> type { Calculator } from "../calculators/types";
+
+<span class="k">export const</span> monOutil: Calculator = {
+  id: "mon-outil",
+  name: "Nom complet de l'outil",
+  shortName: "Nom court",
+  category: "formule",                  <span class="c">// ou "conversion"</span>
+  keywords: ["mot-clé"],
+  summary: "Ce que calcule l'outil.",
+  fields: [
+    { type: "number", id: "a", label: "Première valeur", unit: "mmol/L", min: 0, max: 200, step: 0.1 },
+    { type: "number", id: "b", label: "Deuxième valeur", unit: "g/L",    min: 0, max: 100, step: 0.1 },
+  ],
+  requiredNumberFieldIds: ["a", "b"],
+  compute: (v) =&gt; (v.a ?? 0) + 0.5 * (v.b ?? 0),
+  interpret: (score) =&gt; [
+    { title: "Résultat", level: "info", scoreLabel: `${score.toFixed(1).replace(".", ",")} mmol/L` },
+  ],
+  source: "Référence de la formule.",
+};</pre>
+  <p>À inscrire dans <code>src/lib/tools/index.ts</code> : <code>import { monOutil } from "./monOutil";</code> et ajouter <code>monOutil</code> dans la liste <code>tools</code>.</p>
+
+  <h2>D. Modèle de fiche médicament</h2>
+<pre class="long"><span class="k">import</span> type { Drug } from "./types";
+
+<span class="k">export const</span> monMedicament: Drug = {
+  id: "mon-medicament",
+  dci: "DCI",
+  brands: ["Marque"],
+  class: "Classe thérapeutique",
+  forms: ["Forme 1", "Forme 2"],
+  dosage:
+    "Indication 1 : posologie.\n" +
+    "Indication 2 : posologie.\n" +
+    "_Préparation : …_",
+  contraindications: ["Contre-indication 1", "Contre-indication 2"],
+  source: "RCP (ANSM) ; protocole …",
+};</pre>
+  <p>À inscrire dans <code>src/lib/drugs/index.ts</code> (import + liste <code>drugs</code>).</p>
+</section>
+
+<section class="chapter">
+  <h2 style="margin-top:0">E. Aide-mémoire des commandes</h2>
+  <table>
+    <tr><th style="width:38%">Commande (terminal)</th><th>Effet</th></tr>
+    <tr><td><code>npm install</code></td><td>Installe les dépendances (première fois, ou après changement de <code>package.json</code>).</td></tr>
+    <tr><td><code>npm run dev</code></td><td>Lance l'app en local sur <code>http://localhost:5173/urg-kipu/</code>, avec mise à jour en direct.</td></tr>
+    <tr><td><code>npm run dev -- --host</code></td><td>Idem, accessible depuis le téléphone sur le même Wi-Fi.</td></tr>
+    <tr><td><code>npm run build</code></td><td>Vérifie tout le code et construit le site (dossier <code>dist/</code>).</td></tr>
+    <tr><td><code>npm run preview</code></td><td>Affiche le site construit par <code>build</code>, comme en ligne.</td></tr>
+    <tr><td><code>npm run lint</code></td><td>Repère les maladresses de code.</td></tr>
+    <tr><td><code>node scripts/gen-icons.mjs</code></td><td>Régénère les icônes du site.</td></tr>
+    <tr><td><code>npm run build:native</code></td><td>Construit la version pour l'app iOS (dossier <code>dist-native/</code>).</td></tr>
+    <tr><td><code>npx cap sync ios</code></td><td>Copie cette version dans le projet Xcode.</td></tr>
+    <tr><td><code>npm run ios</code></td><td>Les deux précédentes, puis ouvre Xcode (Mac uniquement).</td></tr>
+    <tr><td><span class="kbd">Ctrl</span>+<span class="kbd">C</span></td><td>Arrête la commande en cours dans le terminal.</td></tr>
+    <tr><td><span class="kbd">↑</span></td><td>Rappelle la commande précédente.</td></tr>
+  </table>
+
+  <h2>F. Check-list avant chaque publication</h2>
+  <ol>
+    <li>J'ai récupéré la dernière version (<b>Fetch origin</b>) avant de commencer.</li>
+    <li>Ma modification fonctionne dans <code>npm run dev</code>, cas limites compris.</li>
+    <li><code>npm run build</code> se termine par « ✓ built ».</li>
+    <li>J'ai relu les lignes modifiées dans GitHub Desktop (vert/rouge).</li>
+    <li>Aucune donnée patient, aucune information personnelle dans le code.</li>
+    <li>La source est renseignée pour tout contenu médical nouveau ou modifié.</li>
+    <li>Message de commit clair, envoi sur <code>main</code>.</li>
+    <li>Coche verte dans Actions, puis vérification sur le site (recharger deux fois).</li>
+  </ol>
+
+  <h2>G. Liens utiles</h2>
+  <table>
+    <tr><th style="width:36%">Quoi</th><th>Où</th></tr>
+    <tr><td>Le dépôt</td><td>github.com/Syssans/urg-kipu</td></tr>
+    <tr><td>Éditer dans le navigateur</td><td>github.dev/Syssans/urg-kipu</td></tr>
+    <tr><td>Le site</td><td>syssans.github.io/urg-kipu</td></tr>
+    <tr><td>Les robots (builds, .ipa)</td><td>github.com/Syssans/urg-kipu/actions</td></tr>
+    <tr><td>Documentation Tailwind (classes)</td><td>tailwindcss.com/docs</td></tr>
+    <tr><td>Documentation Capacitor (iOS)</td><td>capacitorjs.com/docs</td></tr>
+    <tr><td>Sideloadly</td><td>sideloadly.io</td></tr>
+    <tr><td>État des services GitHub</td><td>githubstatus.com</td></tr>
+  </table>
+</section>
+
+</body>
+</html>
