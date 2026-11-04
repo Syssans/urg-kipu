@@ -105,6 +105,21 @@ export function Home() {
             </Link>
           </div>
 
+          <Link
+            to="/examen"
+            className="flex items-center gap-3 rounded-2xl border border-border bg-surface px-4 py-3.5 backdrop-blur-xl transition-transform duration-150 active:scale-[0.98] active:bg-surface-2"
+          >
+            <TileIcon>
+              <path d="M9 4h6v3H9z" stroke="currentColor" strokeWidth={1.8} strokeLinejoin="round" />
+              <path d="M9 5.5H6.5a1 1 0 0 0-1 1V20a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V6.5a1 1 0 0 0-1-1H15" stroke="currentColor" strokeWidth={1.8} strokeLinejoin="round" />
+              <path d="M9 12h6M9 16h4" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" />
+            </TileIcon>
+            <span className="flex-1">
+              <span className="block font-medium text-white">Examen clinique</span>
+              <span className="block text-[13px] leading-snug text-muted">Rédiger l'examen à copier dans le dossier</span>
+            </span>
+          </Link>
+
           <div className="flex flex-col gap-2.5">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-slate-200">Favoris</h2>

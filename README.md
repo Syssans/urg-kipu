@@ -113,6 +113,16 @@ Actuellement 53 fiches : les 50 médicaments de la liste « Dilutions CRUU/SMUR 
 néfopam et prednisolone. Les contre-indications sont reprises du protocole quand il en donne et
 complétées d'après les RCP : à relire avant usage clinique.
 
+### Examen clinique (`src/lib/exam/`)
+
+Accessible depuis l'accueil (`/examen`) : rédige la partie examen clinique d'une observation, à
+copier-coller dans le dossier patient. Tout est normal par défaut (formulation de l'auteur) ;
+chaque constatation peut passer en anormal, avec une phrase modifiable et des suggestions. Les
+constantes et le Glasgow (Y/V/M) sont saisis à part. Rien n'est enregistré (ni stockage local, ni
+historique de saisie du navigateur) et aucun champ d'identité n'existe : quitter la page efface
+tout. La formulation se modifie dans `src/lib/exam/template.ts`, la mise en forme du texte dans
+`src/lib/exam/render.ts`.
+
 ## Icônes
 
 Générées via `scripts/gen-icons.mjs` (nécessite le package `sharp`, déjà en devDependency).

@@ -12,6 +12,7 @@ import { DecisionTreePage } from "./pages/DecisionTreePage";
 import { DrugPage } from "./pages/DrugPage";
 import { Favorites } from "./pages/Favorites";
 import { About } from "./pages/About";
+import { ExamPage } from "./pages/ExamPage";
 import { getTool } from "./lib/tools";
 
 export default function App() {
@@ -31,6 +32,7 @@ export default function App() {
             <Route path="/calcul/:id" element={<CalculatorPage lookup={getTool} />} />
             <Route path="/favoris" element={<Favorites />} />
             <Route path="/a-propos" element={<About />} />
+            <Route path="/examen" element={<ExamPage />} />
             <Route path="/arbres" element={<TreesList />} />
             <Route path="/arbres/:id" element={<DecisionTreePage />} />
             <Route path="/medicaments/:id" element={<DrugPage />} />
