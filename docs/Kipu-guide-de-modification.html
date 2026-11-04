@@ -694,6 +694,16 @@ compute: (v) =&gt; ((v.age ?? 0) &gt;= 65 ? 1 : 0) + (v.diabete ?? 0),</pre>
     <tr><td>Changer la présentation des constantes</td><td>Fonction <code>vitalsLines</code> de <code>render.ts</code>.</td></tr>
     <tr><td>Changer l'écriture du Glasgow</td><td>Fonction <code>findingText</code> de <code>render.ts</code> : <code>`Glasgow ${…} (Y${g.y}V${g.v}M${g.m})`</code>.</td></tr>
   </table>
+  <h2>Le code de transfert</h2>
+  <p>Le bouton « Code pour un autre appareil » transforme l'examen coché en un code court (lettres et chiffres). Sur l'autre appareil, « Reprendre depuis un code » le reconstruit. Le fichier est <code>src/lib/exam/code.ts</code> ; tu n'as normalement pas à y toucher.</p>
+  <ul>
+    <li>Le code contient les constantes, les cases cochées, les options choisies et le Glasgow. Il ne contient <b>pas le texte libre</b> (précisions, « autre constatation ») : il est listé sous le code, à retaper.</li>
+    <li>Une faute de frappe est détectée : le code est refusé plutôt que mal lu.</li>
+    <li>Ce n'est pas un chiffrement : n'importe qui ayant Kipu peut relire un code. Il ne contient jamais d'identité, puisque l'examen n'en a pas.</li>
+  </ul>
+  <div class="box warn"><span class="t">Les deux appareils doivent avoir la même version</span>
+    <p>Le code dépend de la liste exacte des constatations et des options de <code>template.ts</code>. Dès que tu ajoutes, retires ou réordonnes une option, les codes créés avec l'ancienne version sont refusés (message « …pas la même version de Kipu »). Après une modification : recharge le site sur les deux appareils. Attention à l'app iPhone installée par Sideloadly : elle ne se met à jour que quand tu la réinstalles. Pour le transfert, le plus simple est d'utiliser le site (ou l'app ajoutée à l'écran d'accueil depuis Safari), qui se met à jour tout seul.</p>
+  </div>
   <div class="box info"><span class="t">Majuscules automatiques</span>
     <p>Chaque section commence par une majuscule et les éléments suivants passent en minuscule ; les sigles comme « TRC » ou « ROT » sont laissés tels quels. Tu peux écrire tes phrases avec ou sans majuscule.</p>
   </div>

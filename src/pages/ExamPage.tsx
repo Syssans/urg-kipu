@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { Header } from "../components/Header";
 import { gcs } from "../lib/calculators/gcs";
 import { GLASGOW_FINDING_ID, sections, type Choice, type ExamSection, type Finding } from "../lib/exam/template";
+import { CodeError, decodeExam, encodeExam, formatCode, leftOutText } from "../lib/exam/code";
 import {
   abnormalText,
   choiceVisible,
@@ -69,6 +70,16 @@ export function ExamPage() {
     setCopied(false);
   };
 
+  const [showCode, setShowCode] = useState(false);
+  const transfer = useMemo(() => {
+    if (!showCode) return null;
+    try {
+      return { code: encodeExam(exam), leftOut: leftOutText(exam) };
+    } catch (e) {
+      return { error: e instanceof CodeError ? e.message : "Impossible de créer le code." };
+    }
+  }, [exam, showCode]);
+
   return (
     <div>
       <Header title="Examen clinique" back />
@@ -91,6 +102,8 @@ export function ExamPage() {
           </button>
         </div>
 
+        <LoadCodeCard onLoad={(loaded) => setExam(loaded)} />
+
         <VitalsCard vitals={exam.vitals} onChange={setVitals} />
 
         {sections.map((section) => (
@@ -111,13 +124,24 @@ export function ExamPage() {
           <pre className="whitespace-pre-wrap rounded-2xl border border-border bg-surface p-4 font-sans text-sm leading-relaxed text-slate-100 backdrop-blur-xl select-text">
             {text || "Rien de coché pour l'instant."}
           </pre>
-          <button
-            type="button"
-            onClick={reset}
-            className="self-start rounded-lg px-2 py-1.5 text-sm text-muted underline active:text-white"
-          >
-            Tout réinitialiser
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setShowCode((v) => !v)}
+              aria-expanded={showCode}
+              className="rounded-lg border border-border px-3 py-1.5 text-sm text-slate-200 active:bg-surface-2"
+            >
+              {showCode ? "Masquer le code" : "Code pour un autre appareil"}
+            </button>
+            <button
+              type="button"
+              onClick={reset}
+              className="rounded-lg px-2 py-1.5 text-sm text-muted underline active:text-white"
+            >
+              Tout réinitialiser
+            </button>
+          </div>
+          {transfer && <TransferCode transfer={transfer} />}
         </div>
       </form>
 
@@ -133,6 +157,104 @@ export function ExamPage() {
           {copied ? "Copié ✓" : "Copier l'examen"}
         </button>
       </div>
+    </div>
+  );
+}
+
+function TransferCode({ transfer }: { transfer: { code?: string; leftOut?: string[]; error?: string } }) {
+  if (transfer.error) {
+    return <p className="rounded-xl border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">{transfer.error}</p>;
+  }
+  return (
+    <div className="flex flex-col gap-2 rounded-2xl border border-accent-2/40 bg-accent-2/10 p-4">
+      <p
+        aria-label="Code de transfert"
+        className="select-all break-words text-center font-mono text-2xl font-semibold leading-relaxed tracking-wider text-white"
+      >
+        {formatCode(transfer.code ?? "")}
+      </p>
+      <p className="text-[13px] leading-snug text-slate-300">
+        Sur l'autre appareil, ouvrez Kipu → Examen clinique → « Reprendre depuis un code », et tapez ce code
+        ({transfer.code?.length} caractères ; espaces, majuscules et minuscules indifférentes). Le code suit vos
+        modifications en direct. Rien ne passe par internet.
+      </p>
+      {(transfer.leftOut?.length ?? 0) > 0 && (
+        <div className="rounded-xl border border-amber-400/40 bg-amber-400/10 px-3 py-2.5 text-[13px] leading-snug text-amber-100">
+          <p className="mb-1 font-semibold">Texte libre non inclus, à retaper sur l'autre appareil :</p>
+          <ul className="list-disc pl-4">
+            {transfer.leftOut!.map((t) => (
+              <li key={t}>{t}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function LoadCodeCard({ onLoad }: { onLoad: (exam: ExamState) => void }) {
+  const [open, setOpen] = useState(false);
+  const [input, setInput] = useState("");
+  const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
+
+  const load = () => {
+    try {
+      onLoad(decodeExam(input));
+      setMessage({ ok: true, text: "Examen chargé : vérifiez-le ci-dessous, puis copiez-le." });
+      setInput("");
+    } catch (e) {
+      setMessage({ ok: false, text: e instanceof CodeError ? e.message : "Code illisible." });
+    }
+  };
+
+  if (!open) {
+    return (
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="rounded-xl border border-dashed border-border px-4 py-3 text-left text-sm text-slate-200 active:bg-surface-2"
+      >
+        Reprendre depuis un code <span className="text-muted">(examen préparé sur un autre appareil)</span>
+      </button>
+    );
+  }
+  return (
+    <div className="flex flex-col gap-2.5 rounded-2xl border border-border bg-surface p-4 backdrop-blur-xl">
+      <h2 className="font-semibold text-white">Reprendre depuis un code</h2>
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => {
+            setInput(e.target.value);
+            setMessage(null);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              load();
+            }
+          }}
+          autoComplete="off"
+          autoCapitalize="characters"
+          autoCorrect="off"
+          spellCheck={false}
+          placeholder="ex. 7K2M Q9XA …"
+          aria-label="Code de transfert"
+          className="min-w-0 flex-1 rounded-xl border border-border bg-black/30 px-3 py-2.5 font-mono text-base uppercase tracking-wider text-white outline-none placeholder:normal-case placeholder:tracking-normal placeholder:text-muted focus:border-accent-2"
+        />
+        <button
+          type="button"
+          onClick={load}
+          className="shrink-0 rounded-xl border border-accent-2/50 bg-accent-2/20 px-4 text-sm font-semibold text-white active:scale-95"
+        >
+          Charger
+        </button>
+      </div>
+      <p className="text-[12px] leading-snug text-muted">Remplace l'examen en cours.</p>
+      {message && (
+        <p className={`text-sm leading-snug ${message.ok ? "text-emerald-300" : "text-red-300"}`}>{message.text}</p>
+      )}
     </div>
   );
 }

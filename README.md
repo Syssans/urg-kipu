@@ -125,6 +125,12 @@ historique de saisie du navigateur) et aucun champ d'identité n'existe : quitte
 tout. Formulations et options dans `src/lib/exam/template.ts`, mise en forme du texte dans
 `src/lib/exam/render.ts`.
 
+**Code de transfert** (`src/lib/exam/code.ts`) : l'examen coché peut être converti en un code court
+(base32 de Crockford, insensible à la casse, avec somme de contrôle) à recopier à la main sur un autre
+appareil, qui reconstruit l'examen à l'identique. Rien ne transite par le réseau. Le texte libre n'est
+pas inclus. Le code dépend de la structure de `template.ts` : après une modification des
+constatations ou des options, les codes créés avec l'ancienne version sont refusés.
+
 ## Icônes
 
 Générées via `scripts/gen-icons.mjs` (nécessite le package `sharp`, déjà en devDependency).
