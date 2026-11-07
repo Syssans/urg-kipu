@@ -7,7 +7,9 @@ import {
   ageText,
   deletePatient,
   displayName,
+  formatBirthInput,
   getPatient,
+  parseBirthDate,
   patientText,
   storageFailed,
   updatePatient,
@@ -57,6 +59,9 @@ export function PatientPage() {
 
   const set = (patch: Partial<Patient>) => updatePatient(patient.id, patch);
   const age = ageText(patient);
+  // A full date (6 or 8 digits) that does not parse is flagged; a partial one is just waiting.
+  const birthDigits = patient.birthDate.replace(/\D/g, "").length;
+  const birthState = (birthDigits === 6 || birthDigits === 8) && !parseBirthDate(patient.birthDate) ? "invalid" : "ok";
 
   const copy = async () => {
     if (!(await copyText(patientText(patient)))) return;
@@ -87,17 +92,22 @@ export function PatientPage() {
             <label className="flex min-w-0 flex-col gap-1.5">
               <span className="text-xs font-medium text-slate-200">Date de naissance</span>
               <input
-                type="date"
+                type="text"
+                inputMode="numeric"
+                placeholder="JJ/MM/AAAA"
+                maxLength={10}
                 value={patient.birthDate}
-                max={new Date().toISOString().slice(0, 10)}
-                onChange={(e) => set({ birthDate: e.target.value })}
-                className={`${fieldClass} [color-scheme:dark]`}
+                onChange={(e) => set({ birthDate: formatBirthInput(e.target.value) })}
+                autoComplete="off"
+                className={fieldClass}
               />
             </label>
             <label className="flex min-w-0 flex-col gap-1.5">
               <span className="text-xs font-medium text-slate-200">Âge</span>
               {patient.birthDate ? (
-                <span className="flex min-h-[2.75rem] items-center px-1 text-base text-white">{age || "—"}</span>
+                <span className={`flex min-h-[2.75rem] items-center px-1 text-base ${birthState === "invalid" ? "text-red-300" : "text-white"}`}>
+                  {birthState === "invalid" ? "Date invalide" : age || "…"}
+                </span>
               ) : (
                 <NumberText value={patient.age} onChange={(a) => set({ age: a })} ariaLabel="Âge (ans)" placeholder="ans" />
               )}

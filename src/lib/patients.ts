@@ -10,7 +10,7 @@ export interface Patient {
   updatedAt: number;
   lastName: string;
   firstName: string;
-  // yyyy-mm-dd (from <input type="date">), empty if unknown.
+  // As typed, "JJ/MM/AAAA" (or "JJ/MM/AA"), empty if unknown.
   birthDate: string;
   // Typed by hand when the birth date is unknown.
   age: string;
@@ -36,7 +36,13 @@ function read(): Patient[] {
     if (!Array.isArray(parsed)) return [];
     return parsed
       .filter((p) => typeof p?.id === "string")
-      .map((p) => ({ ...blank(p.id, p.createdAt ?? Date.now()), ...p, vitals: { ...emptyVitals(), ...p.vitals } }));
+      .map((p) => ({
+        ...blank(p.id, p.createdAt ?? Date.now()),
+        ...p,
+        // Sheets from the first version stored the birth date as yyyy-mm-dd.
+        birthDate: typeof p.birthDate === "string" ? p.birthDate.replace(/^(\d{4})-(\d{2})-(\d{2})$/, "$3/$2/$1") : "",
+        vitals: { ...emptyVitals(), ...p.vitals },
+      }));
   } catch {
     return [];
   }
@@ -123,18 +129,46 @@ export function deletePatient(id: string) {
   commit(cache.filter((p) => p.id !== id));
 }
 
+/** Puts back a deleted sheet (undo). */
+export function restorePatient(patient: Patient) {
+  commit([patient, ...cache.filter((p) => p.id !== patient.id)]);
+}
+
 export function deleteAllPatients() {
   commit([]);
 }
 
+/** Formats what is typed as JJ/MM/AAAA: keeps the digits and adds the slashes. */
+export function formatBirthInput(raw: string) {
+  const d = raw.replace(/\D/g, "").slice(0, 8);
+  return [d.slice(0, 2), d.slice(2, 4), d.slice(4)].filter(Boolean).join("/");
+}
+
+/** The birth date as a Date, or null while incomplete or invalid. A 2-digit year is taken in the past century when needed. */
+export function parseBirthDate(text: string, now = new Date()): Date | null {
+  const m = /^(\d{2})\/(\d{2})\/(\d{2}|\d{4})$/.exec(text.trim());
+  if (!m) return null;
+  const day = Number(m[1]);
+  const month = Number(m[2]);
+  let year = Number(m[3]);
+  if (m[3].length === 2) {
+    const century = Math.floor(now.getFullYear() / 100) * 100;
+    year = century + year > now.getFullYear() ? century - 100 + year : century + year;
+  }
+  const date = new Date(year, month - 1, day);
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) return null;
+  if (date > now || year < now.getFullYear() - 130) return null;
+  return date;
+}
+
 /** "82 ans", "14 mois", "3 semaines", from the birth date, or the age typed by hand. */
 export function ageText(p: Patient, now = new Date()): string {
-  if (!p.birthDate) {
+  if (!p.birthDate.trim()) {
     const typed = p.age.trim();
     return typed ? (/^\d+$/.test(typed) ? `${typed} ans` : typed) : "";
   }
-  const birth = new Date(p.birthDate + "T00:00:00");
-  if (Number.isNaN(birth.getTime()) || birth > now) return "";
+  const birth = parseBirthDate(p.birthDate, now);
+  if (!birth) return "";
   let months = (now.getFullYear() - birth.getFullYear()) * 12 + (now.getMonth() - birth.getMonth());
   if (now.getDate() < birth.getDate()) months--;
   if (months >= 24) return `${Math.floor(months / 12)} ans`;
@@ -143,9 +177,9 @@ export function ageText(p: Patient, now = new Date()): string {
   return weeks >= 1 ? `${weeks} semaine${weeks > 1 ? "s" : ""}` : "nouveau-né";
 }
 
-export function formatDate(iso: string) {
-  const [y, m, d] = iso.split("-");
-  return y && m && d ? `${d}/${m}/${y}` : iso;
+function formatDate(date: Date) {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()}`;
 }
 
 export function displayName(p: Patient) {
@@ -159,7 +193,8 @@ export function patientText(p: Patient): string {
   const age = ageText(p);
   let head = displayName(p);
   if (age) head += `, ${age}`;
-  if (p.birthDate) head += ` (DDN ${formatDate(p.birthDate)})`;
+  const birth = parseBirthDate(p.birthDate);
+  if (birth) head += ` (DDN ${formatDate(birth)})`;
   lines.push(head);
   const where = [p.room.trim() && `Chambre ${p.room.trim()}`, p.ward.trim()].filter(Boolean).join(", ");
   if (where) lines.push(where);
