@@ -771,7 +771,7 @@ compute: (v) =&gt; ((v.age ?? 0) &gt;= 65 ? 1 : 0) + (v.diabete ?? 0),</pre>
     <tr><th style="width:34%">Je veux…</th><th>Fichier et méthode</th></tr>
     <tr><td>Changer le texte « À propos »</td><td><code>src/pages/About.tsx</code> : modifie le texte entre les balises <code>&lt;p&gt;…&lt;/p&gt;</code>.</td></tr>
     <tr><td>Changer l'avertissement</td><td><code>src/components/Disclaimer.tsx</code> (version longue et version courte « compact »).</td></tr>
-    <tr><td>Modifier l'accueil (tuiles, carte Examen clinique, titres)</td><td><code>src/pages/Home.tsx</code>. Chaque tuile est un bloc <code>&lt;Link to="/scores" …&gt;…&lt;/Link&gt;</code> : copie un bloc complet pour en ajouter une, en changeant <code>to</code> et le texte.</td></tr>
+    <tr><td>Modifier l'accueil (carte Examen clinique, favoris, récents)</td><td><code>src/pages/Home.tsx</code>. La carte Examen clinique est un bloc <code>&lt;Link to="/examen" …&gt;…&lt;/Link&gt;</code> : copie le bloc complet pour en ajouter une, en changeant <code>to</code> et le texte.</td></tr>
     <tr><td>Changer les catégories de couleur des scores</td><td><code>CATEGORY_COLORS</code> dans <code>src/lib/calculators/types.ts</code>.</td></tr>
     <tr><td>Changer les couleurs des résultats</td><td><code>LEVEL_STYLES</code> dans le même fichier.</td></tr>
     <tr><td>Changer le titre d'une page</td><td>La ligne <code>&lt;Header title="…" /&gt;</code> de la page concernée.</td></tr>

@@ -7,7 +7,6 @@ import { DrugListItem } from "../components/DrugListItem";
 import { Disclaimer } from "../components/Disclaimer";
 import { useFavorites } from "../lib/favorites";
 import { timeAgo, useRecentlyUsed } from "../lib/recentlyUsed";
-import { usePatients } from "../lib/patients";
 
 function isCalcEntry(r: CatalogEntry): r is Extract<CatalogEntry, { kind: "calc" }> {
   return r.kind === "calc";
@@ -33,7 +32,6 @@ export function Home() {
     [favorites],
   );
   const { recent } = useRecentlyUsed();
-  const patientCount = usePatients().length;
   const recentEntries = useMemo(
     () =>
       recent
@@ -72,41 +70,6 @@ export function Home() {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-3 gap-3">
-            <Link
-              to="/scores"
-              className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-surface py-5 backdrop-blur-xl transition-transform duration-150 active:scale-[0.96] active:bg-surface-2"
-            >
-              <TileIcon>
-                <rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" strokeWidth={1.8} />
-                <path d="M8 8h8M8 12h2M12 12h2M8 16h2M12 16h2" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" />
-              </TileIcon>
-              <span className="text-xs font-medium text-slate-200">Scores</span>
-            </Link>
-            <Link
-              to="/calcul"
-              className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-surface py-5 backdrop-blur-xl transition-transform duration-150 active:scale-[0.96] active:bg-surface-2"
-            >
-              <TileIcon>
-                <path d="M6 8h11.5M17.5 8 14 4.5M17.5 8 14 11.5" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M18 16H6.5M6.5 16 10 12.5M6.5 16 10 19.5" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
-              </TileIcon>
-              <span className="text-xs font-medium text-slate-200">Calcul</span>
-            </Link>
-            <Link
-              to="/arbres"
-              className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-surface py-5 backdrop-blur-xl transition-transform duration-150 active:scale-[0.96] active:bg-surface-2"
-            >
-              <TileIcon>
-                <circle cx="6" cy="6" r="2.2" stroke="currentColor" strokeWidth={1.8} />
-                <circle cx="18" cy="6" r="2.2" stroke="currentColor" strokeWidth={1.8} />
-                <circle cx="12" cy="18" r="2.2" stroke="currentColor" strokeWidth={1.8} />
-                <path d="M12 15.8V11m0 0H6.5M12 11h5.5M6 8.2V11m12-2.8V11" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" />
-              </TileIcon>
-              <span className="text-xs font-medium text-slate-200">Arbres</span>
-            </Link>
-          </div>
-
           <Link
             to="/examen"
             className="flex items-center gap-3 rounded-2xl border border-border bg-surface px-4 py-3.5 backdrop-blur-xl transition-transform duration-150 active:scale-[0.98] active:bg-surface-2"
@@ -119,22 +82,6 @@ export function Home() {
             <span className="flex-1">
               <span className="block font-medium text-white">Examen clinique</span>
               <span className="block text-[13px] leading-snug text-muted">Rédiger l'examen à copier dans le dossier</span>
-            </span>
-          </Link>
-
-          <Link
-            to="/patients"
-            className="-mt-3 flex items-center gap-3 rounded-2xl border border-border bg-surface px-4 py-3.5 backdrop-blur-xl transition-transform duration-150 active:scale-[0.98] active:bg-surface-2"
-          >
-            <TileIcon>
-              <circle cx="12" cy="8" r="3.5" stroke="currentColor" strokeWidth={1.8} />
-              <path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" />
-            </TileIcon>
-            <span className="flex-1">
-              <span className="block font-medium text-white">Fiches patients</span>
-              <span className="block text-[13px] leading-snug text-muted">
-                {patientCount > 0 ? `${patientCount} fiche${patientCount > 1 ? "s" : ""} sur cet appareil` : "Prendre les infos d'un patient pendant la garde"}
-              </span>
             </span>
           </Link>
 

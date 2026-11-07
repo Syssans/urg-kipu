@@ -35,7 +35,7 @@ export function PatientsList() {
 
   return (
     <div>
-      <Header title="Fiches patients" back />
+      <Header title="Fiches patients" />
       <div className="page-in mx-auto flex max-w-xl flex-col gap-4 px-4 pb-28 pt-4">
         <p className="rounded-xl border border-border bg-surface px-4 py-3 text-[13px] leading-snug text-muted backdrop-blur-xl">
           Les fiches restent <span className="text-slate-200">uniquement sur cet appareil</span> : rien n'est envoyé sur
@@ -65,7 +65,7 @@ export function PatientsList() {
           <p className="rounded-xl border border-dashed border-border p-4 text-sm text-muted">Aucune fiche pour l'instant.</p>
         ) : (
           <div className="flex flex-col gap-2.5">
-            <p className="px-1 text-[12px] text-muted">Glissez une fiche vers la droite pour la supprimer.</p>
+            <p className="px-1 text-[12px] text-muted">Glissez une fiche vers la gauche pour la supprimer.</p>
             {sorted.map((p) => {
               const age = ageText(p);
               const where = [p.room.trim() && `Ch. ${p.room.trim()}`, p.ward.trim()].filter(Boolean).join(" · ");
@@ -143,7 +143,7 @@ export function PatientsList() {
   );
 }
 
-// Drag to the right past 40 % of the width to delete. Vertical moves are left to the page
+// Drag to the left past 40 % of the width to delete. Vertical moves are left to the page
 // scroll; a drag never counts as a tap on the sheet.
 function SwipeToDelete({ onDelete, children }: { onDelete: () => void; children: ReactNode }) {
   const [dx, setDx] = useState(0);
@@ -158,8 +158,8 @@ function SwipeToDelete({ onDelete, children }: { onDelete: () => void; children:
     setDragging(false);
     if (!g || g.axis !== "h") return;
     const width = box.current?.offsetWidth ?? 1;
-    if (g.dx > width * 0.4) {
-      setDx(width);
+    if (-g.dx > width * 0.4) {
+      setDx(-width);
       window.setTimeout(onDelete, 180);
     } else {
       setDx(0);
@@ -170,8 +170,8 @@ function SwipeToDelete({ onDelete, children }: { onDelete: () => void; children:
     <div ref={box} className="relative overflow-hidden rounded-xl">
       <div
         aria-hidden
-        className="absolute inset-0 flex items-center gap-2 rounded-xl bg-red-600/85 pl-5 text-sm font-semibold text-white"
-        style={{ opacity: Math.min(1, dx / 60) }}
+        className="absolute inset-0 flex items-center justify-end gap-2 rounded-xl bg-red-600/85 pr-5 text-sm font-semibold text-white"
+        style={{ opacity: Math.min(1, -dx / 60) }}
       >
         <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
           <path d="M5 7h14M10 11v6M14 11v6M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12M9 7V4h6v3" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
@@ -202,7 +202,7 @@ function SwipeToDelete({ onDelete, children }: { onDelete: () => void; children:
             }
           }
           if (g.axis === "h") {
-            g.dx = Math.max(0, mx);
+            g.dx = Math.min(0, mx);
             setDx(g.dx);
           }
         }}

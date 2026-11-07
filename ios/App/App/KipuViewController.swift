@@ -1,4 +1,5 @@
 import UIKit
+import WebKit
 import Capacitor
 
 /// Root of the app: the web app (Capacitor) fills the screen and the native iOS
@@ -35,7 +36,7 @@ class KipuViewController: UIViewController {
         ("Scores", "tab-scores"),
         ("Calcul", "tab-calcul"),
         ("Arbres", "tab-arbres"),
-        ("Favoris", "tab-favoris"),
+        ("Patients", "tab-patients"),
     ]
 
     override func viewDidLoad() {
@@ -173,6 +174,9 @@ class KipuBridgeViewController: CAPBridgeViewController {
 
     override func capacitorDidLoad() {
         bridge?.registerPluginInstance(chrome)
+        // Swipe from the left edge to go back, as in Safari. The web app's in-page
+        // navigations are in the web view's history, so this goes to the previous page.
+        webView?.allowsBackForwardNavigationGestures = true
     }
 }
 
