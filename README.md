@@ -35,7 +35,7 @@ ni de l'App Store.
 
 1. **Récupérer l'IPA** : onglet *Actions* du dépôt → *Build iOS IPA* → dernier run réussi →
    section *Artifacts* → télécharger `Kipu-ipa-N` et le dézipper (contient `Kipu.ipa`). Le build
-   se lance à chaque push qui touche l'app, ou à la main via *Run workflow*.
+   ne se lance qu'à la demande : *Build iOS IPA* → *Run workflow* (branche `main`).
 2. **Installer [Sideloadly](https://sideloadly.io/)** sur Windows, ainsi qu'iTunes et iCloud
    *version site Apple* (pas celles du Microsoft Store), nécessaires au pilote USB de l'iPhone.
 3. **Brancher l'iPhone** en USB, accepter « Faire confiance à cet ordinateur ».

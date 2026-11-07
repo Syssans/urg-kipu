@@ -464,6 +464,4 @@ export const abg: Calculator = {
   interpret: (_score, v) => keepOnlyMostSpecificPrimary([...acidBaseFindings(v), ...anionGapFindings(v), ...oxygenationAndLactate(v)]),
   source:
     "Approche de Boston (Narins & Emmett, Medicine 1980) ; formule de Winter (Winters RW et al., Ann N Y Acad Sci 1967) ; trou anionique urinaire (Goldstein MB et al., Ann Intern Med 1986) ; définition de Berlin du SDRA (JAMA 2012).",
-  notes:
-    "Les formules de compensation sont des approximations. Le trou anionique urinaire ne s'applique qu'aux acidoses métaboliques hyperchlorémiques (trou anionique plasmatique normal).",
 };

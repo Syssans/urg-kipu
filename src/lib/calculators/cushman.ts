@@ -84,5 +84,4 @@ export const cushman: Calculator = {
     return [{ title, level, scoreLabel: `${score} / 21`, detail }];
   },
   source: "Cushman P et al., Am J Med. 1985.",
-  notes: "Score à répéter régulièrement pour adapter le traitement ; ne remplace pas l'examen clinique (recherche de complications : convulsions, delirium tremens, troubles ioniques).",
 };

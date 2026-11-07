@@ -145,6 +145,4 @@ export const csf: Calculator = {
   interpret: (_score, v) => csfFindings(v),
   source:
     "Critères classiques d'orientation étiologique des méningites (Société de Pathologie Infectieuse de Langue Française ; Tunkel et al., Clin Infect Dis 2004/2017).",
-  notes:
-    "Outil d'orientation, ne remplace pas la culture, les PCR spécifiques ni l'avis infectiologique. Valeurs usuelles adulte : leucocytes < 5/mm³, protéinorachie 0,15-0,45 g/L, ratio glycorachie/glycémie > 0,5-0,6.",
 };

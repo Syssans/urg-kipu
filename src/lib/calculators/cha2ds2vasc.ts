@@ -56,6 +56,4 @@ export const cha2ds2vasc: Calculator = {
     return [{ title, level, scoreLabel: `${score} / 9`, detail }];
   },
   source: "Lip et al., Chest 2010 ; recommandations ESC sur la fibrillation atriale.",
-  notes:
-    "Le sexe féminin est un modificateur de risque : isolé (score = 1 uniquement par ce critère), il ne justifie pas à lui seul une anticoagulation selon les recommandations ESC les plus récentes.",
 };

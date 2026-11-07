@@ -148,6 +148,4 @@ export const nihss: Calculator = {
     return [{ title, level, scoreLabel: `${score} / 42` }];
   },
   source: "Brott et al., Stroke 1989 ; National Institutes of Health.",
-  notes:
-    "Les items « membre non testable » (amputation, ankylose) ne sont pas modélisés ici : jugement clinique requis dans ces cas.",
 };

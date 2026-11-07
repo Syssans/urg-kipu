@@ -40,5 +40,5 @@ export const mmrc: Calculator = {
     }
     return [{ title, level, scoreLabel: `mMRC ${score}` }];
   },
-  source: "Mahler DA, Wells CK, Chest 1988 (échelle MRC modifiée). Utilisée notamment dans la classification GOLD de la BPCO.",
+  source: "Mahler DA, Wells CK, Chest 1988 (échelle MRC modifiée).",
 };

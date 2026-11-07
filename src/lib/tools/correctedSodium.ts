@@ -41,5 +41,4 @@ export const correctedSodium: Calculator = {
     ];
   },
   source: "Formule de Katz MA, N Engl J Med 1973 (+1,6 mmol/L de Na par 5,5 mmol/L de glycémie au-dessus de la normale).",
-  notes: "Certains auteurs (Hillier et al., Am J Med 1999) proposent un facteur de 2,4 plutôt que 1,6 pour les glycémies très élevées (> 22 mmol/L environ).",
 };

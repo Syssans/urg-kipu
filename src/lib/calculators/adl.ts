@@ -102,6 +102,4 @@ export const adl: Calculator = {
   compute: () => 0,
   interpret: (_score, v) => autonomyFindings(v),
   source: "Katz S et al., JAMA 1963 (ADL). Lawton MP, Brody EM, Gerontologist 1969 (IADL).",
-  notes:
-    "IADL : version à 8 items utilisée ici pour tous les patients ; la version originale ne compte que 5 items chez l'homme (cuisine, ménage et lessive traditionnellement non évalués), une distinction obsolète en pratique clinique actuelle.",
 };

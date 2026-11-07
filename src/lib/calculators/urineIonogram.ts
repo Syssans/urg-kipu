@@ -118,6 +118,4 @@ export const urineIonogram: Calculator = {
   compute: () => 0,
   interpret: (_score, v) => urineIonogramFindings(v),
   source: "FENa/FEUrée : Espinel CH, JAMA 1976 ; Carvounis CP et al., Kidney Int 2002. Natriurèse/hyponatrémie : approche classique par le statut volémique (recommandations européennes d'hyponatrémie, Eur J Endocrinol 2014).",
-  notes:
-    "FENa (%) = (Na urinaire × créatinine plasmatique) / (Na plasmatique × créatinine urinaire) × 100. FEUrée (%) = (urée urinaire × créatinine plasmatique) / (urée plasmatique × créatinine urinaire) × 100. Ces seuils s'appliquent surtout à l'insuffisance rénale aiguë oligurique ; peu valides en cas de néphropathie chronique, glomérulaire ou d'injection de produit de contraste récente.",
 };

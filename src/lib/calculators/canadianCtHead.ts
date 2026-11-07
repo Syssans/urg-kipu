@@ -30,6 +30,4 @@ export const canadianCtHead: Calculator = {
     },
   ],
   source: "Stiell et al., Lancet 2001.",
-  notes:
-    "Applicable aux adultes avec traumatisme crânien léger (GCS 13-15) avec perte de connaissance, amnésie ou désorientation observée. Ne s'applique pas sous anticoagulants/antiagrégants, épilepsie connue ou trouble de la coagulation selon certaines validations — évaluer au cas par cas.",
 };

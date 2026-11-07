@@ -61,5 +61,4 @@ export interface DecisionTree {
   rootId: string;
   nodes: Record<string, TreeNode>;
   source: string;
-  notes?: string;
 }

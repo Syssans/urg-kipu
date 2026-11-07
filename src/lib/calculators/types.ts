@@ -98,7 +98,6 @@ export interface Calculator {
   interpret: (score: number, values: Values) => Interpretation[];
   scoreSuffix?: string;
   source: string;
-  notes?: string;
 }
 
 export const CATEGORY_LABELS: Record<Category, string> = {

@@ -49,5 +49,4 @@ export const creatinineClearance: Calculator = {
     return [{ title, level, scoreLabel: `${Math.round(clairance)} mL/min` }];
   },
   source: "Cockcroft DW, Gault MH, Nephron 1976.",
-  notes: "Formule de Cockcroft-Gault : ((140 − âge) × poids × k) / créatininémie, k = 1,23 (homme) ou 1,04 (femme). Moins fiable en cas de poids extrême (obésité, dénutrition), d'âge très avancé ou de fonction rénale rapidement évolutive : préférer le DFG estimé par CKD-EPI si disponible.",
 };

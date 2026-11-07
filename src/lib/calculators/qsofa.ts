@@ -25,5 +25,4 @@ export const qsofa: Calculator = {
     },
   ],
   source: "Singer et al. (Sepsis-3), JAMA 2016.",
-  notes: "Outil de repérage, pas un outil diagnostique du sepsis.",
 };

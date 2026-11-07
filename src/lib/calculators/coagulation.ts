@@ -199,6 +199,4 @@ export const coagulation: Calculator = {
   compute: () => 0,
   interpret: (_score, v) => [...tpTcaFindings(v), ...fibrinogenAndPlateletsFindings(v)],
   source: "Physiopathologie classique de la cascade de la coagulation (voies exogène, endogène et commune) et sémiologie du bilan standard TP/TCA.",
-  notes:
-    "Outil d'orientation étiologique, pas de score chiffré : en cas d'allongement isolé du TCA, un test de mélange (malade + témoin) reste l'étape clé pour distinguer déficit factoriel et anticoagulant circulant. Les seuils de prolongation utilisés ici (INR > 1,2, TP < 70 %, ratio TCA > 1,2) sont des repères usuels ; se référer aux normes du laboratoire local.",
 };

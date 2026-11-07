@@ -27,5 +27,4 @@ export const glycemiaConversion: Calculator = {
     return [{ title: "Saisissez une valeur", level: "info", detail: "Renseignez la glycémie dans l'une des deux unités (l'autre se calcule automatiquement)." }];
   },
   source: "Masse molaire du glucose = 180,16 g/mol (1 mmol/L = 0,18016 g/L).",
-  notes: "Remplissez un seul des deux champs — l'autre est calculé automatiquement. Si les deux sont renseignés, la valeur en mmol/L est utilisée.",
 };

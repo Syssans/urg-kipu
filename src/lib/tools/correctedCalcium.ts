@@ -37,5 +37,4 @@ export const correctedCalcium: Calculator = {
     return [{ title, level, scoreLabel: `${corrected.toFixed(2)} mmol/L`, detail }];
   },
   source: "Ca corrigé (mmol/L) = Ca mesuré + 0,02 × (40 − albumine g/L) ; normes : 2,20-2,60 mmol/L.",
-  notes: "Formule d'estimation : en cas de doute (dysprotidémie majeure, réanimation), le calcium ionisé mesuré directement reste la référence.",
 };

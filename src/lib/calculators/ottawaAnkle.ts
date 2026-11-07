@@ -41,5 +41,4 @@ export const ottawaAnkle: Calculator = {
     return results;
   },
   source: "Stiell et al., JAMA 1993 / BMJ 2003.",
-  notes: "Non validées chez l'enfant < 18 ans dans la version originale (utiliser avec prudence, certaines validations pédiatriques existent).",
 };

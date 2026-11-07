@@ -31,5 +31,4 @@ export const waterDeficit: Calculator = {
     ];
   },
   source: "Déficit en eau (L) = poids habituel (kg) × 0,6 × [(natrémie / 140) − 1] — Collège de Néphrologie, 11ᵉ édition 2024.",
-  notes: "Le coefficient 0,6 (eau corporelle totale) est une simplification usuelle ; à pondérer selon l'âge, le sexe et la corpulence dans les cas limites.",
 };

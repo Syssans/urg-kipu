@@ -67,5 +67,4 @@ export const asia: Calculator = {
     return [{ title: grade.title, level: grade.level, detail: grade.detail }];
   },
   source: "American Spinal Injury Association — International Standards for Neurological Classification of Spinal Cord Injury (ISNCSCI) ; Kirshblum S et al., J Spinal Cord Med 2011.",
-  notes: "Version simplifiée pour orientation rapide : le grading officiel repose sur un examen segmentaire complet (10 myotomes et 28 dermatomes de chaque côté), à réaliser pour une classification précise ou un suivi.",
 };

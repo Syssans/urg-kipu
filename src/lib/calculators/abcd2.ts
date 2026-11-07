@@ -55,5 +55,4 @@ export const abcd2: Calculator = {
     return [{ title, level, scoreLabel: `${score} / 7`, detail }];
   },
   source: "Johnston SC et al., Lancet 2007.",
-  notes: "Un score bas ne doit pas retarder l'avis spécialisé en cas de doute diagnostique ou de forte suspicion clinique d'AIT.",
 };

@@ -301,6 +301,4 @@ export const seizure: DecisionTree = {
     "Adulte : Collège des Enseignants de Médecine Intensive – Réanimation (CE-MIR), chapitre 30 « Convulsions et état de mal épileptique » (items 105 et 342). " +
     "Enfant : Collège National des Pédiatres Universitaires (CNPU), chapitre 52 « Convulsions, crises d'épilepsie, épilepsie » (items 346 et 105). " +
     "Recommandations formalisées d'experts SRLF/SFMU, en collaboration avec le GFRUP pour l'enfant, 2018 ; classification ILAE 2017.",
-  notes:
-    "Chez l'enfant, l'état de mal « menaçant » est défini par une crise ≥ 5 minutes (probabilité plus grande de se poursuivre que de s'arrêter spontanément) et l'état de mal « établi » par des crises continues ou successives sans amélioration de la conscience sur 30 minutes ; ne jamais utiliser de canule de Guedel chez l'enfant en crise. Chez l'adulte, ne pas surdiagnostiquer une CTCG devant des atypies cliniques (évoquer une crise non épileptique psychogène) ; l'amélioration sous benzodiazépine ne confirme pas à elle seule le diagnostic d'épilepsie.",
 };

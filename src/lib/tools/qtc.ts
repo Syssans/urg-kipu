@@ -53,5 +53,4 @@ export const qtc: Calculator = {
     return [{ title, level, scoreLabel: `${qtc.toFixed(0)} ms`, detail }];
   },
   source: "Formule de Framingham (QTc = QT + 154 × (1 − RR), QT en ms et RR en secondes ; Sagie et al., Am J Cardiol 1992) ; seuils selon Rautaharju et al., AHA/ACCF/HRS 2009.",
-  notes: "La formule de Framingham (correction linéaire) est moins dépendante de la fréquence cardiaque que celle de Bazett, qui surestime le QTc aux fréquences élevées et le sous-estime aux fréquences basses.",
 };

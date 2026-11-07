@@ -73,6 +73,4 @@ export const gir: Calculator = {
     return [{ title, level, scoreLabel: `GIR ${score}`, detail }];
   },
   source: "Grille nationale AGGIR (Autonomie Gérontologie Groupes Iso-Ressources), arrêté du 2 décembre 2008.",
-  notes:
-    "La cotation GIR complète repose sur 10 variables discriminantes évaluées par une équipe médico-sociale (APA/MDPH). Cet outil propose une estimation rapide au lit du patient à partir des groupes-types AGGIR, utile pour orienter la filière (retour à domicile, aides, EHPAD) mais ne se substitue pas à l'évaluation médico-sociale officielle.",
 };

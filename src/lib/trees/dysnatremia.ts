@@ -122,7 +122,5 @@ export const dysnatremia: DecisionTree = {
     },
   },
   source:
-    "Protocoles de service SAU & SAMU du CHU Dijon-Bourgogne : hyponatrémie (16/03/2026, réd. Dr Maurey, val. Pr Ray, sources CUEN 2025 et SRLF 2020) ; hypernatrémie (Sept. 2025, réd. M. Houssait, val. Pr Ray, Collège de Néphrologie 11ᵉ éd. 2024) — des exemples de protocoles locaux, à confronter à celui en vigueur dans votre propre établissement.",
-  notes:
-    "Hypernatrémie : surveiller diurèse et PA, contrôler l'ionogramme toutes les 6-8h ; objectif de baisse ≤ 2 mmol/L/h et ≤ 10-12 mmol/L/24h — risque d'œdème cérébral si correction trop rapide.",
+    "Protocoles de service SAU & SAMU du CHU Dijon-Bourgogne : hyponatrémie (16/03/2026, réd. Dr Maurey, val. Pr Ray, sources CUEN 2025 et SRLF 2020) ; hypernatrémie (Sept. 2025, réd. M. Houssait, val. Pr Ray, Collège de Néphrologie 11ᵉ éd. 2024).",
 };

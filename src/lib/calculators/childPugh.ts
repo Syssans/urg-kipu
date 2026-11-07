@@ -73,5 +73,4 @@ export const childPugh: Calculator = {
     return [{ title, level, scoreLabel: `${score} / 15`, detail }];
   },
   source: "Pugh RN et al., Br J Surg. 1973.",
-  notes: "Le score MELD est aujourd'hui préféré pour la priorisation en transplantation, mais Child-Pugh reste largement utilisé pour évaluer le pronostic global et la tolérance aux traitements/interventions.",
 };

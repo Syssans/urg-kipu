@@ -129,7 +129,7 @@
   <div class="flow">
     <div><b>1. Tu modifies</b>un fichier, dans le navigateur (github.dev) ou sur ton PC.</div><span>→</span>
     <div><b>2. Tu enregistres sur GitHub</b>un « commit » sur la branche <code>main</code>.</div><span>→</span>
-    <div><b>3. GitHub reconstruit</b>le site (≈ 1 min) et l'app iOS (≈ 2 min).</div><span>→</span>
+    <div><b>3. GitHub reconstruit</b>le site (≈ 1 min) ; l'app iOS à la demande (≈ 2 min).</div><span>→</span>
     <div><b>4. Tu testes</b>sur le site, puis sur l'iPhone via Sideloadly.</div>
   </div>
   <div class="box tip"><span class="t">Filet de sécurité</span>
@@ -334,7 +334,6 @@
     },
   ],
   source: "Singer et al. (Sepsis-3), JAMA 2016.", <span class="c">// affichée sous le résultat</span>
-  notes: "Outil de repérage, pas un outil diagnostique du sepsis.",  <span class="c">// facultatif</span>
 };</pre>
 
   <h2>Les modifications courantes</h2>
@@ -854,9 +853,9 @@ compute: (v) =&gt; ((v.age ?? 0) &gt;= 65 ? 1 : 0) + (v.diabete ?? 0),</pre>
   </ol>
 
   <h2>L'app iPhone (sans Mac)</h2>
-  <p>Chaque envoi qui touche l'app lance aussi « Build iOS IPA », sur un Mac de GitHub. Gratuit tant que le dépôt est public.</p>
+  <p>L'app iOS n'est compilée que quand tu le demandes, sur un Mac de GitHub (gratuit tant que le dépôt est public). Lance-la après les modifications que tu veux tester sur l'iPhone.</p>
   <ol class="steps">
-    <li>Onglet <b>Actions</b> → <b>Build iOS IPA</b> → le dernier run avec une coche verte → en bas, section <b>Artifacts</b> → télécharge <code>Kipu-ipa-N</code>. Dézippe : tu obtiens <code>Kipu.ipa</code>. Pour relancer une compilation à la main : bouton <b>Run workflow</b>.</li>
+    <li>Onglet <b>Actions</b> → <b>Build iOS IPA</b> → bouton <b>Run workflow</b> (branche <code>main</code>) → <b>Run workflow</b>. Environ deux minutes plus tard, ouvre ce run (coche verte) → en bas, section <b>Artifacts</b> → télécharge <code>Kipu-ipa-N</code>. Dézippe : tu obtiens <code>Kipu.ipa</code>.</li>
     <li>Sur Windows, ouvre <b>Sideloadly</b> (installé avec iTunes et iCloud <i>téléchargés depuis le site d'Apple</i>, pas depuis le Microsoft Store).</li>
     <li>Branche l'iPhone en USB, glisse <code>Kipu.ipa</code> dans Sideloadly, entre ton identifiant Apple, clique sur <b>Start</b>.</li>
     <li>Première fois seulement, sur l'iPhone : Réglages → Confidentialité et sécurité → <b>Mode développeur</b> (redémarrage), puis Réglages → Général → <b>VPN et gestion de l'appareil</b> → faire confiance à ton identifiant Apple.</li>
@@ -946,7 +945,7 @@ npx cap sync ios         <span class="c"># la copie dans le projet Xcode</span><
     <li><b>Ajouter un onglet</b> : une ligne dans chaque liste, une icône web (fonction <code>…Icon</code> en bas de BottomNav.tsx) et un nouveau dossier <code>tab-xxx.imageset</code> (copie un dossier existant, remplace les deux PNG, et corrige les noms dans son <code>Contents.json</code>). iOS affiche bien 5 onglets ; au-delà, prévois plutôt une tuile sur l'accueil.</li>
   </ul>
   <div class="box warn"><span class="t">Modifier du Swift sans Mac</span>
-    <p>C'est possible : modifie le fichier dans github.dev ou VS Code, publie, et regarde le résultat de « Build iOS IPA ». En cas d'erreur Swift, la croix rouge apparaît à l'étape <b>Build App.app (unsigned)</b> ; le message indique le fichier, la ligne et le problème, comme pour TypeScript. Reste sur de petites modifications (textes, couleurs, ordre).</p>
+    <p>C'est possible : modifie le fichier dans github.dev ou VS Code, publie, lance « Build iOS IPA » (Run workflow) et regarde son résultat. En cas d'erreur Swift, la croix rouge apparaît à l'étape <b>Build App.app (unsigned)</b> ; le message indique le fichier, la ligne et le problème, comme pour TypeScript. Reste sur de petites modifications (textes, couleurs, ordre).</p>
   </div>
 </section>
 

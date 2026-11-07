@@ -34,5 +34,4 @@ export const crb65: Calculator = {
     return [{ title, level, scoreLabel: `${score} / 4`, detail }];
   },
   source: "Lim et al., Thorax 2003 (British Thoracic Society).",
-  notes: "Version du CURB-65 sans dosage de l'urée : utile quand un bilan biologique immédiat n'est pas disponible (médecine de ville, préhospitalier).",
 };

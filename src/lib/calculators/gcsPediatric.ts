@@ -70,5 +70,4 @@ export const gcsPediatric: Calculator = {
     return [{ title, level, scoreLabel: `${score} / 15 (Y${v.eye} V${v.verbal} M${v.motor})`, detail: detail || undefined }];
   },
   source: "Adaptation pédiatrique de Teasdale & Jennett (Lancet 1974), James HE, Pediatric Head Injury 1986.",
-  notes: "Utilisée principalement chez le nourrisson et l'enfant préverbal (< 2 ans) ; au-delà, le score de Glasgow adulte est généralement utilisable.",
 };

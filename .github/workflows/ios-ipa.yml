@@ -1,21 +1,11 @@
 # Builds the iOS app on a GitHub-hosted Mac, without code signing, and publishes
 # Kipu.ipa as a run artifact. Install it on an iPhone from Windows with Sideloadly
 # (free Apple ID), which signs it on the fly. See README, "Tester l'app iOS sans Mac".
+# Runs only when started by hand (Actions → Build iOS IPA → Run workflow).
 name: Build iOS IPA
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - src/**
-      - ios/**
-      - public/**
-      - index.html
-      - package.json
-      - package-lock.json
-      - capacitor.config.ts
-      - vite.config.ts
-      - .github/workflows/ios-ipa.yml
 
 permissions:
   contents: read

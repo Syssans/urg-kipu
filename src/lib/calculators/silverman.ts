@@ -84,5 +84,4 @@ export const silverman: Calculator = {
     return [{ title, level, scoreLabel: `${score} / 10` }];
   },
   source: "Silverman WA, Andersen DH, Pediatrics 1956.",
-  notes: "Attention au sens du score : contrairement à l'Apgar, plus le score de Silverman est élevé, plus la détresse respiratoire est sévère.",
 };
