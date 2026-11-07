@@ -55,7 +55,7 @@ export const glasgowTotal = (g: Glasgow) => g.y + g.v + g.m;
 
 const clean = (s: string) => s.trim().replace(/\./g, ",");
 
-function vitalsLines(v: Vitals): string[] {
+export function vitalsLines(v: Vitals): string[] {
   const lines: string[] = [];
   if (v.temp.trim()) lines.push(`T°: ${clean(v.temp)}°C`);
   const parts: string[] = [];

@@ -131,6 +131,16 @@ appareil, qui reconstruit l'examen à l'identique. Rien ne transite par le rése
 pas inclus. Le code dépend de la structure de `template.ts` : après une modification des
 constatations ou des options, les codes créés avec l'ancienne version sont refusés.
 
+### Fiches patients (`src/lib/patients.ts`)
+
+Accessible depuis l'accueil (`/patients`) : fiches à remplir pendant la garde (nom, prénom, date de
+naissance et âge calculé, chambre, service, motif de l'appel, antécédents, constantes, glycémie
+capillaire, notes). Enregistrement automatique **uniquement dans le stockage local de l'appareil**
+(`localStorage`, clé `kipu:patients`) : rien n'est envoyé ni synchronisé. Les fiches restent jusqu'à
+suppression manuelle ; un rappel apparaît pour celles non modifiées depuis plus de 48 h. Une fiche
+peut être copiée en texte, ou ouvrir l'examen clinique avec ses constantes. Le stockage n'est pas
+chiffré par Kipu : il repose sur le verrouillage de l'appareil. À utiliser sur un appareil personnel.
+
 ## Icônes
 
 Générées via `scripts/gen-icons.mjs` (nécessite le package `sharp`, déjà en devDependency).

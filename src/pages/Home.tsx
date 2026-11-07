@@ -7,6 +7,7 @@ import { DrugListItem } from "../components/DrugListItem";
 import { Disclaimer } from "../components/Disclaimer";
 import { useFavorites } from "../lib/favorites";
 import { timeAgo, useRecentlyUsed } from "../lib/recentlyUsed";
+import { usePatients } from "../lib/patients";
 
 function isCalcEntry(r: CatalogEntry): r is Extract<CatalogEntry, { kind: "calc" }> {
   return r.kind === "calc";
@@ -32,6 +33,7 @@ export function Home() {
     [favorites],
   );
   const { recent } = useRecentlyUsed();
+  const patientCount = usePatients().length;
   const recentEntries = useMemo(
     () =>
       recent
@@ -117,6 +119,22 @@ export function Home() {
             <span className="flex-1">
               <span className="block font-medium text-white">Examen clinique</span>
               <span className="block text-[13px] leading-snug text-muted">Rédiger l'examen à copier dans le dossier</span>
+            </span>
+          </Link>
+
+          <Link
+            to="/patients"
+            className="-mt-3 flex items-center gap-3 rounded-2xl border border-border bg-surface px-4 py-3.5 backdrop-blur-xl transition-transform duration-150 active:scale-[0.98] active:bg-surface-2"
+          >
+            <TileIcon>
+              <circle cx="12" cy="8" r="3.5" stroke="currentColor" strokeWidth={1.8} />
+              <path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" />
+            </TileIcon>
+            <span className="flex-1">
+              <span className="block font-medium text-white">Fiches patients</span>
+              <span className="block text-[13px] leading-snug text-muted">
+                {patientCount > 0 ? `${patientCount} fiche${patientCount > 1 ? "s" : ""} sur cet appareil` : "Prendre les infos d'un patient pendant la garde"}
+              </span>
             </span>
           </Link>
 

@@ -298,6 +298,7 @@
     <tr><td><code>/arbres</code> · <code>/arbres/dysnatremie</code></td><td>Liste des arbres · un arbre</td></tr>
     <tr><td><code>/medicaments/clonazepam</code></td><td>Une fiche médicament (pas de liste)</td></tr>
     <tr><td><code>/examen</code></td><td>Examen clinique</td></tr>
+    <tr><td><code>/patients</code> · <code>/patients/&lt;id&gt;</code></td><td>Fiches patients · une fiche</td></tr>
     <tr><td><code>/favoris</code> · <code>/a-propos</code></td><td>Favoris · À propos</td></tr>
   </table>
   <div class="box info"><span class="t">Retrouver où un texte est écrit</span>
@@ -709,6 +710,22 @@ compute: (v) =&gt; ((v.age ?? 0) &gt;= 65 ? 1 : 0) + (v.diabete ?? 0),</pre>
   </div>
   <div class="box danger"><span class="t">Confidentialité : ce qu'il ne faut pas changer</span>
     <p>La page n'enregistre rien et n'a aucun champ d'identité. Ne lui ajoute pas de sauvegarde (<code>localStorage</code>) ni de champ nom, date de naissance ou IPP. C'est ce qui permet de l'utiliser sur un poste partagé sans risque.</p>
+  </div>
+</section>
+
+<section class="chapter">
+  <h2 style="margin-top:0">Les fiches patients</h2>
+  <p>Écrans : <code>src/pages/PatientsList.tsx</code> (liste) et <code>src/pages/PatientPage.tsx</code> (une fiche). Données et mise en texte : <code>src/lib/patients.ts</code>.</p>
+  <ul>
+    <li><b>Où sont les données</b> : uniquement dans le stockage local du navigateur ou de l'app (<code>localStorage</code>, clé <code>kipu:patients</code>), sur l'appareil. Rien n'est envoyé, rien n'est synchronisé. Elles restent jusqu'à suppression.</li>
+    <li><b>Ajouter un champ</b> : ajoute-le dans l'interface <code>Patient</code> et dans la fonction <code>blank</code> de <code>patients.ts</code> (valeur vide <code>""</code>), puis un <code>&lt;TextField&gt;</code> ou <code>&lt;TextArea&gt;</code> dans <code>PatientPage.tsx</code> en copiant un champ existant, et sa ligne dans <code>patientText</code> pour qu'il apparaisse dans « Copier la fiche ». Les fiches déjà enregistrées reçoivent automatiquement la valeur vide.</li>
+    <li><b>Changer le délai de rappel</b> (48 h) : <code>OLD_AFTER_MS</code> dans <code>patients.ts</code>.</li>
+  </ul>
+  <div class="box danger"><span class="t">Ce sont des données nominatives de santé</span>
+    <p>Ne change jamais la clé de stockage pour envoyer ces données ailleurs (serveur, synchronisation, GitHub). Kipu ne chiffre pas les fiches : leur protection repose sur le code de verrouillage du téléphone. Sur un ordinateur partagé, les fiches resteraient lisibles par les utilisateurs suivants.</p>
+  </div>
+  <div class="box warn"><span class="t">Ne pas perdre ses fiches</span>
+    <p>Dans Safari, un site non ajouté à l'écran d'accueil peut voir ses données effacées après plusieurs jours sans visite. Utilise Kipu depuis l'icône de l'écran d'accueil ou l'app installée. Supprimer l'app ou effacer les données de Safari efface aussi les fiches.</p>
   </div>
 </section>
 
