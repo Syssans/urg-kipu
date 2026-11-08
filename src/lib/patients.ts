@@ -1,8 +1,11 @@
 import { useSyncExternalStore } from "react";
 import { vitalsLines, type Vitals } from "./exam/render";
+import { deriveKey, fromBase64, KDF_ITERATIONS, open, randomBytes, seal, toBase64, type Sealed } from "./vault";
 
-// Patient sheets, kept ONLY in this device's local storage: never sent anywhere, never synced.
-// They stay until the user deletes them.
+// Patient sheets, kept ONLY on this device: never sent anywhere, never synced.
+// They are encrypted with a key derived from the user's code (see vault.ts). The key only
+// lives in memory while unlocked. Each sheet is deleted automatically a set time after its
+// creation (72 h at most); this works while locked, as the creation time is stored in clear.
 
 export interface Patient {
   id: string;
@@ -23,54 +26,130 @@ export interface Patient {
   notes: string;
 }
 
-const STORAGE_KEY = "kipu:patients";
-// Sheets older than this get a reminder to delete them.
-export const OLD_AFTER_MS = 48 * 3600 * 1000;
+interface VaultItem extends Sealed {
+  id: string;
+  createdAt: number;
+}
+
+interface Vault {
+  v: 1;
+  salt: string;
+  iterations: number;
+  // Something known, sealed with the key: tells a wrong code from a right one.
+  check: Sealed;
+  retentionHours: number;
+  items: VaultItem[];
+}
+
+export type VaultStatus = "none" | "locked" | "unlocked";
+
+const VAULT_KEY = "kipu:vault";
+// Sheets of the first versions, stored in clear: encrypted (then removed) when the code is set.
+const LEGACY_KEY = "kipu:patients";
+const CHECK_TEXT = "kipu";
+export const RETENTION_CHOICES = [12, 24, 48, 72];
+const DEFAULT_RETENTION = 24;
+// Lock after this long in the background or without any touch.
+const LOCK_AFTER_HIDDEN_MS = 2 * 60 * 1000;
+const LOCK_AFTER_IDLE_MS = 10 * 60 * 1000;
 
 const emptyVitals = (): Vitals => ({ temp: "", sys: "", dia: "", hr: "", sat: "", onO2: false, o2Flow: "", rr: "" });
 
-function read(): Patient[] {
+function normalize(p: Partial<Patient> & { id: string }): Patient {
+  return {
+    ...blank(p.id, p.createdAt ?? Date.now()),
+    ...p,
+    // Sheets from the first version stored the birth date as yyyy-mm-dd.
+    birthDate: typeof p.birthDate === "string" ? p.birthDate.replace(/^(\d{4})-(\d{2})-(\d{2})$/, "$3/$2/$1") : "",
+    vitals: { ...emptyVitals(), ...p.vitals },
+  };
+}
+
+function readVault(): Vault | null {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(VAULT_KEY);
+    const v = raw ? JSON.parse(raw) : null;
+    return v && v.v === 1 && Array.isArray(v.items) ? (v as Vault) : null;
+  } catch {
+    return null;
+  }
+}
+
+function readLegacy(): Patient[] {
+  try {
+    const raw = localStorage.getItem(LEGACY_KEY);
     const parsed = raw ? JSON.parse(raw) : [];
-    if (!Array.isArray(parsed)) return [];
-    return parsed
-      .filter((p) => typeof p?.id === "string")
-      .map((p) => ({
-        ...blank(p.id, p.createdAt ?? Date.now()),
-        ...p,
-        // Sheets from the first version stored the birth date as yyyy-mm-dd.
-        birthDate: typeof p.birthDate === "string" ? p.birthDate.replace(/^(\d{4})-(\d{2})-(\d{2})$/, "$3/$2/$1") : "",
-        vitals: { ...emptyVitals(), ...p.vitals },
-      }));
+    return Array.isArray(parsed) ? parsed.filter((p) => typeof p?.id === "string").map(normalize) : [];
   } catch {
     return [];
   }
 }
 
-let cache: Patient[] = read();
-const listeners = new Set<() => void>();
+let vault: Vault | null = readVault();
+let key: Uint8Array | null = null;
+let patients: Patient[] = [];
 let saveFailed = false;
 
-function commit(next: Patient[]) {
-  cache = next;
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    saveFailed = false;
-  } catch {
-    // Storage unavailable (private browsing, full): the sheet lives only until the page closes.
-    saveFailed = true;
-  }
+interface Snapshot {
+  status: VaultStatus;
+  patients: Patient[];
+  retentionHours: number;
+  legacyCount: number;
+}
+let snapshot: Snapshot = makeSnapshot();
+const listeners = new Set<() => void>();
+
+function makeSnapshot(): Snapshot {
+  return {
+    status: !vault ? "none" : key ? "unlocked" : "locked",
+    patients,
+    retentionHours: vault?.retentionHours ?? DEFAULT_RETENTION,
+    legacyCount: vault ? 0 : readLegacy().length,
+  };
+}
+
+function emit() {
+  snapshot = makeSnapshot();
   listeners.forEach((l) => l());
 }
 
-// Another tab changed the sheets.
-if (typeof window !== "undefined") {
-  window.addEventListener("storage", (e) => {
-    if (e.key !== STORAGE_KEY) return;
-    cache = read();
-    listeners.forEach((l) => l());
-  });
+function writeVault() {
+  if (!vault) return;
+  try {
+    localStorage.setItem(VAULT_KEY, JSON.stringify(vault));
+    saveFailed = false;
+  } catch {
+    // Storage unavailable (private browsing, full): the sheets live only until the page closes.
+    saveFailed = true;
+  }
+}
+
+const expiresAt = (createdAt: number) => createdAt + (vault?.retentionHours ?? DEFAULT_RETENTION) * 3600 * 1000;
+
+/** Deletes the sheets past their time. Needs no key. */
+function purge() {
+  const now = Date.now();
+  if (vault) {
+    const kept = vault.items.filter((i) => expiresAt(i.createdAt) > now);
+    if (kept.length !== vault.items.length) {
+      vault = { ...vault, items: kept };
+      writeVault();
+    }
+  }
+  const keptPatients = patients.filter((p) => expiresAt(p.createdAt) > now);
+  if (keptPatients.length !== patients.length) patients = keptPatients;
+  emit();
+}
+
+/** Encrypts and saves the open sheets. */
+function commit(next: Patient[]) {
+  patients = next;
+  if (vault && key) {
+    const k = key;
+    vault = { ...vault, items: next.map((p) => ({ id: p.id, createdAt: p.createdAt, ...seal(k, JSON.stringify(p)) })) };
+    writeVault();
+  }
+  emit();
 }
 
 function subscribe(listener: () => void) {
@@ -78,13 +157,143 @@ function subscribe(listener: () => void) {
   return () => listeners.delete(listener);
 }
 
+export function usePatientStore() {
+  return useSyncExternalStore(subscribe, () => snapshot);
+}
+
 export function usePatients() {
-  return useSyncExternalStore(subscribe, () => cache);
+  return usePatientStore().patients;
 }
 
 export const storageFailed = () => saveFailed;
+export const getPatient = (id: string) => patients.find((p) => p.id === id);
+export const expiryOf = (p: Patient) => expiresAt(p.createdAt);
 
-export const getPatient = (id: string) => cache.find((p) => p.id === id);
+// ---- code, lock, unlock ----
+
+const MIN_DIGITS = 4;
+
+/** Checks a new code and its confirmation; returns an error message or null. */
+export function newCodeError(code: string, confirm: string) {
+  if (code.length < MIN_DIGITS) return `Le code doit faire au moins ${MIN_DIGITS} chiffres (6 conseillés).`;
+  if (code !== confirm) return "Les deux codes ne correspondent pas.";
+  return null;
+}
+
+
+/** First use: sets the code, and encrypts the sheets left by earlier versions. */
+export async function setupCode(code: string) {
+  const salt = randomBytes(16);
+  const k = await deriveKey(code, salt, KDF_ITERATIONS);
+  vault = { v: 1, salt: toBase64(salt), iterations: KDF_ITERATIONS, check: seal(k, CHECK_TEXT), retentionHours: DEFAULT_RETENTION, items: [] };
+  key = k;
+  commit(readLegacy());
+  try {
+    localStorage.removeItem(LEGACY_KEY);
+  } catch {
+    // nothing to remove
+  }
+  purge();
+  navigator.storage?.persist?.().catch(() => {});
+  touch();
+}
+
+/** Returns false for a wrong code. */
+export async function unlock(code: string): Promise<boolean> {
+  if (!vault) return false;
+  const k = await deriveKey(code, fromBase64(vault.salt), vault.iterations);
+  try {
+    if (open(k, vault.check) !== CHECK_TEXT) return false;
+  } catch {
+    return false;
+  }
+  key = k;
+  patients = vault.items.flatMap((item) => {
+    try {
+      // The creation time in clear is the one the automatic deletion goes by.
+      return [normalize({ ...JSON.parse(open(k, item)), createdAt: item.createdAt })];
+    } catch {
+      return [];
+    }
+  });
+  purge();
+  touch();
+  return true;
+}
+
+export function lock() {
+  if (!key) return;
+  key = null;
+  patients = [];
+  emit();
+}
+
+export async function changeCode(code: string) {
+  if (!vault || !key) return;
+  const salt = randomBytes(16);
+  const k = await deriveKey(code, salt, KDF_ITERATIONS);
+  vault = { ...vault, salt: toBase64(salt), iterations: KDF_ITERATIONS, check: seal(k, CHECK_TEXT) };
+  key = k;
+  commit(patients);
+}
+
+/** Forgotten code: erases the code and every sheet. */
+export function resetVault() {
+  try {
+    localStorage.removeItem(VAULT_KEY);
+    localStorage.removeItem(LEGACY_KEY);
+  } catch {
+    // nothing to remove
+  }
+  vault = null;
+  key = null;
+  patients = [];
+  emit();
+}
+
+export function setRetention(hours: number) {
+  if (!vault || !RETENTION_CHOICES.includes(hours)) return;
+  vault = { ...vault, retentionHours: hours };
+  writeVault();
+  purge();
+}
+
+// ---- automatic deletion and locking ----
+
+let lastActivity = Date.now();
+let hiddenSince: number | null = null;
+function touch() {
+  lastActivity = Date.now();
+}
+
+if (typeof window !== "undefined") {
+  purge();
+  window.addEventListener("pointerdown", touch, { passive: true });
+  window.addEventListener("keydown", touch);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      hiddenSince = Date.now();
+      return;
+    }
+    if (hiddenSince !== null && Date.now() - hiddenSince > LOCK_AFTER_HIDDEN_MS) lock();
+    hiddenSince = null;
+    purge();
+  });
+  window.setInterval(() => {
+    if (key && Date.now() - lastActivity > LOCK_AFTER_IDLE_MS) lock();
+    purge();
+  }, 30_000);
+  // Another tab changed the sheets: start again from what is stored.
+  window.addEventListener("storage", (e) => {
+    if (e.key !== VAULT_KEY && e.key !== LEGACY_KEY) return;
+    vault = readVault();
+    key = null;
+    patients = [];
+    emit();
+  });
+}
+
+// ---- sheets ----
 
 function blank(id: string, now: number): Patient {
   return {
@@ -115,23 +324,22 @@ function newId() {
 
 export function createPatient(): string {
   const patient = blank(newId(), Date.now());
-  commit([patient, ...cache]);
-  // Ask the browser not to clear Kipu's storage on its own (no-op where unsupported).
-  navigator.storage?.persist?.().catch(() => {});
+  commit([patient, ...patients]);
   return patient.id;
 }
 
 export function updatePatient(id: string, patch: Partial<Patient>) {
-  commit(cache.map((p) => (p.id === id ? { ...p, ...patch, updatedAt: Date.now() } : p)));
+  commit(patients.map((p) => (p.id === id ? { ...p, ...patch, updatedAt: Date.now() } : p)));
 }
 
 export function deletePatient(id: string) {
-  commit(cache.filter((p) => p.id !== id));
+  commit(patients.filter((p) => p.id !== id));
 }
 
-/** Puts back a deleted sheet (undo). */
+/** Puts back a deleted sheet (undo). Does nothing once locked or past its time. */
 export function restorePatient(patient: Patient) {
-  commit([patient, ...cache.filter((p) => p.id !== patient.id)]);
+  if (!key || expiresAt(patient.createdAt) <= Date.now()) return;
+  commit([patient, ...patients.filter((p) => p.id !== patient.id)]);
 }
 
 export function deleteAllPatients() {

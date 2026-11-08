@@ -7,18 +7,24 @@ import {
   deleteAllPatients,
   deletePatient,
   displayName,
-  OLD_AFTER_MS,
+  expiryOf,
+  lock,
   restorePatient,
-  usePatients,
+  usePatientStore,
   type Patient,
 } from "../lib/patients";
-import { timeAgo } from "../lib/recentlyUsed";
+import { SecuritySettings } from "../components/SecuritySettings";
 
 export function PatientsList() {
-  const patients = usePatients();
+  const { patients, retentionHours } = usePatientStore();
   const navigate = useNavigate();
   const [confirmAll, setConfirmAll] = useState(false);
-  const [now] = useState(() => Date.now());
+  const [now, setNow] = useState(() => Date.now());
+  // Keeps the "deleted in …" times current.
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
   // Last sheet deleted by a swipe, kept a few seconds so it can be put back.
   const [undo, setUndo] = useState<Patient | null>(null);
   const undoTimer = useRef<number | undefined>(undefined);
@@ -31,17 +37,28 @@ export function PatientsList() {
     undoTimer.current = window.setTimeout(() => setUndo(null), 6000);
   };
   const sorted = [...patients].sort((a, b) => b.updatedAt - a.updatedAt);
-  const oldCount = patients.filter((p) => now - p.updatedAt > OLD_AFTER_MS).length;
 
   return (
     <div>
       <Header title="Fiches patients" />
       <div className="page-in mx-auto flex max-w-xl flex-col gap-4 px-4 pb-28 pt-4">
-        <p className="rounded-xl border border-border bg-surface px-4 py-3 text-[13px] leading-snug text-muted backdrop-blur-xl">
-          Les fiches restent <span className="text-slate-200">uniquement sur cet appareil</span> : rien n'est envoyé sur
-          internet. Elles sont conservées jusqu'à ce que vous les supprimiez. À utiliser sur votre téléphone personnel
-          uniquement : sur un ordinateur partagé, elles resteraient visibles pour les suivants.
-        </p>
+        <div className="flex flex-col gap-2 rounded-xl border border-border bg-surface px-4 py-3 backdrop-blur-xl">
+          <p className="text-[13px] leading-snug text-muted">
+            Fiches <span className="text-slate-200">chiffrées et conservées uniquement sur cet appareil</span>, supprimées
+            automatiquement {retentionHours} h après leur création. À utiliser sur votre téléphone personnel uniquement.
+          </p>
+          <button
+            type="button"
+            onClick={lock}
+            className="flex items-center gap-1.5 self-start rounded-lg border border-border px-3 py-1.5 text-xs text-slate-200 active:bg-surface-2"
+          >
+            <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5">
+              <rect x="5" y="10.5" width="14" height="9.5" rx="2" stroke="currentColor" strokeWidth={2} />
+              <path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
+            </svg>
+            Verrouiller
+          </button>
+        </div>
 
         <button
           type="button"
@@ -54,13 +71,6 @@ export function PatientsList() {
           Nouvelle fiche
         </button>
 
-        {oldCount > 0 && (
-          <p className="rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-3 text-[13px] leading-snug text-amber-100">
-            {oldCount} fiche{oldCount > 1 ? "s n'ont" : " n'a"} pas été modifiée{oldCount > 1 ? "s" : ""} depuis plus de 48 h.
-            Pensez à supprimer celles dont vous n'avez plus besoin.
-          </p>
-        )}
-
         {sorted.length === 0 ? (
           <p className="rounded-xl border border-dashed border-border p-4 text-sm text-muted">Aucune fiche pour l'instant.</p>
         ) : (
@@ -69,14 +79,15 @@ export function PatientsList() {
             {sorted.map((p) => {
               const age = ageText(p);
               const where = [p.room.trim() && `Ch. ${p.room.trim()}`, p.ward.trim()].filter(Boolean).join(" · ");
-              const old = now - p.updatedAt > OLD_AFTER_MS;
+              const left = expiryOf(p) - now;
+              const soon = left < 3 * 3600 * 1000;
               return (
                 <SwipeToDelete key={p.id} onDelete={() => swipeDelete(p)}>
                 <Link
                   to={`/patients/${p.id}`}
                   draggable={false}
                   className={`block rounded-xl border bg-surface px-4 py-3.5 active:bg-surface-2 ${
-                    old ? "border-amber-400/40" : "border-border"
+                    soon ? "border-amber-400/40" : "border-border"
                   }`}
                 >
                   <div className="flex items-baseline justify-between gap-2">
@@ -84,7 +95,7 @@ export function PatientsList() {
                       {displayName(p)}
                       {age && <span className="font-normal text-muted"> · {age}</span>}
                     </span>
-                    <span className={`shrink-0 text-[11px] ${old ? "text-amber-300" : "text-muted"}`}>{timeAgo(p.updatedAt)}</span>
+                    <span className={`shrink-0 text-[11px] ${soon ? "text-amber-300" : "text-muted"}`}>suppr. dans {formatLeft(left)}</span>
                   </div>
                   {where && <p className="mt-0.5 text-[13px] text-slate-300">{where}</p>}
                   {p.reason.trim() && <p className="mt-1 line-clamp-2 text-[13px] leading-snug text-muted">{p.reason.trim()}</p>}
@@ -120,6 +131,8 @@ export function PatientsList() {
               Supprimer toutes les fiches
             </button>
           ))}
+
+        <SecuritySettings />
       </div>
 
       {undo && (
@@ -141,6 +154,12 @@ export function PatientsList() {
       )}
     </div>
   );
+}
+
+function formatLeft(ms: number) {
+  const minutes = Math.max(0, Math.round(ms / 60000));
+  if (minutes < 60) return `${minutes} min`;
+  return `${Math.floor(minutes / 60)} h${minutes % 60 && minutes < 600 ? String(minutes % 60).padStart(2, "0") : ""}`;
 }
 
 // Drag to the left past 40 % of the width to delete. Vertical moves are left to the page

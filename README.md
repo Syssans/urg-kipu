@@ -131,15 +131,27 @@ appareil, qui reconstruit l'examen à l'identique. Rien ne transite par le rése
 pas inclus. Le code dépend de la structure de `template.ts` : après une modification des
 constatations ou des options, les codes créés avec l'ancienne version sont refusés.
 
-### Fiches patients (`src/lib/patients.ts`)
+### Fiches patients (`src/lib/patients.ts`, `src/lib/vault.ts`)
 
-Accessible depuis l'accueil (`/patients`) : fiches à remplir pendant la garde (nom, prénom, date de
-naissance et âge calculé, chambre, service, motif de l'appel, antécédents, constantes, glycémie
-capillaire, notes). Enregistrement automatique **uniquement dans le stockage local de l'appareil**
-(`localStorage`, clé `kipu:patients`) : rien n'est envoyé ni synchronisé. Les fiches restent jusqu'à
-suppression manuelle ; un rappel apparaît pour celles non modifiées depuis plus de 48 h. Une fiche
-peut être copiée en texte, ou ouvrir l'examen clinique avec ses constantes. Le stockage n'est pas
-chiffré par Kipu : il repose sur le verrouillage de l'appareil. À utiliser sur un appareil personnel.
+Onglet « Patients » (`/patients`) : fiches à remplir pendant la garde (nom, prénom, date de naissance
+et âge calculé, chambre, service, motif de l'appel, antécédents, constantes, glycémie capillaire,
+notes). Rien n'est envoyé ni synchronisé : tout reste sur l'appareil (`localStorage`, clé `kipu:vault`).
+
+- **Chiffrement** : AES-256-GCM, clé dérivée du code de l'utilisateur (PBKDF2-SHA256, 600 000
+  itérations, sel aléatoire). Bibliothèques @noble (JavaScript pur, auditées), pour fonctionner aussi
+  dans l'app iOS ; `crypto.subtle` n'est utilisé que pour accélérer la dérivation quand il est
+  disponible. La clé ne vit qu'en mémoire pendant le déverrouillage.
+- **Verrouillage** : au lancement, après 10 min sans interaction ou 2 min en arrière-plan, ou à la
+  demande. Attente croissante à partir du 5ᵉ code faux. Code oublié = fiches effacées.
+- **Suppression automatique** : 12, 24 (défaut), 48 ou 72 h après la création de la fiche. La date de
+  création est stockée en clair pour que la suppression fonctionne même verrouillé ; une fiche
+  expirée pendant la veille du téléphone est supprimée à la prochaine ouverture de Kipu.
+- Les fiches des versions précédentes (non chiffrées, clé `kipu:patients`) sont chiffrées à la
+  création du code, puis l'ancien stockage est effacé.
+
+Limite : un code à quelques chiffres protège contre l'accès occasionnel (téléphone prêté ou laissé
+déverrouillé), pas contre une extraction des données par un attaquant outillé ; la protection de
+fond reste le verrouillage du téléphone. À utiliser sur un appareil personnel.
 
 ## Icônes
 

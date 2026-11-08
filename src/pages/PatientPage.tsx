@@ -7,6 +7,7 @@ import {
   ageText,
   deletePatient,
   displayName,
+  expiryOf,
   formatBirthInput,
   getPatient,
   parseBirthDate,
@@ -26,6 +27,12 @@ function isEmpty(p: Patient) {
 }
 
 const pendingRemoval = new Map<string, number>();
+
+function formatExpiry(ts: number) {
+  const d = new Date(ts);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(d.getDate())}/${pad(d.getMonth() + 1)} à ${pad(d.getHours())}h${pad(d.getMinutes())}`;
+}
 
 export function PatientPage() {
   const { id = "" } = useParams();
@@ -80,7 +87,7 @@ export function PatientPage() {
         <p className={`px-1 text-[12px] ${storageFailed() ? "text-red-300" : "text-muted"}`}>
           {storageFailed()
             ? "Enregistrement impossible sur cet appareil (navigation privée ?) : la fiche sera perdue en quittant."
-            : "Enregistrée automatiquement sur cet appareil uniquement."}
+            : `Chiffrée et enregistrée sur cet appareil uniquement. Suppression automatique le ${formatExpiry(expiryOf(patient))}.`}
         </p>
 
         <Card title="Patient">
