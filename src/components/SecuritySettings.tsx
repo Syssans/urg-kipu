@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { changeCode, newCodeError, RETENTION_CHOICES, setRetention, usePatientStore } from "../lib/patients";
+import { changeCode, disableBiometric, enableBiometric, newCodeError, RETENTION_CHOICES, setRetention, usePatientStore } from "../lib/patients";
+import { useBiometricInfo } from "../lib/biometric";
 import { CodeInput } from "./PatientsGate";
 
 export function SecuritySettings() {
-  const { retentionHours, patients } = usePatientStore();
+  const { retentionHours, patients, biometric } = usePatientStore();
+  const bio = useBiometricInfo();
   const [changing, setChanging] = useState(false);
   const [code, setCode] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -50,6 +52,26 @@ export function SecuritySettings() {
           fiche dont le délai expire pendant que le téléphone est en veille est supprimée à la prochaine ouverture de Kipu.
         </p>
       </div>
+
+      {bio.available && (
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-sm text-slate-200">Déverrouiller avec {bio.label}</span>
+          <button
+            type="button"
+            aria-pressed={biometric}
+            onClick={async () => {
+              setMessage(null);
+              if (biometric) await disableBiometric();
+              else if (!(await enableBiometric())) setMessage({ ok: false, text: `Impossible d'activer ${bio.label} (code de l'iPhone désactivé ?).` });
+            }}
+            className={`shrink-0 rounded-lg border px-3 py-1.5 text-sm ${
+              biometric ? "border-accent-2/60 bg-accent-2/15 text-white" : "border-border text-slate-300 active:bg-surface-2"
+            }`}
+          >
+            {biometric ? "Activé" : "Activer"}
+          </button>
+        </div>
+      )}
 
       {changing ? (
         <div className="flex flex-col gap-2">

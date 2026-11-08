@@ -1,6 +1,8 @@
 import UIKit
 import WebKit
 import Capacitor
+import LocalAuthentication
+import Security
 
 /// Root of the app: the web app (Capacitor) fills the screen and the native iOS
 /// chrome sits on top of it, as siblings so the bars get their own touches:
@@ -174,6 +176,7 @@ class KipuBridgeViewController: CAPBridgeViewController {
 
     override func capacitorDidLoad() {
         bridge?.registerPluginInstance(chrome)
+        bridge?.registerPluginInstance(KipuBiometricPlugin())
         // Swipe from the left edge to go back, as in Safari. The web app's in-page
         // navigations are in the web view's history, so this goes to the previous page.
         webView?.allowsBackForwardNavigationGestures = true
@@ -212,5 +215,101 @@ class NativeChromePlugin: CAPPlugin, CAPBridgedPlugin {
 
     func emit(_ event: String, _ data: [String: Any] = [:]) {
         notifyListeners(event, data: data)
+    }
+}
+
+/// Face ID / Touch ID for the patient sheets. Keeps the sheets' encryption key in the iOS
+/// Keychain, readable only after a successful biometric check, on this device only, and only
+/// while the iPhone has a passcode. Enrolling a new face or finger invalidates it
+/// (.biometryCurrentSet): the code is then needed again.
+@objc(KipuBiometricPlugin)
+class KipuBiometricPlugin: CAPPlugin, CAPBridgedPlugin {
+    let identifier = "KipuBiometricPlugin"
+    let jsName = "KipuBiometric"
+    let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(name: "isAvailable", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "saveKey", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "loadKey", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "deleteKey", returnType: CAPPluginReturnPromise),
+    ]
+
+    private let service = "fr.kipu.urgences.patients"
+    private let account = "vault-key"
+
+    private func baseQuery() -> [String: Any] {
+        [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: service,
+            kSecAttrAccount as String: account,
+        ]
+    }
+
+    @objc func isAvailable(_ call: CAPPluginCall) {
+        let context = LAContext()
+        var error: NSError?
+        let available = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error)
+        let type: String
+        switch context.biometryType {
+        case .faceID: type = "faceID"
+        case .touchID: type = "touchID"
+        default: type = "none"
+        }
+        call.resolve(["available": available, "type": type])
+    }
+
+    @objc func saveKey(_ call: CAPPluginCall) {
+        guard let encoded = call.getString("key"), let key = Data(base64Encoded: encoded) else {
+            return call.reject("Missing key")
+        }
+        var error: Unmanaged<CFError>?
+        guard let access = SecAccessControlCreateWithFlags(
+            nil, kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly, .biometryCurrentSet, &error
+        ) else {
+            return call.reject("Biometric protection unavailable")
+        }
+        SecItemDelete(baseQuery() as CFDictionary)
+        var query = baseQuery()
+        query[kSecAttrAccessControl as String] = access
+        query[kSecValueData as String] = key
+        let status = SecItemAdd(query as CFDictionary, nil)
+        if status == errSecSuccess {
+            call.resolve()
+        } else {
+            call.reject("Keychain error", String(status))
+        }
+    }
+
+    @objc func loadKey(_ call: CAPPluginCall) {
+        let context = LAContext()
+        context.localizedReason = call.getString("reason") ?? "Déverrouiller les fiches patients"
+        context.localizedCancelTitle = "Utiliser le code"
+        var query = baseQuery()
+        query[kSecReturnData as String] = true
+        query[kSecMatchLimit as String] = kSecMatchLimitOne
+        query[kSecUseAuthenticationContext as String] = context
+        // Reading the item shows the Face ID prompt and waits for it: keep it off the main thread.
+        DispatchQueue.global(qos: .userInitiated).async {
+            var result: AnyObject?
+            let status = SecItemCopyMatching(query as CFDictionary, &result)
+            switch status {
+            case errSecSuccess:
+                if let data = result as? Data {
+                    call.resolve(["key": data.base64EncodedString()])
+                } else {
+                    call.reject("Unreadable key", "invalid")
+                }
+            case errSecUserCanceled:
+                call.reject("Cancelled", "cancelled")
+            case errSecItemNotFound:
+                call.reject("No key", "invalid")
+            default:
+                call.reject("Biometric check failed", "failed")
+            }
+        }
+    }
+
+    @objc func deleteKey(_ call: CAPPluginCall) {
+        SecItemDelete(baseQuery() as CFDictionary)
+        call.resolve()
     }
 }

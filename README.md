@@ -143,6 +143,11 @@ notes). Rien n'est envoyé ni synchronisé : tout reste sur l'appareil (`localSt
   disponible. La clé ne vit qu'en mémoire pendant le déverrouillage.
 - **Verrouillage** : au lancement, après 10 min sans interaction ou 2 min en arrière-plan, ou à la
   demande. Attente croissante à partir du 5ᵉ code faux. Code oublié = fiches effacées.
+- **Face ID / Touch ID** (app iOS uniquement, `src/lib/biometric.ts` + plugin natif `KipuBiometric`
+  dans `ios/App/App/KipuViewController.swift`) : la clé est rangée dans le trousseau iOS, protégée
+  par la biométrie (`.biometryCurrentSet`, cet appareil uniquement, code de l'iPhone requis). Ajouter
+  un visage ou une empreinte sur l'iPhone invalide la clé : le code est redemandé, puis Face ID se
+  réactive dans « Sécurité ». Le code reste toujours utilisable.
 - **Suppression automatique** : 12, 24 (défaut), 48 ou 72 h après la création de la fiche. La date de
   création est stockée en clair pour que la suppression fonctionne même verrouillé ; une fiche
   expirée pendant la veille du téléphone est supprimée à la prochaine ouverture de Kipu.

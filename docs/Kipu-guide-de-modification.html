@@ -718,6 +718,7 @@ compute: (v) =&gt; ((v.age ?? 0) &gt;= 65 ? 1 : 0) + (v.diabete ?? 0),</pre>
   <ul>
     <li><b>Où sont les données</b> : uniquement sur l'appareil (<code>localStorage</code>, clé <code>kipu:vault</code>), chiffrées en AES-256 avec une clé tirée du code. Rien n'est envoyé ni synchronisé.</li>
     <li><b>Ajouter un champ</b> : ajoute-le dans l'interface <code>Patient</code> et dans la fonction <code>blank</code> de <code>patients.ts</code> (valeur vide <code>""</code>), puis un <code>&lt;TextField&gt;</code> ou <code>&lt;TextArea&gt;</code> dans <code>PatientPage.tsx</code> en copiant un champ existant, et sa ligne dans <code>patientText</code> pour « Copier la fiche ». Les fiches existantes reçoivent la valeur vide.</li>
+    <li><b>Face ID</b> (app iPhone) : <code>src/lib/biometric.ts</code> côté app, et la classe <code>KipuBiometricPlugin</code> à la fin de <code>ios/App/App/KipuViewController.swift</code> côté natif, qui range la clé dans le trousseau iOS. Le texte affiché par iOS la première fois est <code>NSFaceIDUsageDescription</code> dans <code>Info.plist</code>.</li>
     <li><b>Délais</b> : choix de suppression automatique dans <code>RETENTION_CHOICES</code> (ne pas dépasser 72) et <code>DEFAULT_RETENTION</code> ; verrouillage automatique dans <code>LOCK_AFTER_IDLE_MS</code> et <code>LOCK_AFTER_HIDDEN_MS</code>.</li>
   </ul>
   <div class="box danger"><span class="t">Ce sont des données nominatives de santé</span>

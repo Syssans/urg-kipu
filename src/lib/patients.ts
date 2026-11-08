@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from "react";
 import { vitalsLines, type Vitals } from "./exam/render";
 import { deriveKey, fromBase64, KDF_ITERATIONS, open, randomBytes, seal, toBase64, type Sealed } from "./vault";
+import { biometricEnabled, forgetBiometricKey, loadBiometricKey, saveBiometricKey } from "./biometric";
 
 // Patient sheets, kept ONLY on this device: never sent anywhere, never synced.
 // They are encrypted with a key derived from the user's code (see vault.ts). The key only
@@ -95,6 +96,8 @@ interface Snapshot {
   patients: Patient[];
   retentionHours: number;
   legacyCount: number;
+  // Face ID unlock is on (iOS app).
+  biometric: boolean;
 }
 let snapshot: Snapshot = makeSnapshot();
 const listeners = new Set<() => void>();
@@ -105,6 +108,7 @@ function makeSnapshot(): Snapshot {
     patients,
     retentionHours: vault?.retentionHours ?? DEFAULT_RETENTION,
     legacyCount: vault ? 0 : readLegacy().length,
+    biometric: biometricEnabled(),
   };
 }
 
@@ -198,10 +202,9 @@ export async function setupCode(code: string) {
   touch();
 }
 
-/** Returns false for a wrong code. */
-export async function unlock(code: string): Promise<boolean> {
+/** Opens the sheets with this key; false if it is not the right one. */
+function openWith(k: Uint8Array): boolean {
   if (!vault) return false;
-  const k = await deriveKey(code, fromBase64(vault.salt), vault.iterations);
   try {
     if (open(k, vault.check) !== CHECK_TEXT) return false;
   } catch {
@@ -221,6 +224,41 @@ export async function unlock(code: string): Promise<boolean> {
   return true;
 }
 
+/** Returns false for a wrong code. */
+export async function unlock(code: string): Promise<boolean> {
+  if (!vault) return false;
+  return openWith(await deriveKey(code, fromBase64(vault.salt), vault.iterations));
+}
+
+/** Face ID unlock (iOS app). A key that no longer opens the sheets turns Face ID off. */
+export async function unlockWithBiometric(): Promise<"ok" | "cancelled" | "invalid" | "failed"> {
+  const result = await loadBiometricKey("Déverrouiller les fiches patients");
+  if ("error" in result) {
+    if (result.error === "invalid") await disableBiometric();
+    return result.error;
+  }
+  if (openWith(result.key)) return "ok";
+  await disableBiometric();
+  return "invalid";
+}
+
+/** Turns Face ID unlock on with the current key (sheets must be unlocked). */
+export async function enableBiometric(): Promise<boolean> {
+  if (!key) return false;
+  try {
+    await saveBiometricKey(key);
+    emit();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function disableBiometric() {
+  await forgetBiometricKey();
+  emit();
+}
+
 export function lock() {
   if (!key) return;
   key = null;
@@ -235,6 +273,8 @@ export async function changeCode(code: string) {
   vault = { ...vault, salt: toBase64(salt), iterations: KDF_ITERATIONS, check: seal(k, CHECK_TEXT) };
   key = k;
   commit(patients);
+  // Face ID keeps working with the new code.
+  if (biometricEnabled() && !(await enableBiometric())) await disableBiometric();
 }
 
 /** Forgotten code: erases the code and every sheet. */
@@ -249,6 +289,7 @@ export function resetVault() {
   key = null;
   patients = [];
   emit();
+  void forgetBiometricKey().then(emit);
 }
 
 export function setRetention(hours: number) {
